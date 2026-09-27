@@ -28,7 +28,13 @@ export const appCheck = (verify: AppCheckVerifier) =>
 		try {
 			await verify(token);
 		} catch (err) {
-			logger.warn(`${c.req.path} rejected: invalid App Check token`, err);
+			// The reason only, no stack: the stack is firebase-admin's internals,
+			// and Error Reporting would open an error group for any entry with
+			// one, so every junk token sent to the public URL would show up there.
+			const reason = err instanceof Error ? err.message : String(err);
+			logger.warn(`${c.req.path} rejected: invalid App Check token`, {
+				reason,
+			});
 			return c.json(UNAUTHORIZED, 401);
 		}
 

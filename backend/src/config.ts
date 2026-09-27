@@ -18,6 +18,21 @@ if (appCheckOff && process.env.K_SERVICE) {
 	);
 }
 
+// Unset means Genkit's default console logging, for local dev. The image
+// sets json (backend/Dockerfile). Anything else is refused rather than
+// falling back, since a typo would silently bring back unparsed logs.
+const LOG_FORMATS = ["console", "json"] as const;
+type LogFormat = (typeof LOG_FORMATS)[number];
+const isLogFormat = (value: string): value is LogFormat =>
+	(LOG_FORMATS as readonly string[]).includes(value);
+
+const logFormat = process.env.LOG_FORMAT ?? "console";
+if (!isLogFormat(logFormat)) {
+	throw new Error(
+		`LOG_FORMAT must be one of ${LOG_FORMATS.join(", ")}, got ${JSON.stringify(logFormat)}.`,
+	);
+}
+
 const parsedAllowedOrigins = process.env.CORS_ORIGIN?.split(",")
 	.map((origin) => origin.trim())
 	.filter(Boolean);
@@ -37,4 +52,5 @@ export const config = {
 	// Fail-closed: only the exact value "off" (for local dev without a
 	// registered debug token, see docs/local-setup.md) turns App Check off.
 	appCheckEnforced: !appCheckOff,
+	logFormat,
 };

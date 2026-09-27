@@ -5,8 +5,16 @@ import { config } from "./config.ts";
 import { verifyAppCheckToken } from "./firebase.ts";
 import { createChatFlow } from "./flows/chat.ts";
 import { ai, chatModel } from "./genkit.ts";
+import { createJsonLogSink } from "./logging.ts";
 import { appCheck } from "./middleware/app-check.ts";
 import { createChatHandler } from "./routes/chat.ts";
+
+// Before any of this file's logging (like the APP_CHECK=off warning below).
+// Logs made while the imports above load would miss it; none log today.
+// Without LOG_FORMAT=json, Genkit's default console logging stays.
+if (config.logFormat === "json") {
+	logger.init(createJsonLogSink());
+}
 
 export const app = new Hono();
 

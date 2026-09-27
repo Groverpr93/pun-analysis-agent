@@ -21,6 +21,9 @@ RUN pnpm --filter backend deploy --legacy --prod --frozen-lockfile /prod/backend
 
 FROM node:24-slim
 ENV NODE_ENV=production
+# One JSON line per log call, which Cloud Run turns into one entry with a
+# severity (src/logging.ts). Without it, logs are split per line.
+ENV LOG_FORMAT=json
 WORKDIR /app
 COPY --from=build /prod/backend/package.json ./
 COPY --from=build /prod/backend/node_modules ./node_modules

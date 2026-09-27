@@ -65,16 +65,18 @@ test("rejects a token the verifier refuses, with the same response as a missing 
 	assert.equal(reached.mock.callCount(), 0);
 });
 
-test("logs the verifier's reason for rejecting a token", async () => {
-	const reason = new Error("Firebase App Check token has expired.");
+test("logs the verifier's reason for rejecting a token, without its stack", async () => {
 	const { app } = buildApp(async () => {
-		throw reason;
+		throw new Error("Firebase App Check token has expired.");
 	});
 
 	await post(app, { "X-Firebase-AppCheck": "expired-token" });
 
 	assert.equal(logWarn.mock.callCount(), 1);
-	assert.ok(logWarn.mock.calls[0].arguments.includes(reason));
+	assert.deepEqual(logWarn.mock.calls[0]?.arguments, [
+		"/api/chat rejected: invalid App Check token",
+		{ reason: "Firebase App Check token has expired." },
+	]);
 });
 
 test("passes a request with a valid token through to the route, verifying that exact token", async () => {

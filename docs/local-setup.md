@@ -97,6 +97,8 @@ The dev server serves `GET /health` and `POST /api/chat` at `http://localhost:80
 curl localhost:8080/health
 ```
 
+Locally, Backend logs as plain console text. The Docker image sets `LOG_FORMAT=json` ([`backend/Dockerfile`](../backend/Dockerfile)), which writes each log call as one JSON line with a `severity` and `message`: that is what makes Cloud Run store it as one Logs Explorer entry with the right severity, rather than one entry per line of a stack trace (TASK-29). Set `LOG_FORMAT=json` locally to see exactly what Cloud Run receives. Any value other than `console` or `json` makes the server refuse to start.
+
 `pnpm dev` and `pnpm test` run the TypeScript directly on Node 24, with no loader like `tsx`. `pnpm test` uses Node's built-in test runner (`node:test`) against [`backend/tests/`](../backend/tests/) — see [`engineering-practices.md`](engineering-practices.md) for why no separate test framework is needed here.
 
 ## Frontend (`frontend/`)
