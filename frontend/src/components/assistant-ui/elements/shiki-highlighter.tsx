@@ -1,7 +1,12 @@
 "use client";
 
 import type { FC } from "react";
-import { type ShikiHighlighterProps, useShikiHighlighter } from "react-shiki";
+// The core entry, unlike the root one, doesn't reference every bundled
+// grammar: the caller passes a `highlighter` with the languages it loaded.
+import {
+	type ShikiHighlighterProps,
+	useShikiHighlighter,
+} from "react-shiki/core";
 import { cn } from "@/lib/utils";
 import { shikiContainerClassName } from "./shiki-container";
 
@@ -10,13 +15,14 @@ import { shikiContainerClassName } from "./shiki-container";
  */
 export type SyntaxHighlighterProps = Omit<
 	ShikiHighlighterProps,
-	"children" | "theme"
-> & {
-	theme?: ShikiHighlighterProps["theme"];
-	code: string;
-	/** Skips tokenization and renders the plain code while `true`. */
-	streaming?: boolean;
-};
+	"children" | "highlighter"
+> &
+	// Required: react-shiki/core throws during render without one.
+	Required<Pick<ShikiHighlighterProps, "highlighter">> & {
+		code: string;
+		/** Skips tokenization and renders the plain code while `true`. */
+		streaming?: boolean;
+	};
 
 // Moved to shiki-container.ts (from the registry version) so the lazy
 // wrapper's plain fallback can share it without loading Shiki.
@@ -31,13 +37,10 @@ const PlainCode: FC<{ code: string }> = ({ code }) => (
 const HighlightedCode: FC<{
 	code: string;
 	language: SyntaxHighlighterProps["language"];
-	theme: NonNullable<SyntaxHighlighterProps["theme"]>;
+	theme: SyntaxHighlighterProps["theme"];
 	options: Omit<ShikiHighlighterProps, "children" | "language" | "theme">;
 }> = ({ code, language, theme, options }) => {
-	const highlighted = useShikiHighlighter(code, language, theme, {
-		...options,
-		defaultColor: "light-dark()",
-	});
+	const highlighted = useShikiHighlighter(code, language, theme, options);
 	return <>{highlighted ?? <PlainCode code={code} />}</>;
 };
 
@@ -51,7 +54,7 @@ const HighlightedCode: FC<{
 export const SyntaxHighlighter: FC<SyntaxHighlighterProps> = ({
 	code,
 	language,
-	theme = { dark: "github-dark-default", light: "github-light-default" },
+	theme,
 	className,
 	style,
 	// Inert: useShikiHighlighter output has no default styles or language label.

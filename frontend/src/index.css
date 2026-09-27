@@ -237,7 +237,7 @@
 
 /*
  * Code highlighting (Shiki's css-variables theme, see
- * lazy-shiki-highlighter.tsx). Each token color is a Purdue brand color
+ * purdue-highlighter.ts). Each token color is a Purdue brand color
  * (marcom.purdue.edu/our-brand/visual-identity), deepened in light mode
  * where the original is under WCAG AA on the warm code background. Every
  * value was checked at >= 4.5:1 against both code backgrounds (a Markdown

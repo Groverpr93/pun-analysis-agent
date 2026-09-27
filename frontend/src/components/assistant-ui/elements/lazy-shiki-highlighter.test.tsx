@@ -12,6 +12,7 @@ const loadHighlighter = async () => {
 
 afterEach(() => {
 	vi.doUnmock("./shiki-highlighter.aui");
+	vi.doUnmock("./purdue-highlighter");
 	vi.restoreAllMocks();
 });
 
@@ -32,22 +33,82 @@ describe("lazy SyntaxHighlighter", () => {
 		);
 	});
 
-	it("shows the code unhighlighted, rather than crashing the app, when Shiki can't load", async () => {
-		// e.g. a tab opened before a deploy asks for a chunk that's gone.
-		vi.doMock("./shiki-highlighter.aui", () => {
-			throw new Error("Failed to fetch dynamically imported module");
-		});
-		const logError = vi.spyOn(console, "error").mockImplementation(() => {});
+	it.each([
+		["json5", "{is_pun: true}"],
+		// Fence languages are matched case-insensitively.
+		["JSON", CODE],
+		// Highlighted with the JSON5 grammar, which covers JSONC's comments.
+		["jsonc", '{"is_pun": true // the model is sure\n}'],
+	])("highlights %s", async (language, code) => {
 		const SyntaxHighlighter = await loadHighlighter();
 
-		render(<SyntaxHighlighter language="json" code={CODE} />);
-
-		await waitFor(() =>
-			expect(logError).toHaveBeenCalledWith(
-				"Couldn't load the code highlighter:",
-				expect.anything(),
-			),
+		const { container } = render(
+			<SyntaxHighlighter language={language} code={code} />,
 		);
-		expect(screen.getByText(CODE)).toBeInTheDocument();
+
+		await waitFor(
+			() =>
+				expect(
+					container.querySelector('[style*="--shiki-token-"]'),
+				).toBeInTheDocument(),
+			{ timeout: 5000 },
+		);
 	});
+
+	it("renders languages it doesn't load (only JSON/JSON5 ship) as plain code", async () => {
+		const SyntaxHighlighter = await loadHighlighter();
+		const python = "def is_pun(text): return True";
+
+		const { container } = render(
+			<SyntaxHighlighter language="python" code={python} />,
+		);
+
+		// .shiki marks Shiki's own output, not the Suspense fallback.
+		await waitFor(
+			() => expect(container.querySelector("pre.shiki")).toBeInTheDocument(),
+			{ timeout: 5000 },
+		);
+		expect(container).toHaveTextContent(python);
+		expect(
+			container.querySelector('[style*="--shiki-token-"]'),
+		).not.toBeInTheDocument();
+	});
+
+	// e.g. a tab opened before a deploy asks for a chunk that's gone.
+	it.each([
+		{
+			failing: "the highlighter component's chunk",
+			mock: () =>
+				vi.doMock("./shiki-highlighter.aui", () => {
+					throw new Error("Failed to fetch dynamically imported module");
+				}),
+		},
+		{
+			failing: "creating the highlighter (e.g. a grammar chunk)",
+			mock: () =>
+				vi.doMock("./purdue-highlighter", () => ({
+					createPurdueHighlighting: () =>
+						Promise.reject(
+							new Error("Failed to fetch dynamically imported module"),
+						),
+				})),
+		},
+	])(
+		"shows the code unhighlighted, rather than crashing the app, when $failing fails to load",
+		async ({ mock }) => {
+			mock();
+			const logError = vi.spyOn(console, "error").mockImplementation(() => {});
+			const SyntaxHighlighter = await loadHighlighter();
+
+			render(<SyntaxHighlighter language="json" code={CODE} />);
+
+			await waitFor(() =>
+				expect(logError).toHaveBeenCalledWith(
+					"Couldn't load the code highlighter:",
+					expect.anything(),
+				),
+			);
+			expect(screen.getByText(CODE)).toBeInTheDocument();
+		},
+	);
 });
