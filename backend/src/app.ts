@@ -8,6 +8,8 @@ import { ai, chatModel } from "./genkit.ts";
 import { createJsonLogSink } from "./logging.ts";
 import { appCheck } from "./middleware/app-check.ts";
 import { createChatHandler } from "./routes/chat.ts";
+import { createAnalyzePunTool } from "./tools/analyze-pun.ts";
+import { fixtureFetch } from "./tools/analyze-pun-fixture.ts";
 
 // Before any of this file's logging (like the APP_CHECK=off warning below).
 // Logs made while the imports above load would miss it; none log today.
@@ -34,5 +36,11 @@ if (config.appCheckEnforced) {
 	);
 }
 
-const chatFlow = createChatFlow(ai, chatModel);
+// Answered by a fixture until Inference's /analyze is deployed (TASK-14);
+// TASK-11 swaps fixtureFetch for the real fetch.
+const analyzePun = createAnalyzePunTool(ai, {
+	fetch: fixtureFetch,
+	inferenceUrl: config.inferenceUrl,
+});
+const chatFlow = createChatFlow(ai, chatModel, [analyzePun]);
 app.post("/api/chat", createChatHandler(chatFlow));

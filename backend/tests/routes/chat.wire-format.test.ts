@@ -97,6 +97,25 @@ test("Hono handler's success-path bytes match the real @genkit-ai/express handle
 	assert.equal(honoBody, genkitBody);
 });
 
+test("Hono handler's bytes for an analyze_pun turn match the real @genkit-ai/express handler's", async () => {
+	const toolRequest = { name: "analyze_pun", input: { text: "Tell me a pun" } };
+	const { honoBody, genkitBody } = await compareWireBytes(
+		(request, { sendChunk }) => {
+			if (request.messages.at(-1)?.role === "tool") {
+				sendChunk("Here's one about interest.");
+				return { text: "Here's one about interest." };
+			}
+			sendChunk({ content: [{ toolRequest }] });
+			return { toolRequests: [toolRequest] };
+		},
+	);
+
+	// Guards against both sides dropping the tool chunks alike.
+	assert.match(honoBody, /"toolRequest"/);
+	assert.match(honoBody, /"toolResponse"/);
+	assert.equal(honoBody, genkitBody);
+});
+
 const parseErrorEvent = (body: string) => {
 	assert.match(body, /^error: .*\n\n$/s);
 	return JSON.parse(body.slice("error: ".length)).error;

@@ -8,6 +8,7 @@ import { Hono } from "hono";
 import { createJsonLogSink, toLogLine } from "../src/logging.ts";
 import { appCheck } from "../src/middleware/app-check.ts";
 import { createChatHandler } from "../src/routes/chat.ts";
+import { createAnalyzePunTool } from "../src/tools/analyze-pun.ts";
 import { buildMockChatFlow } from "./helpers/build-mock-chat-flow.ts";
 
 // The JSON sink is installed on Genkit's real logger, so these tests see
@@ -159,6 +160,44 @@ test("a failed /api/chat is one ERROR entry with the upstream detail and stack",
 	assert.equal(entry.message, "/api/chat flow failed");
 	assert.deepEqual(entry.detail, { error: { code: 503 } });
 	assert.match(entry["exception.stacktrace"], /upstream detail\n\s+at /);
+});
+
+// The cause has to be a field of its own, so Cloud Logging can filter on it.
+test("an Inference failure in analyze_pun is one WARNING entry with its cause as a field", async () => {
+	const analyzePun = createAnalyzePunTool(genkit({}), {
+		fetch: async () => new Response(null, { status: 502 }),
+		inferenceUrl: "http://inference.test",
+	});
+
+	await analyzePun({ text: "..." });
+
+	assert.deepEqual(onlyEntry(), {
+		severity: "WARNING",
+		message:
+			"analyze_pun: Inference call failed, returning the undetermined result",
+		cause: "non_2xx",
+		status: 502,
+	});
+});
+
+test("an unreachable Inference is logged with the network error's code", async () => {
+	const analyzePun = createAnalyzePunTool(genkit({}), {
+		fetch: async () => {
+			throw new TypeError("fetch failed", {
+				cause: Object.assign(new Error("connect ECONNREFUSED"), {
+					code: "ECONNREFUSED",
+				}),
+			});
+		},
+		inferenceUrl: "http://inference.test",
+	});
+
+	await analyzePun({ text: "..." });
+
+	const entry = onlyEntry();
+	assert.equal(entry.cause, "unreachable");
+	assert.equal(entry.errorCode, "ECONNREFUSED");
+	assert.equal(entry["exception.message"], "fetch failed");
 });
 
 // The wiring in app.ts, in a real process: whether LOG_FORMAT picks the

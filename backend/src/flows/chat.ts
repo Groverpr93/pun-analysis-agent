@@ -1,5 +1,12 @@
-import type { Genkit, ModelArgument } from "genkit";
+import type {
+	GenerateResponseChunk,
+	Genkit,
+	ModelArgument,
+	ToolArgument,
+} from "genkit";
 import { z } from "genkit";
+import { GenerateResponseChunkSchema } from "genkit/model";
+import { numberToolRequests } from "./tool-request-refs.ts";
 
 /**
  * Matches docs/contracts.md's /api/chat request shape. `role` is
@@ -36,29 +43,62 @@ const toGenkitMessages = (messages: ChatInput["messages"]) =>
 	}));
 
 /**
- * Builds the Phase 1 chat flow: a plain conversational proxy to `model`, no
- * tool-calling. Takes `ai`/`model` as parameters (rather than importing the
- * production instance directly) so tests can substitute a Genkit test-double
- * model without touching real Gemini, per docs/engineering-practices.md's
- * "Backend in isolation" section.
+ * What the flow streams, per docs/contracts.md's /api/chat stream: the next
+ * piece of the reply as plain text, or, for a chunk carrying a tool call or
+ * its result, Genkit's own chunk unmodified.
  */
-export function createChatFlow(ai: Genkit, model: ModelArgument) {
+export const chatStreamChunkSchema = z.union([
+	z.string(),
+	GenerateResponseChunkSchema,
+]);
+
+const hasToolPart = (chunk: GenerateResponseChunk) =>
+	chunk.content.some((part) => part.toolRequest || part.toolResponse);
+
+/**
+ * Builds the chat flow: a conversation with `model`, which may call `tools`
+ * (analyze_pun in production) before replying. Takes `ai`/`model`/`tools`
+ * as parameters (rather than importing the production instances directly)
+ * so tests can substitute a Genkit test-double model and a tool backed by a
+ * fixture, without touching real Gemini or Inference, per
+ * docs/engineering-practices.md's "Backend in isolation" section.
+ */
+export function createChatFlow(
+	ai: Genkit,
+	model: ModelArgument,
+	tools: ToolArgument[],
+) {
 	return ai.defineFlow(
 		{
 			name: "chatFlow",
 			inputSchema: chatInputSchema,
 			outputSchema: z.string(),
-			streamSchema: z.string(),
+			streamSchema: chatStreamChunkSchema,
 		},
-		async (input, { sendChunk }) => {
+		async (input, { sendChunk, abortSignal }) => {
 			const { stream, response } = ai.generateStream({
 				model,
 				messages: toGenkitMessages(input.messages),
+				tools,
+				// The request's signal (routes/chat.ts): when the user stops or
+				// leaves, no further model turns go to Gemini.
+				abortSignal,
+				// Per reply, so refs are unique across all of the reply's tool calls.
+				use: [numberToolRequests()],
 			});
+			// The whole reply, across model turns. Genkit's response.text is only
+			// the last turn's, which leaves out any text the model sent before
+			// calling a tool, and the result must be the complete reply
+			// (docs/contracts.md).
+			let reply = "";
 			for await (const chunk of stream) {
-				sendChunk(chunk.text);
+				sendChunk(hasToolPart(chunk) ? chunk.toJSON() : chunk.text);
+				reply += chunk.text;
 			}
-			return (await response).text;
+			// Also where Genkit reports a failure that no chunk carried; awaiting
+			// it fails the flow instead of leaving the rejection unhandled.
+			await response;
+			return reply;
 		},
 	);
 }

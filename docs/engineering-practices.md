@@ -70,4 +70,4 @@ flowchart LR
 
 ## Open items
 
-- No shared fixture format yet for the `/analyze` stand-in: Backend's tests ([`backend/tests/fixtures/analyze-results.ts`](../backend/tests/fixtures/analyze-results.ts)), Frontend's stub and Eval each keep their own. It should probably be one fixture referenced from [`contracts.md`](contracts.md) so they can't drift apart. Backend's production stand-in ([`backend/src/tools/analyze-pun-fixture.ts`](../backend/src/tools/analyze-pun-fixture.ts)) deliberately answers only the undetermined result. (Both Backend files arrive with TASK-9, PR #47.)
+- No shared fixture format yet for the `/analyze` stand-in: Backend's tests ([`backend/tests/fixtures/analyze-results.ts`](../backend/tests/fixtures/analyze-results.ts)), Frontend's stub and Eval each keep their own. It should probably be one fixture referenced from [`contracts.md`](contracts.md) so they can't drift apart. Backend's production stand-in ([`backend/src/tools/analyze-pun-fixture.ts`](../backend/src/tools/analyze-pun-fixture.ts)) deliberately answers only the undetermined result.
