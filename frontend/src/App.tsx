@@ -39,11 +39,23 @@ function App({
 	return (
 		<AssistantRuntimeProvider runtime={runtime}>
 			<TooltipProvider>
-				<SidebarProvider>
+				{/*
+				 * The thread must be height-bounded: assistant-ui sizes the last
+				 * turn's scroll reserve from the viewport's height, so a viewport
+				 * that grows with its content feeds that reserve back into itself
+				 * without limit (TASK-33). `h-dvh` sizes the shell to the screen, and
+				 * the `flex-1` wrapper hands Thread the space left under the header —
+				 * the layout of assistant-ui's own template. `overflow-hidden` is
+				 * load-bearing: like `min-h-0`, it lets this flex child shrink below
+				 * its content height instead of growing with the messages.
+				 */}
+				<SidebarProvider className="h-dvh">
 					<ThreadListSidebar />
 					<SidebarInset>
 						<AppHeader />
-						<Thread />
+						<div className="flex-1 overflow-hidden">
+							<Thread />
+						</div>
 					</SidebarInset>
 				</SidebarProvider>
 			</TooltipProvider>
