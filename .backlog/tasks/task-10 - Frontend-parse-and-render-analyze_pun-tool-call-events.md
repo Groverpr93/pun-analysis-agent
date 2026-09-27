@@ -1,11 +1,11 @@
 ---
 id: TASK-10
 title: 'Frontend: parse and render analyze_pun tool-call events'
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-17 23:34'
-updated_date: '2026-09-27 18:55'
+updated_date: '2026-09-27 20:17'
 due_date: '2026-09-21'
 labels: []
 milestone: m-3
@@ -27,22 +27,22 @@ Error scope: failures of /api/chat itself (network, non-2xx, quota and other Bac
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 assistant-ui shows the analyze_pun call live as it fires and resolves (running to complete)
-- [ ] #2 A resolved pun explanation is visually distinguished from plain chat text
-- [ ] #3 Adapter's tool-call parsing is unit-tested against recorded fixture events matching the Backend task's documented shape
-- [ ] #4 ChatModelAdapter creates one assistant-ui {type: 'tool-call', toolCallId, toolName, args, result} part per analyze_pun toolRequest part (a chunk can hold several) and sets its result from the toolResponse part with the same ref, per docs/contracts.md's pairing rule; unit-tested with parallel calls whose results arrive in the opposite order
-- [ ] #5 An llm_fallback result (empty explanation) renders as senses supplied by Gemini at lower confidence, backed by a stub fixture
-- [ ] #6 An undetermined result (is_pun: null) renders as 'Inference couldn't analyze this' with no confidence shown, checked with an explicit is_pun === null test (a truthiness check would show it as 'not a pun'), backed by a stub fixture; tool results are typed with a shared AnalyzeResult type (is_pun: boolean | null, confidence: number | null) so the compiler catches unhandled nulls
-- [ ] #7 A turn that ends after an analyze_pun toolRequest but before its toolResponse never leaves the call running: a Backend error event, dropped connection or missing result settles it as failed ('couldn't finish'), and a user stop settles it as cancelled; TASK-24's error box and wording are unchanged. Unit-tested with fixture streams that end right after a toolRequest, and each case checked in the running UI
-- [ ] #8 A slow analyze_pun stays visibly running with no Frontend timeout of its own; the wait is bounded by Backend's Inference timeout (INFERENCE_TIMEOUT_MS per call, set from a measured cold start by TASK-32 and recorded in docs/contracts.md)
-- [ ] #9 The stream parser accepts both a plain-string message and a Genkit-chunk message (docs/contracts.md's Phase 2 shape), and this task deploys before TASK-9 merges, so the live site never receives tool chunks it can't render
+- [x] #1 assistant-ui shows the analyze_pun call live as it fires and resolves (running to complete)
+- [x] #2 A resolved pun explanation is visually distinguished from plain chat text
+- [x] #3 Adapter's tool-call parsing is unit-tested against recorded fixture events matching the Backend task's documented shape
+- [x] #4 ChatModelAdapter creates one assistant-ui {type: 'tool-call', toolCallId, toolName, args, result} part per analyze_pun toolRequest part (a chunk can hold several) and sets its result from the toolResponse part with the same ref, per docs/contracts.md's pairing rule; unit-tested with parallel calls whose results arrive in the opposite order
+- [x] #5 An llm_fallback result (empty explanation) renders as senses supplied by Gemini at lower confidence, backed by a stub fixture
+- [x] #6 An undetermined result (is_pun: null) renders as 'Inference couldn't analyze this' with no confidence shown, checked with an explicit is_pun === null test (a truthiness check would show it as 'not a pun'), backed by a stub fixture; tool results are typed with a shared AnalyzeResult type (is_pun: boolean | null, confidence: number | null) so the compiler catches unhandled nulls
+- [x] #7 A turn that ends after an analyze_pun toolRequest but before its toolResponse never leaves the call running: a Backend error event, dropped connection or missing result settles it as failed ('couldn't finish'), and a user stop settles it as cancelled; TASK-24's error box and wording are unchanged. Unit-tested with fixture streams that end right after a toolRequest, and each case checked in the running UI
+- [x] #8 A slow analyze_pun stays visibly running with no Frontend timeout of its own; the wait is bounded by Backend's Inference timeout (INFERENCE_TIMEOUT_MS per call, set from a measured cold start by TASK-32 and recorded in docs/contracts.md)
+- [x] #9 The stream parser accepts both a plain-string message and a Genkit-chunk message (docs/contracts.md's Phase 2 shape), and this task deploys before TASK-9 merges, so the live site never receives tool chunks it can't render
 <!-- AC:END -->
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
-- [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
-- [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
+- [x] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
+- [x] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
+- [x] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
 
 ## Implementation Plan
@@ -76,4 +76,15 @@ Bundle: Shiki eagerly added ~200 kB (65 kB gzip) to the main chunk; lazy-loaded 
 Found pre-existing on main: thread viewport height grows without bound after the 2nd exchange; spun off as a separate task.
 
 History resend (the PR #27 note above): deferred to TASK-35, since carrying tool calls in the request changes the /api/chat contract; recorded as a known limitation in docs/contracts.md.
+
+Validation on main after merge (d4edbb1 #50, 83f547c #47), 2026-09-27: frontend 131/131, tsc clean; backend 99/99.
+AC evidence: #1 running->complete in the stub UI and live against #47's Backend; #2 card with gold rule and tinted background, checked in both themes and at 375px; #3 parser and adapter tests replay three streams recorded from #47's Backend with real Gemini; #4 reply-parts tests (parallel calls, opposite-order results, split chunks); #5/#6 summarizeAnalyzePunCall tests plus stub fixtures, with an explicit is_pun === null test and a mutation check; #7 adapter tests for error event, clean end, dropped connection, missing result and user stop after a toolRequest, plus the stub's fail/slow scenarios checked in the UI; #8 the slow scenario stays running for 30s with no Frontend timeout.
+AC #9: #50 and #47 were merged 1s apart (20:06:57/58Z), so both deploys ran from 83f547c. Firebase Hosting finished at 20:08:48Z, and the Cloud Run deploy started at 20:09:00Z, so the frontend was live first. That order came from the same commit and the frontend's faster pipeline, not from a gate. Deployed site checked: pun-agent.web.app renders the analyze_pun card (undetermined, as expected until TASK-11); Gemini's free-tier quota was exhausted for the follow-up model turn, which TASK-24's error box showed.
+Follow-ups: TASK-35 (resend analyze_pun history); PR #50 review thread: Gemini accepts an empty assistant turn (checked against real Gemini), so no change.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Frontend renders Backend's analyze_pun tool calls (Phase 2). The /api/chat parser accepts both plain-text and Genkit-chunk messages. reply-parts.ts pairs each call with its result by ref, and treats unanswered, reused or missing refs as a broken stream. Each call shows as a collapsible card (verdict, pun probability, llm_fallback caveat, undetermined, couldn't finish/cancelled) with the raw /analyze JSON. Code blocks and the card JSON are syntax-highlighted in a lazily loaded, WCAG-AA Purdue palette. PR #47's contract docs landed with this task (consumer first). Verified with 131 frontend tests (recorded real-Gemini streams, mutation checks), stub and live UI checks in both themes and at phone width, code and architectural review subagents, and the deployed site.
+<!-- SECTION:FINAL_SUMMARY:END -->

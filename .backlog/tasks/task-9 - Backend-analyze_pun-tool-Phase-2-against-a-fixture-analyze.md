@@ -1,11 +1,11 @@
 ---
 id: TASK-9
 title: 'Backend: analyze_pun tool (Phase 2) against a fixture /analyze'
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-17 23:34'
-updated_date: '2026-09-27 19:04'
+updated_date: '2026-09-27 20:27'
 due_date: '2026-09-21'
 labels: []
 milestone: m-3
@@ -87,4 +87,12 @@ Smoke test (2026-09-27, pnpm dev + real Gemini via curl, 'Are these puns? 1) ...
 AC #5 (Inference timeout set from a measured Cloud Run cold start, recorded in docs/contracts.md) moved to TASK-32 (2026-09-27, @yaisiel.torres), since it can't be measured until Inference is deployed (TASK-14). TASK-9 ships the named constant INFERENCE_TIMEOUT_MS with a provisional 20 s, marked unmeasured in contracts.md.
 
 Stacked on PR #50 (TASK-10), 2026-09-27: merged #50's branch in, keeping #50's contracts.md, engineering-practices.md and TASK-10 backlog file, since #50 carries this PR's final contract text plus its additions; then dropped #50's 'Backend side pending PR #47' notes. If #50 is squash-merged, merge main in with -X ours (rehearsed: no conflicts, identical tree). Ref uniqueness (required by #50's contract): decided with @yaisiel.torres to detect and log rather than rename, since Gemini pairs calls with results by its own ids; numberToolRequests logs a WARNING when a reply reuses a ref.
+
+Validation on main after merge (83f547c, #47; stacked on #50 = TASK-10), 2026-09-27: backend 99/99, frontend 131/131. PR review: the flow now passes Genkit's abortSignal to generateStream, so a user stop ends the tool loop instead of sending the remaining model turns to Gemini. Deploy order: both deploys ran from 83f547c; Firebase Hosting finished at 20:08:48Z, before the Cloud Run deploy started at 20:09:00Z. Deployed site: pun-agent.web.app shows the analyze_pun card with the undetermined result (fixtureFetch until TASK-11); the follow-up model turn hit Gemini's free-tier quota (RESOURCE_EXHAUSTED shown via TASK-24's error box).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Backend's analyze_pun tool (Phase 2): Gemini calls it with { text }, and it calls Inference's /analyze through an injected fetch. Production uses fixtureFetch, which answers the undetermined result until TASK-11. A timeout, unreachable Inference, a non-2xx or a malformed answer degrades to the undetermined result, logged with its cause, and the schema is nullable-typed with the contract's cross-field rules. /api/chat streams tool chunks as Genkit chunks next to plain-text messages, with every call ref'd (numbered when Gemini omits an id; reuse is logged) and the full reply text in result. The flow honours the user's stop. Closes sync point 3 (contract in docs/contracts.md, landed consumer-first with TASK-10). Verified with 99 backend tests, including a wire-format parity test against @genkit-ai/express, real-fetch timeout/unreachable tests and mutation checks, a real-Gemini smoke test, and the deployed site. The measured Inference timeout moved to TASK-32.
+<!-- SECTION:FINAL_SUMMARY:END -->
