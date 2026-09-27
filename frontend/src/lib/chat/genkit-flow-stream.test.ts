@@ -3,6 +3,7 @@ import { byteStreamOf, utf8 } from "./fixtures/byte-stream";
 import {
 	recordedErrorStream,
 	recordedPhase1Stream,
+	recordedToolCallThenErrorStream,
 } from "./fixtures/recorded-genkit-streams";
 import {
 	FlowErrorEvent,
@@ -94,6 +95,55 @@ describe("parseGenkitFlowStream", () => {
 
 	it("throws on an event it doesn't recognize rather than skipping it", async () => {
 		const body = byteStreamOf([utf8('data: {"surprise":1}\n\n')]);
+		await expect(collect(body)).rejects.toThrow(/Unrecognized/);
+	});
+
+	it("parses a recorded Phase 2 stream's Genkit chunks as message objects, alongside plain-text ones", async () => {
+		const body = byteStreamOf([
+			utf8('data: {"message":"Let me check. "}\n\n'),
+			utf8(
+				recordedToolCallThenErrorStream.slice(
+					0,
+					recordedToolCallThenErrorStream.indexOf("error: "),
+				),
+			),
+			utf8('data: {"result":"Let me check. "}\n\n'),
+		]);
+
+		const events = await collect(body);
+
+		expect(
+			events.map((event) =>
+				"message" in event ? typeof event.message : "result",
+			),
+		).toEqual(["string", "object", "object", "result"]);
+		expect(events[1]).toMatchObject({
+			message: {
+				role: "model",
+				content: [{ toolRequest: { name: "analyze_pun", ref: "call_71294" } }],
+			},
+		});
+	});
+
+	it.each([
+		["a message object without content", '{"message":{"role":"model"}}'],
+		["a message that is neither text nor a chunk", '{"message":42}'],
+		["a result that isn't text", '{"result":{"text":"hi"}}'],
+		["a null message", '{"message":null}'],
+		[
+			"a message whose content isn't a list",
+			'{"message":{"role":"model","content":"hi"}}',
+		],
+		[
+			"a toolRequest without a ref, which would merge parallel calls",
+			'{"message":{"role":"model","content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"a"}}}]}}',
+		],
+		[
+			"a toolResponse without a ref",
+			'{"message":{"role":"tool","content":[{"toolResponse":{"name":"analyze_pun","output":{}}}]}}',
+		],
+	])("throws on %s rather than rendering it", async (_, payload) => {
+		const body = byteStreamOf([utf8(`data: ${payload}\n\n`)]);
 		await expect(collect(body)).rejects.toThrow(/Unrecognized/);
 	});
 

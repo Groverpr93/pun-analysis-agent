@@ -74,19 +74,97 @@ describe("App", () => {
 		).toBeInTheDocument();
 	});
 
-	it("renders a tool call and follow-up text for the Phase 2 fixture", async () => {
-		renderApp();
-		await screen.findByText("Got a pun for me?");
+	describe("analyze_pun tool calls", () => {
+		const findCard = (verdict: string | RegExp) =>
+			screen.findByRole("button", { name: verdict }, { timeout: 3000 });
 
-		await sendMessage("got a good pun for me?");
+		it("renders the call as a collapsed card, between the reply's text parts", async () => {
+			renderApp();
+			await screen.findByText("Got a pun for me?");
 
-		expect(await screen.findByText(/let me take a look/i)).toBeInTheDocument();
-		expect(
-			await screen.findByText("1 tool call", {}, { timeout: 3000 }),
-		).toBeInTheDocument();
-		expect(
-			await screen.findByText(/found one/i, {}, { timeout: 3000 }),
-		).toBeInTheDocument();
+			await sendMessage("got a good pun for me?");
+
+			const preamble = await screen.findByText(/let me take a look/i);
+			const card = await findCard("Pun (homographic), Pun probability 94%");
+			const followUp = await screen.findByText(
+				/found one/i,
+				{},
+				{ timeout: 3000 },
+			);
+			expect(preamble.compareDocumentPosition(card)).toBe(
+				Node.DOCUMENT_POSITION_FOLLOWING,
+			);
+			expect(card.compareDocumentPosition(followUp)).toBe(
+				Node.DOCUMENT_POSITION_FOLLOWING,
+			);
+			// Collapsed: the explanation and the raw response wait for a click.
+			expect(card).toHaveAttribute("aria-expanded", "false");
+			expect(screen.queryByText(/"sense_source": "wordnet"/)).toBeNull();
+		});
+
+		it("shows the explanation and Inference's raw response once opened", async () => {
+			renderApp();
+			await screen.findByText("Got a pun for me?");
+			await sendMessage("got a good pun for me?");
+
+			fireEvent.click(await findCard("Pun (homographic), Pun probability 94%"));
+
+			expect(
+				await screen.findByText(/its slang sense \(money\)/, { selector: "p" }),
+			).toBeInTheDocument();
+			// Check the block's text: once highlighted, the JSON is split across
+			// token spans (lazy-shiki-highlighter.test.tsx checks the colors).
+			const response = await screen.findByText("Inference response");
+			expect(response.parentElement).toHaveTextContent(
+				'"sense_source": "wordnet"',
+			);
+		});
+
+		it("says Gemini supplied the senses for an llm_fallback result", async () => {
+			renderApp();
+			await screen.findByText("Got a pun for me?");
+
+			await sendMessage("show me the fallback");
+
+			expect(
+				await findCard(
+					"Pun (homophonic), Pun probability 81%, Senses supplied by Gemini, at lower confidence",
+				),
+			).toBeInTheDocument();
+		});
+
+		it("says Inference couldn't analyze an undetermined result, with no confidence", async () => {
+			renderApp();
+			await screen.findByText("Got a pun for me?");
+
+			await sendMessage("an undetermined one");
+
+			// The exact name rules out a confidence alongside it.
+			expect(
+				await findCard("Inference couldn't analyze this"),
+			).toBeInTheDocument();
+		});
+
+		it("stays running while the call is slow, and shows it cancelled when the user stops", async () => {
+			renderApp();
+			await screen.findByText("Got a pun for me?");
+			await sendMessage("a slow pun");
+
+			await findCard("Checking for a pun…");
+			fireEvent.click(screen.getByRole("button", { name: "Stop generating" }));
+
+			expect(await findCard("Pun check cancelled")).toBeInTheDocument();
+		});
+
+		it("shows the call couldn't finish when the reply fails before its result, keeping the error box", async () => {
+			renderApp();
+			await screen.findByText("Got a pun for me?");
+
+			await sendMessage("make the pun fail");
+
+			expect(await findCard("Pun check couldn't finish")).toBeInTheDocument();
+			expect(await screen.findByText(/simulated failure/i)).toBeInTheDocument();
+		});
 	});
 
 	it("renders an error state for a failed run", async () => {

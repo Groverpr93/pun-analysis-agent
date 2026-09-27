@@ -4,6 +4,11 @@ import type {
 } from "@assistant-ui/react";
 import { FlowErrorEvent, parseGenkitFlowStream } from "./genkit-flow-stream";
 import { getMessageText } from "./message-text";
+import {
+	applyMessage,
+	assertEveryCallAnswered,
+	type ReplyParts,
+} from "./reply-parts";
 
 // What the chat's error box shows. Whatever actually went wrong goes to the
 // console instead, since it's written for developers (e.g. "Failed to fetch").
@@ -71,8 +76,8 @@ const waitForAppCheckToken = (
 /**
  * The real ChatModelAdapter: sends the conversation to Backend's
  * `/api/chat` (docs/contracts.md) and streams Genkit's reply back into
- * assistant-ui. Phase 1 is text-only; `analyze_pun` tool-call events are
- * TASK-10's extension of this same adapter.
+ * assistant-ui: reply text as text parts, and each `analyze_pun` call as a
+ * tool-call part that gets its result once Backend sends it.
  *
  * `getAppCheckToken` supplies the Firebase App Check token Backend requires
  * on every request; it's injected so tests need no Firebase or reCAPTCHA.
@@ -115,15 +120,21 @@ export const createLiveChatModelAdapter = (
 		}
 
 		// Failing mid-reply: Backend's own error event is already user-facing;
-		// anything else (dropped connection, garbled or missing events) means
-		// the reply was cut off.
-		let text = "";
+		// anything else (dropped connection, garbled or missing events, a tool
+		// call left without a result) means the reply was cut off. A tool call
+		// still waiting for its result when this throws needs no settling here:
+		// assistant-ui shows it with the message's status, so as failed, or as
+		// cancelled when the user stopped.
+		let parts: ReplyParts = [];
 		try {
 			for await (const event of parseGenkitFlowStream(response.body)) {
 				// Each `message` is only the newest piece of the reply, but every
-				// yield replaces what assistant-ui shows — so yield the running total.
-				text = "result" in event ? event.result : text + event.message;
-				yield { content: [{ type: "text", text }] };
+				// yield replaces what assistant-ui shows — so yield all parts so far.
+				// `result` repeats the reply's text without its tool calls
+				// (docs/contracts.md), so the parts built so far stand as they are.
+				if ("result" in event) assertEveryCallAnswered(parts);
+				else parts = applyMessage(parts, event.message);
+				yield { content: parts };
 			}
 		} catch (error) {
 			if (error instanceof FlowErrorEvent) {

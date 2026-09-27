@@ -4,10 +4,14 @@ import type {
 	ThreadMessage,
 } from "@assistant-ui/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { punResult, undeterminedResult } from "./fixtures/analyze-results";
 import { byteStreamOf, utf8 } from "./fixtures/byte-stream";
 import {
 	recordedErrorStream,
+	recordedParallelToolCallsStream,
 	recordedPhase1Stream,
+	recordedToolCallStream,
+	recordedToolCallThenErrorStream,
 } from "./fixtures/recorded-genkit-streams";
 import {
 	APP_CHECK_TIMEOUT_MS,
@@ -128,7 +132,7 @@ describe("createLiveChatModelAdapter", () => {
 		expect(headersOf(1).get("X-Firebase-AppCheck")).toBe("second-token");
 	});
 
-	it("yields the accumulated reply after every chunk, ending on the result's text", async () => {
+	it("yields the accumulated reply after every chunk, ending on the whole reply", async () => {
 		mockFetch(new Response(recordedPhase1Stream));
 
 		const texts = await collectTexts(run([message("user", "hi")]));
@@ -435,6 +439,237 @@ describe("createLiveChatModelAdapter", () => {
 
 			expect(error.message).toBe(NO_REPLY);
 			expect(logError).toHaveBeenCalledWith(offline);
+		});
+	});
+});
+
+describe("createLiveChatModelAdapter with analyze_pun tool calls", () => {
+	/** The message Backend sent in both recorded tool-call streams. */
+	const BUSY_MESSAGE =
+		"The assistant is busy right now. Please try again in a moment.";
+	const CUT_OFF = "The reply was cut off before it finished. Please try again.";
+
+	const event = (payload: unknown) => `data: ${JSON.stringify(payload)}\n\n`;
+	const toolRequestEvent = (ref: string, text: string) =>
+		event({
+			message: {
+				role: "model",
+				index: 0,
+				content: [
+					{ toolRequest: { name: "analyze_pun", input: { text }, ref } },
+				],
+			},
+		});
+	const toolResponseEvent = (ref: string, output: unknown) =>
+		event({
+			message: {
+				role: "tool",
+				index: 1,
+				content: [{ toolResponse: { name: "analyze_pun", output, ref } }],
+			},
+		});
+
+	const contentsOf = async (gen: AsyncGenerator<ChatModelRunResult>) => {
+		const contents: ChatModelRunResult["content"][] = [];
+		try {
+			for await (const result of gen) contents.push(result.content);
+			return { contents, error: undefined };
+		} catch (error) {
+			return { contents, error: error as Error };
+		}
+	};
+
+	beforeEach(() => {
+		vi.spyOn(console, "error").mockImplementation(() => {});
+	});
+
+	it("renders a recorded reply: the call, its result, then the text after it", async () => {
+		mockFetch(new Response(recordedToolCallStream));
+
+		const { contents, error } = await contentsOf(run([message("user", "hi")]));
+
+		expect(error).toBeUndefined();
+		const [call, text] = contents.at(-1) ?? [];
+		expect(call).toMatchObject({
+			type: "tool-call",
+			toolCallId: "call_125622",
+			args: { text: "I used to be a banker, but I lost interest." },
+			result: undeterminedResult,
+		});
+		expect(text).toMatchObject({ type: "text" });
+		expect(text?.type === "text" && text.text).toMatch(
+			/^Yes, that is a pun!.*core concept in banking\.$/s,
+		);
+	});
+
+	it("shows a recorded call running, then completes it with its result", async () => {
+		mockFetch(new Response(recordedToolCallThenErrorStream));
+
+		const { contents, error } = await contentsOf(run([message("user", "hi")]));
+
+		const call = {
+			type: "tool-call",
+			toolCallId: "call_71294",
+			toolName: "analyze_pun",
+			args: { text: "I used to be a banker, but I lost interest." },
+		};
+		expect(contents[0]).toEqual([expect.objectContaining(call)]);
+		expect(contents[0]?.[0]).not.toHaveProperty("result");
+		expect(contents[1]).toEqual([
+			expect.objectContaining({ ...call, result: undeterminedResult }),
+		]);
+		// Gemini failed after the call finished; the error box still shows it.
+		expect(error?.message).toBe(BUSY_MESSAGE);
+	});
+
+	it("pairs the recorded parallel calls with their results by ref", async () => {
+		mockFetch(new Response(recordedParallelToolCallsStream));
+
+		const { contents } = await contentsOf(run([message("user", "hi")]));
+
+		expect(contents.at(-1)).toMatchObject([
+			{
+				toolCallId: "call_109468",
+				args: { text: "Time flies like an arrow; fruit flies like a banana." },
+				result: undeterminedResult,
+			},
+			{
+				toolCallId: "call_109471",
+				args: { text: "The meeting starts at noon." },
+				result: undeterminedResult,
+			},
+		]);
+	});
+
+	it("keeps text and tool calls in order, rather than replacing them with the result's text", async () => {
+		mockFetch(
+			new Response(
+				event({ message: "Let me check. " }) +
+					toolRequestEvent("0", "I lost interest.") +
+					toolResponseEvent("0", punResult) +
+					event({ message: "It's a pun." }) +
+					event({ result: "Let me check. It's a pun." }),
+			),
+		);
+
+		const { contents, error } = await contentsOf(run([message("user", "hi")]));
+
+		expect(error).toBeUndefined();
+		expect(contents.at(-1)).toMatchObject([
+			{ type: "text", text: "Let me check. " },
+			{ type: "tool-call", toolCallId: "0", result: punResult },
+			{ type: "text", text: "It's a pun." },
+		]);
+	});
+
+	it("keeps the text it streamed, not the result's, since the contract makes them the same", async () => {
+		// docs/contracts.md: `result` repeats the streamed reply text, so the
+		// adapter never re-reads it; a different `result` isn't shown.
+		mockFetch(
+			new Response(
+				event({ message: "Streamed text." }) +
+					event({ result: "Something else." }),
+			),
+		);
+
+		const { contents, error } = await contentsOf(run([message("user", "hi")]));
+
+		expect(error).toBeUndefined();
+		expect(contents.at(-1)).toEqual([{ type: "text", text: "Streamed text." }]);
+	});
+
+	describe("when the turn ends right after a toolRequest", () => {
+		const afterRequest = toolRequestEvent("0", "I lost interest.");
+
+		/**
+		 * The run must end (so assistant-ui stops showing the call as running)
+		 * with the call still lacking a result, which assistant-ui then shows
+		 * with the message's failed or cancelled status.
+		 */
+		const expectCallLeftUnanswered = (
+			contents: ChatModelRunResult["content"][],
+		) => {
+			expect(contents.at(-1)).toEqual([
+				expect.objectContaining({ type: "tool-call", toolCallId: "0" }),
+			]);
+			expect(contents.at(-1)?.[0]).not.toHaveProperty("result");
+		};
+
+		it("fails with Backend's error event as-is", async () => {
+			mockFetch(new Response(afterRequest + recordedErrorStream));
+
+			const { contents, error } = await contentsOf(
+				run([message("user", "hi")]),
+			);
+
+			expectCallLeftUnanswered(contents);
+			expect(error?.message).toBe(RECORDED_ERROR_MESSAGE);
+		});
+
+		it("says the reply was cut off when the body just ends", async () => {
+			mockFetch(new Response(afterRequest));
+
+			const { contents, error } = await contentsOf(
+				run([message("user", "hi")]),
+			);
+
+			expectCallLeftUnanswered(contents);
+			expect(error?.message).toBe(CUT_OFF);
+		});
+
+		it("says the reply was cut off when the connection drops", async () => {
+			let reads = 0;
+			const drops = new ReadableStream<Uint8Array>({
+				pull(controller) {
+					if (reads++ === 0) controller.enqueue(utf8(afterRequest));
+					else controller.error(new TypeError("network error"));
+				},
+			});
+			mockFetch(new Response(drops));
+
+			const { contents, error } = await contentsOf(
+				run([message("user", "hi")]),
+			);
+
+			expectCallLeftUnanswered(contents);
+			expect(error?.message).toBe(CUT_OFF);
+		});
+
+		it("says the reply was cut off when the result arrives without the call's toolResponse", async () => {
+			mockFetch(new Response(afterRequest + event({ result: "" })));
+
+			const { contents, error } = await contentsOf(
+				run([message("user", "hi")]),
+			);
+
+			expectCallLeftUnanswered(contents);
+			expect(error?.message).toBe(CUT_OFF);
+			expect(String(vi.mocked(console.error).mock.calls[0]?.[0])).toMatch(
+				/without results for tool calls 0/,
+			);
+		});
+
+		it("rethrows the user's stop untouched, so assistant-ui shows the call as cancelled", async () => {
+			const controller = new AbortController();
+			let reads = 0;
+			const stopped = new ReadableStream<Uint8Array>({
+				pull(stream) {
+					if (reads++ === 0) {
+						stream.enqueue(utf8(afterRequest));
+					} else {
+						controller.abort();
+						stream.error(controller.signal.reason);
+					}
+				},
+			});
+			mockFetch(new Response(stopped));
+
+			const { contents, error } = await contentsOf(
+				run([message("user", "hi")], controller.signal),
+			);
+
+			expectCallLeftUnanswered(contents);
+			expect(error?.name).toBe("AbortError");
 		});
 	});
 });

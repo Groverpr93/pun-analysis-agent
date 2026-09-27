@@ -17,6 +17,10 @@ Complements [`../project-spec.md`](../project-spec.md). Owned by the Frontend do
 - Handles the hard chat-specific plumbing (streaming, auto-scroll, keyboard shortcuts, tool-call state) so custom work stays scoped to adapters and later theming, not chat mechanics.
 - Still built on CSS variables for theming, so adjusting colors/spacing later doesn't mean touching component internals.
 
+### Code highlighting
+
+Code blocks in replies, and the raw `/analyze` response in the `analyze_pun` card, are highlighted by assistant-ui's registry `shiki-highlighter` (`react-shiki`). Shiki is heavy (~65 kB gzipped, plus a WASM regex engine and one chunk per language grammar), so [`lazy-shiki-highlighter.tsx`](../../frontend/src/components/assistant-ui/elements/lazy-shiki-highlighter.tsx) loads it on first use, and shows plain code until then, or if loading fails (e.g. a tab opened before a deploy asking for a chunk that no longer exists). Token colors are Shiki's css-variables theme, set in [`index.css`](../../frontend/src/index.css) from Purdue's brand palette and checked against WCAG AA on both code backgrounds in both themes.
+
 ### Alternatives considered and rejected
 
 | Option | Why not |
@@ -73,7 +77,7 @@ Per [`../engineering-practices.md`](../engineering-practices.md)'s isolation rul
   2. In the browser console, run this expression twice, a second apart:
      `[document.querySelector('[data-slot=aui_thread-viewport]').getBoundingClientRect().height, innerHeight, document.body.scrollHeight]`
   3. Pass: both runs return the same numbers, the viewport height is `innerHeight` minus the 56px header, and `document.body.scrollHeight` equals `innerHeight`. On the broken layout the first number climbs by thousands of pixels between runs.
-- **Fixture sharing.** The stub's fixtures should track the real `/api/chat` shape in [`../contracts.md`](../contracts.md) closely enough that swapping the stub for the real adapter doesn't require touching component code — confirmed for Phase 1 in TASK-8: the live adapter yields the same text-part shape as the stub, and the UI ran unchanged against the real Backend.
+- **Fixture sharing.** The stub's fixtures should track the real `/api/chat` shape in [`../contracts.md`](../contracts.md) closely enough that swapping the stub for the real adapter doesn't require touching component code — confirmed for Phase 1 in TASK-8 (the UI ran unchanged against the real Backend), and for Phase 2 in TASK-10 against TASK-9's Backend. The stub yields assistant-ui parts directly, so it doesn't exercise the stream parsing: what keeps that matched to Backend is the byte-for-byte recordings in [`recorded-genkit-streams.ts`](../../frontend/src/lib/chat/fixtures/recorded-genkit-streams.ts), which the parser and live-adapter tests replay. Mention a trigger word to reach each Phase 2 state in the stub ([`stub-chat-model-adapter.ts`](../../frontend/src/lib/chat/stub-chat-model-adapter.ts)'s `SCENARIOS`): `pun`, `fallback`, `undetermined`, `not a pun`, `fail` (the reply fails before the tool result), `slow` (the call runs for 30 s, to try stop) and `error`.
 
 ---
 
@@ -92,7 +96,7 @@ What *is* Phase 2 work is extending that same adapter to also parse `tool-call` 
 
 - ~~Identify which of the default theme's Tailwind tokens (colors, spacing, radii) to override to reach the Claude-inspired palette/layout, once the interface is running against real content.~~ — resolved in TASK-6.1: `frontend/src/index.css`'s `:root`/`.dark` blocks retune `--background`/`--foreground`/`--primary`/etc. directly via oklch values, verified visually in both color schemes.
 - Settle on the exact accent shade (a muted gold in the Boilermaker Gold family, not the literal brand hex) — a candidate shade is in place (`--primary` in `frontend/src/index.css`) and was eyeballed against the warm-neutral background in both themes, but a formal contrast-ratio (WCAG) check hasn't been done yet.
-- ~~Confirm the Genkit stream event shape for tool calls~~ — resolved: sync point 3 is closed in [`../contracts.md`](../contracts.md), which specifies the `toolRequest`/`toolResponse` chunk shapes and the client-side `toolCallId` correlation rule the adapter's parsing logic should follow.
+- ~~Confirm the Genkit stream event shape for tool calls~~ — resolved: sync point 3 is closed in [`../contracts.md`](../contracts.md), which specifies the `toolRequest`/`toolResponse` chunk shapes and the `ref`-based rule the adapter's parsing logic uses to pair each result with its call.
 - The shared stub-fixture format (so Frontend's stub and Backend's Phase 2 fixture don't drift apart) is still open — see [`../engineering-practices.md`](../engineering-practices.md)'s open items.
 - ~~The one test that exists today (`frontend/src/App.test.tsx`) only smoke-tests the default Vite starter page — it gets replaced once the real greeting/chat UI lands, not extended.~~ — resolved in TASK-6: `App.test.tsx` now covers the greeting/chat transition, message rendering, loading state, tool-call rendering, error state, and thread-list persistence behavior.
 - ~~CORS middleware on Backend (needed for the `live` adapter flag and for the deployed Firebase↔Cloud-Run pairing) isn't implemented yet~~ — resolved in TASK-7: `hono/cors` in [`../../backend/src/app.ts`](../../backend/src/app.ts), allowlisting the local dev origin and the Firebase Hosting origin.

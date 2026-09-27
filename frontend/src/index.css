@@ -235,6 +235,37 @@
 	}
 }
 
+/*
+ * Code highlighting (Shiki's css-variables theme, see
+ * lazy-shiki-highlighter.tsx). Each token color is a Purdue brand color
+ * (marcom.purdue.edu/our-brand/visual-identity), deepened in light mode
+ * where the original is under WCAG AA on the warm code background. Every
+ * value was checked at >= 4.5:1 against both code backgrounds (a Markdown
+ * code block, and the analyze_pun card's darker one) before landing.
+ */
+:root {
+	--shiki-foreground: var(--foreground);
+	--shiki-background: transparent;
+	--shiki-token-keyword: oklch(0.52 0.07 72); /* Aged, deepened: 5.0:1 */
+	--shiki-token-string: oklch(0.5 0.105 90); /* Rush, deepened: 5.4:1 */
+	--shiki-token-string-expression: var(--shiki-token-string);
+	--shiki-token-constant: oklch(0.45 0.06 255); /* Steel's blue: 6.7:1 */
+	--shiki-token-function: var(--foreground);
+	--shiki-token-parameter: var(--foreground);
+	--shiki-token-punctuation: #555960; /* Steel: 6.4:1 */
+	--shiki-token-comment: oklch(0.52 0.013 265); /* Cool Gray, deepened: 5.0:1 */
+	--shiki-token-link: var(--shiki-token-keyword);
+}
+
+.dark {
+	--shiki-token-keyword: #daaa00; /* Rush: 7.7:1 */
+	--shiki-token-string: #ebd99f; /* Dust: 11.8:1 */
+	--shiki-token-constant: oklch(0.78 0.06 255); /* Steel's blue, light: 8.3:1 */
+	--shiki-token-punctuation: #c4bfc0; /* Steam: 9.1:1 */
+	--shiki-token-comment: #9d9795; /* Railway Gray: 5.8:1 */
+	--shiki-token-link: #ddb945; /* Field: 8.8:1 */
+}
+
 @custom-variant data-open (
 	&:where([data-state="open"], [data-open]:not([data-open="false"]))
 );

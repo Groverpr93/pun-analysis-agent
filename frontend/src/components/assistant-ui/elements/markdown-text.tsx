@@ -13,6 +13,7 @@ import { CheckIcon, CopyIcon } from "lucide-react";
 import { type FC, memo, useMemo, useRef } from "react";
 import remarkGfm from "remark-gfm";
 
+import { SyntaxHighlighter } from "@/components/assistant-ui/elements/lazy-shiki-highlighter";
 import { TooltipIconButton } from "@/components/assistant-ui/elements/tooltip-icon-button";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { cn } from "@/lib/utils";
@@ -265,4 +266,5 @@ const defaultComponents = memoizeMarkdownComponents({
 		);
 	},
 	CodeHeader,
+	SyntaxHighlighter,
 });
