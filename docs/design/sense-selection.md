@@ -69,7 +69,7 @@ Adding a `sense_source: "wordnet" | "wiktionary" | "llm_fallback" | null` field 
 - No phonetic pipeline yet for homophonic puns — steps 1–4 above only find double senses of *one* word, not sound-alike word pairs.
 - The selectional-preference seed lists in step 4 are hand-built, not learned — unclear how much coverage they get before falling back to Tier 1 gloss scoring.
 - Domain ownership is settled (Andi leads Sense Selection, Livia leads Detection, Yai leads Conversational, Prateek leads Eval — see [`../milestones/milestone-3.md`](../milestones/milestone-3.md)), and ~~the exact hand-off point between Andi (starting at Tier 0) and Yai (starting at Tier 3) within Sense Selection is still open~~ — resolved 2026-09-23: Tier 3 moved to Backend (Yai's domain), and the hand-off is `sense_source: "llm_fallback"` in [`../contracts.md`](../contracts.md).
-- Wiktionary dump size/licensing footprint inside the Cloud Run image is unverified — may need to prune to single-word entries before bundling.
+- ~~Wiktionary dump size/licensing footprint inside the Cloud Run image is unverified — may need to prune to single-word entries before bundling.~~ — resolved 2026-09-26 (TASK-17): the English dump is 3.3 GB; pruned to single-word English noun/verb/adj entries, one gloss per sense, dropping form-of/alt-of senses (e.g. "plural of dough"), it is a ~66 MB SQLite file (`inference/scripts/build_wiktionary_db.py`). It ships as a GitHub Release asset downloaded at Docker build time, with CC BY-SA attribution in [`../../inference/README.md`](../../inference/README.md).
 - The margin threshold from Tier 1 (when two senses count as "close enough" to be a pun) is unset until Eval runs this against real data (see below).
 
 ## Eval hooks

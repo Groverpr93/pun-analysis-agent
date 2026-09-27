@@ -20,3 +20,6 @@ __pycache__/
 
 # Editor
 *.code-workspace
+
+# Inference: downloaded Wiktionary sense data (see docs/local-setup.md)
+inference/data/

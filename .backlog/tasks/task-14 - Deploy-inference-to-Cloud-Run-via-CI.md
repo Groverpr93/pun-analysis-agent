@@ -42,4 +42,6 @@ deploy-inference.yml is currently a placeholder, identical in structure to deplo
 
 <!-- SECTION:NOTES:BEGIN -->
 From TASK-27 (2026-09-26): the JS deploys now gate on a reusable test-js.yml (workflow_call) that test.yml also calls, and use a concurrency group plus a main-only workflow_dispatch. When the inference deploy becomes real, consider the same for Python: a reusable test-python.yml (uv sync --locked + pytest; eval's unittest job could share it) that test.yml calls and deploy-inference.yml gates on.
+
+From TASK-17 (PR #25): the Inference image now carries ~206 MB of WordNet data (`oewn:2025`) and a 66 MB Wiktionary file (978 MB image locally). Check the compressed size against Artifact Registry's 0.5 GB free tier with 5 images kept (docs/local-setup.md), and tune the cleanup policy if needed. The Dockerfile's `ADD --checksum` requires BuildKit, which Cloud Build and `docker build` use by default.
 <!-- SECTION:NOTES:END -->

@@ -34,6 +34,8 @@ jobs:
       - working-directory: inference
         run: uv sync --locked
       - working-directory: inference
+        run: uv run python -m wn download oewn:2025
+      - working-directory: inference
         run: uv run pytest
 
   test-eval:

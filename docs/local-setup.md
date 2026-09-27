@@ -71,6 +71,8 @@ Python + [`uv`](https://docs.astral.sh/uv/) (fast, reproducible dependency manag
 ```bash
 cd inference
 uv sync
+uv run python -m wn download oewn:2025  # one-time: sense-selection's WordNet data
+curl -fL --create-dirs -o data/wiktionary.sqlite.gz https://github.com/team-play/pun-analysis-agent/releases/download/wiktionary-data-2026-09-25/wiktionary.sqlite.gz && gunzip -f data/wiktionary.sqlite.gz  # one-time: sense-selection's Wiktionary data
 uv run pytest
 uv run ruff check .
 uv run ruff format .
