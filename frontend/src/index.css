@@ -166,6 +166,60 @@
 			height: 0;
 		}
 	}
+
+	/*
+	 * Otto's thinking sprite (components/otto/otto-sprite.tsx). steps(1) holds
+	 * each keyframe until the next one, so every change is a hard frame cut
+	 * like a game sprite, not a smooth tween. Translations are in sprite
+	 * pixels (1px = one viewBox unit).
+	 */
+	--animate-otto-bob: otto-bob 0.9s steps(1) infinite;
+	--animate-otto-blink: otto-blink 3.2s steps(1) infinite;
+	--animate-otto-scratch: otto-scratch 1.6s steps(1) infinite;
+	--animate-otto-thought: otto-thought 1.8s steps(1) infinite both;
+	@keyframes otto-bob {
+		0% {
+			transform: translateY(0);
+		}
+		50% {
+			transform: translateY(1px);
+		}
+	}
+	@keyframes otto-blink {
+		0% {
+			opacity: 1;
+		}
+		94% {
+			opacity: 0;
+		}
+		98% {
+			opacity: 1;
+		}
+	}
+	/* Two quick rubs, then a pause. */
+	@keyframes otto-scratch {
+		0%,
+		20%,
+		40% {
+			transform: translateX(0);
+		}
+		10%,
+		30% {
+			transform: translateX(1px);
+		}
+	}
+	/* Staggered per dot via animation-delay; `both` keeps each hidden until its turn. */
+	@keyframes otto-thought {
+		0% {
+			opacity: 0;
+		}
+		17% {
+			opacity: 1;
+		}
+		83% {
+			opacity: 0;
+		}
+	}
 }
 
 @layer base {

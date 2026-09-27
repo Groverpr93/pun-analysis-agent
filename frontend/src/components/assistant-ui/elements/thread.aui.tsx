@@ -66,6 +66,7 @@ import {
 	ToolGroupTrigger,
 } from "@/components/assistant-ui/elements/tool-group.aui";
 import { TooltipIconButton } from "@/components/assistant-ui/elements/tooltip-icon-button";
+import { ThinkingOtto } from "@/components/otto/thinking-otto";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -618,15 +619,7 @@ const AssistantMessage: FC = () => {
 									</div>
 								);
 							case "indicator":
-								return (
-									<span
-										data-slot="aui_assistant-message-indicator"
-										className="animate-pulse font-sans"
-										aria-label="Assistant is working"
-									>
-										{"●"}
-									</span>
-								);
+								return <ThinkingOtto />;
 							default:
 								return null;
 						}
