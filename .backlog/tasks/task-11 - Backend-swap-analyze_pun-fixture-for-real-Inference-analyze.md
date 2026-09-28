@@ -4,7 +4,7 @@ title: 'Backend: swap analyze_pun fixture for real Inference /analyze'
 status: To Do
 assignee: []
 created_date: '2026-09-17 23:34'
-updated_date: '2026-09-27 15:40'
+updated_date: '2026-09-28 09:29'
 due_date: '2026-09-21'
 labels: []
 milestone: m-4
@@ -33,6 +33,7 @@ TASK-9 deliberately calls Inference through an injectable client backed by a fix
 - [ ] #2 An end-to-end conversation on the Firebase-hosted frontend returns real is_pun/pun_type/explanation/confidence/sense_source values, not fixture data
 - [ ] #3 TASK-9's fixture-based tests still pass unchanged; only the default runtime client changes
 - [ ] #4 A cold-started or timed-out Inference request falls back to docs/contracts.md's undetermined /analyze result, per docs/project-spec.md's Cloud Run cold-start caveat
+- [ ] #5 Once deployed, an Inference failure's analyze_pun WARNING keeps its stack in exception.stacktrace and does not appear in Error Reporting (carried over from TASK-29, the first point where it can happen in production)
 <!-- AC:END -->
 
 ## Definition of Done

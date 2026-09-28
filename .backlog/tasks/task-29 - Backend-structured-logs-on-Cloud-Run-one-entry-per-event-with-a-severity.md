@@ -1,11 +1,11 @@
 ---
 id: TASK-29
 title: 'Backend: structured logs on Cloud Run, one entry per event with a severity'
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-26 13:45'
-updated_date: '2026-09-28 09:15'
+updated_date: '2026-09-28 09:29'
 labels: []
 dependencies: []
 references:
@@ -29,18 +29,18 @@ Keep what those calls deliberately log server-side only: the upstream error deta
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 On Cloud Run, each logger call produces exactly one log entry, including errors with a stack trace
-- [ ] #2 Each entry has the right severity (WARNING for App Check rejections and the APP_CHECK=off warning, ERROR for flow failures), and its message is the log call's message
-- [ ] #3 Flow-failure entries still include the upstream error detail and the stack trace; App Check rejection entries still include the reason
-- [ ] #4 Local pnpm dev logs stay human-readable
-- [ ] #5 Tests cover the log format without needing Cloud Run or the network
+- [x] #1 On Cloud Run, each logger call produces exactly one log entry, including errors with a stack trace
+- [x] #2 Each entry has the right severity (WARNING for App Check rejections and the APP_CHECK=off warning, ERROR for flow failures), and its message is the log call's message
+- [x] #3 Flow-failure entries still include the upstream error detail and the stack trace; App Check rejection entries still include the reason
+- [x] #4 Local pnpm dev logs stay human-readable
+- [x] #5 Tests cover the log format without needing Cloud Run or the network
 <!-- AC:END -->
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
-- [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
-- [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
+- [x] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
+- [x] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
+- [x] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
 
 ## Implementation Plan
@@ -68,4 +68,12 @@ Error Reporting: per Google's docs it scans all jsonPayload fields for a stack t
 Post-deploy check (2026-09-28), via gcloud logging read on pun-agent-backend since the 66c8629 deploy: every logger call is one entry, including errors with a stack trace. App Check rejections are WARNING and flow failures ERROR, with the call's message. Flow failures carry detail and exception.stacktrace. Warnings with no fields are stored as textPayload (Cloud Logging does this for a JSON line with only severity + message), and their severity is still read correctly. Error Reporting had 0 groups over 30 days despite 4 ERROR entries with stack traces. The Error Reporting API was not enabled; enabled it with @yaisiel.torres's approval. Probes written through entries:write with the backend's cloud_run_revision resource: A (Error: header, stack_trace field) and C (GenkitError: header, stack_trace field) were grouped within 20s. B (GenkitError: header in exception.stacktrace, our current shape) was not grouped after 5 min. So Error Reporting does not read the dotted exception.stacktrace key, despite the docs saying it searches all jsonPayload fields; the header name doesn't matter. Duplicate ERROR per Gemini failure: @genkit-ai/google-genai googleai/client.mjs logs logger.error(e) before rethrowing, then chat.ts logs it with detail. Decided with @yaisiel.torres: keep both and document it in chat.ts; skipping our stack when the plugin already logged it would need a guess or stateful dedupe tied to one line in a dependency.
 
 Implemented follow-up (plan 7-9): logging.ts withReportableStack moves exception.stacktrace to stack_trace on ERROR entries only; the toLogLine JSDoc reserves stack_trace; the chat.ts comment documents the plugin's duplicate entry (also counted twice in Error Reporting). Tests: ERROR entries (with metadata, logged on their own in the plugin's shape, and the /api/chat path) have stack_trace; the analyze_pun WARNING keeps exception.stacktrace and has no stack_trace. Mutation-checked: applying the move at every level fails the WARNING test, and never moving it fails the ERROR tests. 100/100 backend tests pass, biome clean. Code review subagent: no blockers; applied its should-fix (double count in Error Reporting in the comment), the reserved-key JSDoc note and the plugin-shape test. Architectural review not needed (no contract, topology or dependency change). Docs: none mention these fields. Still to do after deploy: a real flow failure groups in Error Reporting, and an analyze_pun warning does not. Probe entries remain in the error-reporting-probe log and as PROBE-A/PROBE-C groups in Error Reporting.
+
+Post-deploy (2026-09-28): #55 (2b661fd) deployed by Deploy Backend run 36402699453 as revision pun-agent-backend-00006-jn4; /health and App Check smoke tests passed. Its entries are one line each with the right severity. No /api/chat failure has happened since, so Error Reporting has only the PROBE-A/C groups. Closed on this evidence, decided with @yaisiel.torres: ACs #1-#3 from production logs (2026-09-27/28); #4 and #5 from tests (console-mode wiring test, 100/100 backend tests). Error Reporting, an extra check that isn't an AC: probe C proved a GenkitError trace in stack_trace is grouped for this service's resource, and tests prove the /api/chat failure path writes stack_trace. Not yet observed live: a real flow failure grouped in Error Reporting (needs a Gemini failure). The analyze_pun WARNING staying out of Error Reporting can't happen in production while analyze_pun uses the fixture, so it moved to TASK-11 as AC #5. DoD #2: no architectural review needed (logging format only; no contract, topology or dependency change). DoD #3: no docs describe these fields.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+On Cloud Run (LOG_FORMAT=json), every Genkit logger call is written as one JSON line with a Cloud Logging severity and the call's message. Metadata stays as queryable fields: upstream detail on flow failures, the reason on App Check rejections. ERROR entries carry the stack under stack_trace, so Error Reporting groups them (it ignored Genkit's exception.stacktrace). WARNINGs keep exception.stacktrace, so handled degradation isn't reported. The Error Reporting API is now enabled. Gemini failures are logged twice (once by the Google AI plugin, once by us with the detail), a documented, deliberate choice. Verified with production logs, probe entries in Error Reporting, and 100/100 mutation-checked backend tests; local console output is unchanged.
+<!-- SECTION:FINAL_SUMMARY:END -->
