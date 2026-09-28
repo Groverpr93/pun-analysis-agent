@@ -11,6 +11,24 @@ const SEVERITY: Record<Level, string> = {
 	error: "ERROR",
 };
 
+/**
+ * Error Reporting only picks up a stack trace from a field it knows, such as
+ * `stack_trace`. It ignored Genkit's `exception.stacktrace` (checked
+ * 2026-09-28 with test entries), so ERROR entries get the stack under that
+ * name. Other levels keep Genkit's name on purpose: a WARNING with a stack
+ * (e.g. analyze_pun's Inference failures) is handled degradation, not an
+ * error to report.
+ */
+const withReportableStack = (
+	level: Level,
+	fields: Record<string, unknown>,
+): Record<string, unknown> => {
+	const { "exception.stacktrace": stack, ...rest } = fields;
+	return level === "error" && stack !== undefined
+		? { ...rest, stack_trace: stack }
+		: fields;
+};
+
 const isRecord = (value: unknown): value is Record<string, unknown> =>
 	typeof value === "object" && value !== null && !Array.isArray(value);
 
@@ -40,15 +58,18 @@ const toJsonSafe = (value: unknown) => {
  *
  * Cloud Logging also lifts a few other keys out of the payload (`time`,
  * `httpRequest`, `labels`, `logging.googleapis.com/*`), so metadata
- * shouldn't use those names.
+ * shouldn't use those names. Nor `stack_trace`: it's where ERROR entries put
+ * the stack (see withReportableStack), and on any entry Error Reporting
+ * reports it.
  */
 export function toLogLine(
 	level: Level,
 	message: string,
 	fields: Record<string, unknown>,
 ): string {
+	const entryFields = withReportableStack(level, fields);
 	const safeFields = Object.fromEntries(
-		Object.entries(fields).map(([key, value]) => [key, toJsonSafe(value)]),
+		Object.entries(entryFields).map(([key, value]) => [key, toJsonSafe(value)]),
 	);
 	// Last, so a metadata field named severity or message can't replace them.
 	return JSON.stringify({ ...safeFields, severity: SEVERITY[level], message });
@@ -58,8 +79,8 @@ export function toLogLine(
  * A sink for Genkit's logger (`logger.init(createJsonLogSink())`) that
  * writes each call as one JSON line. Genkit's `logger` hands every sink
  * `(message)` or `(message, metadata)`, with any Error already flattened
- * into `exception.*` metadata fields; other shapes are formatted the way
- * console would, into the message. Genkit filters by `level` before calling
+ * into `exception.*` metadata fields (see withReportableStack for the stack
+ * trace); other shapes are formatted the way console would, into the message. Genkit filters by `level` before calling
  * the sink, so the sink itself doesn't.
  */
 export function createJsonLogSink(

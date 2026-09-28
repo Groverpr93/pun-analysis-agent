@@ -78,6 +78,12 @@ export function createChatHandler(flow: ChatFlow) {
 				// GenkitError.detail holds the upstream payload (e.g. which quota ran
 				// out), which the logger doesn't record from the error by itself.
 				const detail = err instanceof GenkitError ? err.detail : undefined;
+				// A failed Gemini request is logged twice: the Google AI plugin logs
+				// the error itself before rethrowing it (googleai/client.mjs in
+				// @genkit-ai/google-genai), then this logs it with the detail, so
+				// Error Reporting counts it twice too. Kept anyway: only this entry
+				// has the detail, and it's the only entry for failures that don't
+				// come from a Gemini request.
 				logger.error("/api/chat flow failed", { detail }, err);
 				await writer.write(
 					`error: ${JSON.stringify({ error: toUserFacingError(err) })}\n\n`,

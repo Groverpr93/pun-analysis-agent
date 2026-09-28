@@ -44,6 +44,7 @@ for (const [level, severity] of [
 	});
 }
 
+// ERROR entries carry the stack under stack_trace, the field Error Reporting reads.
 test("an error with a stack trace is one line, keeping the message, metadata and stack", () => {
 	const err = new Error("boom");
 	assert.match(err.stack ?? "", /\n/);
@@ -56,7 +57,24 @@ test("an error with a stack trace is one line, keeping the message, metadata and
 		detail: { code: 503 },
 		"exception.type": "Error",
 		"exception.message": "boom",
-		"exception.stacktrace": err.stack,
+		stack_trace: err.stack,
+	});
+});
+
+// The Google AI plugin's call shape (logger.error(e) before rethrowing a
+// failed Gemini request): it's reported to Error Reporting too, which is why
+// chat.ts documents each Gemini failure being counted twice.
+test("an error logged on its own is reported with its stack", () => {
+	const err = new Error("boom");
+
+	logger.error(err);
+
+	assert.deepEqual(onlyEntry(), {
+		severity: "ERROR",
+		message: "boom",
+		"exception.type": "Error",
+		"exception.message": "boom",
+		stack_trace: err.stack,
 	});
 });
 
@@ -159,7 +177,7 @@ test("a failed /api/chat is one ERROR entry with the upstream detail and stack",
 	assert.equal(entry.severity, "ERROR");
 	assert.equal(entry.message, "/api/chat flow failed");
 	assert.deepEqual(entry.detail, { error: { code: 503 } });
-	assert.match(entry["exception.stacktrace"], /upstream detail\n\s+at /);
+	assert.match(entry.stack_trace, /upstream detail\n\s+at /);
 });
 
 // The cause has to be a field of its own, so Cloud Logging can filter on it.
@@ -198,6 +216,10 @@ test("an unreachable Inference is logged with the network error's code", async (
 	assert.equal(entry.cause, "unreachable");
 	assert.equal(entry.errorCode, "ECONNREFUSED");
 	assert.equal(entry["exception.message"], "fetch failed");
+	// A warning is handled degradation: its stack stays out of stack_trace,
+	// so Error Reporting doesn't count it as an error.
+	assert.match(entry["exception.stacktrace"], /fetch failed\n\s+at /);
+	assert.equal(entry.stack_trace, undefined);
 });
 
 // The wiring in app.ts, in a real process: whether LOG_FORMAT picks the
