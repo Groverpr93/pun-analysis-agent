@@ -52,7 +52,7 @@ One-time GCP setup it relies on (already done, see TASK-13's notes):
 | Service account `pun-agent-runtime@pun-agent.iam.gserviceaccount.com` | `pun-agent` | the identity the service runs as; can read only the secret below, no project-level roles |
 | Secret `gemini-api-key-runtime` | `pun-agent` Secret Manager | the production Gemini key, mounted as `GEMINI_API_KEY` |
 | Gemini API key `pun-agent-runtime` | `gen-lang-client-0125403786` (no billing, free tier) | restricted to the Gemini API |
-| Docker repo `pun-agent` | Artifact Registry, `us-east1` | images tagged by commit SHA; a cleanup policy keeps the 5 most recent (free tier is 0.5 GB) |
+| Docker repo `pun-agent` | Artifact Registry, `us-east1` | images tagged by commit SHA, one repo version per push; cleanup policies keep each image's 3 most recent versions (3 deploys to roll back to) and delete anything else older than a day (free tier is 0.5 GB; see below) |
 
 To rotate the production Gemini key, create a new key in the AI Studio project and pipe it straight into a new secret version, so it's never printed:
 
@@ -63,6 +63,28 @@ gcloud services api-keys get-key-string <NEW_KEY_UID> --project=gen-lang-client-
 ```
 
 The `tr -d '\n'` matters: `--format='value(...)'` adds a trailing newline, which would make Gemini reject the key. Redeploy (re-run the workflow) so new instances pick up the `latest` version, then delete the old key.
+
+#### Image retention
+
+The repo's two cleanup policies combine as "delete anything older than a day, unless it's one of that image's 3 most recent versions", since a keep policy wins over a delete policy. Both deploy workflows push with `provenance: false`, so each deploy is exactly one version and "3 versions" means you can always roll back to the 3 latest deploys of each service. (With provenance on, `docker/build-push-action` pushes an image index plus an attestation, 3 versions per deploy, and "3 versions" would be 1 deploy.) Everything pushed in the last day or two is kept too: cleanup runs as a background job about once a day. Until each image has 3 provenance-free pushes, the repo keeps the older keep-5 policy (TASK-40), because the older pushes still count 3 versions each.
+
+Cloud Run keeps its own copy of the image for a revision that's serving, so deleting it from the registry doesn't affect live traffic. Whether a revision that isn't serving can come back without its registry image isn't documented, so roll back only to a revision whose image is still listed.
+
+On 2026-09-28 the repo was 393 MB of the 0.5 GB free tier, mostly the ~219 MB Inference image. Kept deploys share every unchanged layer, so a code-only deploy adds very little, but three kept Inference deploys that each changed dependencies could take ~650 MB on their own (TASK-39 reduces this). Check the size with `gcloud artifacts repositories describe pun-agent --location=us-east1`.
+
+Deletions are logged in Data Access audit logs, which are off by default, so check what's left with `gcloud artifacts versions list --package=backend --repository=pun-agent --location=us-east1` rather than the logs. To change the policies, write the **complete** set to a file and apply it. `set-cleanup-policies` replaces every existing policy with the file's contents, so a file missing the keep policy leaves only the delete policy, which then deletes every image older than a day. Check the result with `list-cleanup-policies`:
+
+```json
+[
+  {"name": "delete-older-than-1d", "action": {"type": "Delete"}, "condition": {"tagState": "any", "olderThan": "1d"}},
+  {"name": "keep-3-most-recent", "action": {"type": "Keep"}, "mostRecentVersions": {"keepCount": 3}}
+]
+```
+
+```bash
+gcloud artifacts repositories set-cleanup-policies pun-agent --project=pun-agent \
+  --location=us-east1 --policy=cleanup-policies.json
+```
 
 ### Inference deploy (CI only)
 
@@ -78,7 +100,7 @@ One-time GCP setup it relies on, alongside Backend's:
 |---|---|---|
 | Cloud Run service `pun-agent-inference` | `pun-agent`, `us-east1` | created by the first deploy. Private (`--no-allow-unauthenticated`), `--min-instances=0`, `--max-instances=1` |
 | Service account `pun-agent-inference@pun-agent.iam.gserviceaccount.com` | `pun-agent` | the identity the service runs as; no roles at all, since Inference's data is baked into the image. Created 2026-09-28 (TASK-14) |
-| Docker repo `pun-agent` | Artifact Registry, `us-east1` | shared with Backend, under `inference/`. The image is ~219 MB compressed (measured 2026-09-28) and the repo already held ~143 MB of Backend images, so the 0.5 GB free tier has little headroom; TASK-39 and TASK-40 track keeping it under |
+| Docker repo `pun-agent` | Artifact Registry, `us-east1` | shared with Backend, under `inference/`, with the same cleanup policies (see Backend deploy). The image is ~219 MB compressed (measured 2026-09-28), so it dominates the repo's size against the 0.5 GB free tier; TASK-39 tracks keeping dependency bumps from re-uploading its WordNet data |
 
 Backend's `roles/run.invoker` grant isn't in this table because the deploy manages it.
 

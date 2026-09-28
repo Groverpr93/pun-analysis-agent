@@ -78,8 +78,12 @@ jobs:
           context: .
           file: backend/Dockerfile
           push: ${{ env.DEPLOY == 'true' }}
+          # One registry version per push (no attestation index), so the
+          # repo's keep-3 cleanup policy means 3 deploys to roll back to
+          # (docs/local-setup.md).
+          provenance: false
           tags: ${{ env.IMAGE }}:${{ github.sha }}
-          # Scoped so a future Inference image build doesn't overwrite this cache.
+          # Scoped so the Inference image build doesn't overwrite this cache.
           cache-from: type=gha,scope=backend
           cache-to: type=gha,scope=backend,mode=max
 
