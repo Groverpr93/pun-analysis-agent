@@ -6,7 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-09-20 10:04'
-updated_date: '2026-09-23 10:44'
+updated_date: '2026-09-28 11:17'
 labels:
   - wsd
 milestone: m-6
@@ -27,7 +27,7 @@ Tier 3 of docs/design/sense-selection.md's sense-selection chain, redesigned 202
 
 Why: keeping every Gemini call in Backend means one service owns the Gemini key and its free-tier quota (TASK-13 gives Backend's Cloud Run service its own key, in a project without billing), and Inference stays a pure NLP service with no LLM dependency, no key of its own and nothing extra to mock. The original version of this task had Inference prompt Gemini 'via Genkit, already in the stack', but Genkit only exists in Backend (TypeScript); inference/ has no Genkit or Gemini dependency.
 
-Split with TASK-12, which owns the system instruction's structure and persona, including consulting Inference through analyze_pun for each new phrase (by instruction, not a forced toolChoice). This task owns the llm_fallback part of that instruction and its behavior. Stays in m-6 because it is still Tier 3 of the sense-selection design, just executed by Backend's Gemini. docs/contracts.md and docs/design/sense-selection.md were updated to this design when the task was rewritten.
+Split with TASK-12, which owns the system instruction's structure and scope/redirect rules (TASK-31.1 owns the persona), including consulting Inference through analyze_pun for each new phrase (by instruction, not a forced toolChoice). This task owns the llm_fallback part of that instruction and its behavior. Stays in m-6 because it is still Tier 3 of the sense-selection design, just executed by Backend's Gemini. docs/contracts.md and docs/design/sense-selection.md were updated to this design when the task was rewritten.
 <!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
@@ -45,3 +45,9 @@ Split with TASK-12, which owns the system instruction's structure and persona, i
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+From TASK-12's review: the undetermined-result guidance ("If is_pun is null, the classifier couldn't judge the text: decide yourself.") currently lives in analyze_pun's tool description (backend/src/tools/analyze-pun.ts), not in backend/src/flows/system-instruction.ts. When adding the llm_fallback/undetermined paragraph to the system instruction, move or merge that sentence so the guidance lives in one place.
+<!-- SECTION:NOTES:END -->

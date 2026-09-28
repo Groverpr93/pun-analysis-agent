@@ -4,6 +4,7 @@ title: 'Backend: give Gemini the Otto the otter persona'
 status: To Do
 assignee: []
 created_date: '2026-09-27 15:02'
+updated_date: '2026-09-28 11:28'
 labels: []
 milestone: m-5
 dependencies:
@@ -39,3 +40,16 @@ TASK-12 limits Gemini to pun analysis, but nothing defines who is talking, so re
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Comments
+
+<!-- COMMENTS:BEGIN -->
+author: @yaisiel.torres
+created: 2026-09-28 11:28
+---
+Open question from TASK-12 (PR #64): is writing new puns in scope? TASK-12's system instruction (backend/src/flows/system-instruction.ts) covers analyzing puns and wordplay and redirects anything else, but it doesn't say whether the assistant may write puns (e.g. "tell me a pun about otters"). As written, Gemini decides for itself.
+- Allow: fits Otto's playful voice and the "That's punny!" catchphrase, and people will likely ask a pun-themed mascot for one.
+- Disallow: keeps replies to analysis, so eval runs (TASK-12's original motivation) aren't mixed with generated puns.
+Decide before or as part of this task. The rule itself belongs in TASK-12's scope paragraph, so whoever picks this up should update that paragraph and keep its redirect behavior.
+---
+<!-- COMMENTS:END -->

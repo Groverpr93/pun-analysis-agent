@@ -12,6 +12,7 @@ import {
 	analyzePunInputSchema,
 	analyzeResultSchema,
 } from "../tools/analyze-pun.ts";
+import { SYSTEM_INSTRUCTION } from "./system-instruction.ts";
 import { numberToolRequests } from "./tool-request-refs.ts";
 
 /**
@@ -45,6 +46,7 @@ type ReplyPart = z.infer<typeof replyPartSchema>;
  * this schema stays exactly as permissive as the contract it implements.
  * Only an assistant message can carry parts, since only a reply contains
  * analyze_pun calls; plain-string content stays valid for any role.
+ * "system" messages are accepted but dropped; see toGenkitMessages.
  */
 export const chatInputSchema = z.object({
 	messages: z.array(
@@ -60,12 +62,11 @@ export const chatInputSchema = z.object({
 
 export type ChatInput = z.infer<typeof chatInputSchema>;
 
-type GenkitRole = "user" | "model" | "system";
+type GenkitRole = "user" | "model";
 
 /** Genkit uses "model" where chat UIs conventionally say "assistant". */
 const GENKIT_ROLE_BY_INPUT_ROLE: Record<string, GenkitRole> = {
 	assistant: "model",
-	system: "system",
 };
 
 const toGenkitRole = (role: string): GenkitRole =>
@@ -126,17 +127,24 @@ function toGenkitReplyMessages(parts: ReplyPart[]): MessageData[] {
 	return messages;
 }
 
+/**
+ * Drops the client's "system" messages, so SYSTEM_INSTRUCTION is the only
+ * system instruction Gemini gets. Genkit sends `system` first, so a client's
+ * would be a second one, which the Gemini plugin rejects, failing the reply.
+ */
 const toGenkitMessages = (messages: ChatInput["messages"]): MessageData[] =>
-	messages.flatMap((message) =>
-		typeof message.content === "string"
-			? [
-					{
-						role: toGenkitRole(message.role),
-						content: [{ text: message.content }],
-					},
-				]
-			: toGenkitReplyMessages(message.content),
-	);
+	messages
+		.filter((message) => message.role !== "system")
+		.flatMap((message) =>
+			typeof message.content === "string"
+				? [
+						{
+							role: toGenkitRole(message.role),
+							content: [{ text: message.content }],
+						},
+					]
+				: toGenkitReplyMessages(message.content),
+		);
 
 /**
  * What the flow streams, per docs/contracts.md's /api/chat stream: the next
@@ -174,6 +182,7 @@ export function createChatFlow(
 		async (input, { sendChunk, abortSignal }) => {
 			const { stream, response } = ai.generateStream({
 				model,
+				system: SYSTEM_INSTRUCTION,
 				messages: toGenkitMessages(input.messages),
 				tools,
 				// The request's signal (routes/chat.ts): when the user stops or

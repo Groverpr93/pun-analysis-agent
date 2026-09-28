@@ -53,6 +53,8 @@ X-Firebase-AppCheck: <Firebase App Check token>
 
 A request that breaks these rules in any other way (parts on a message that isn't `assistant`, another tool's `name`, a `tool-call` without `output`) is rejected before streaming starts, like any other malformed body (see "Failed replies" below).
 
+Messages with `role: "system"` are accepted but ignored: Backend's own system instruction ([`backend/src/flows/system-instruction.ts`](../backend/src/flows/system-instruction.ts)) is the only one Gemini receives. `"assistant"` is the model's earlier reply, and any other role is treated as `"user"`.
+
 Every request must carry a Firebase App Check token for the `pun-agent` project in the `X-Firebase-AppCheck` header. It attests that the request comes from our Firebase-hosted app, so the public Cloud Run URL can't be used to spend the team's Gemini quota directly. Frontend gets tokens from the Firebase JS SDK (reCAPTCHA Enterprise in production, a registered debug token under `pnpm dev`; see [`local-setup.md`](local-setup.md)). Backend checks the header before the request reaches the flow (only CORS runs earlier) and answers a missing or invalid token with:
 
 ```

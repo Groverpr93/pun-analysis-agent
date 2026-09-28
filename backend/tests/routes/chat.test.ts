@@ -95,7 +95,8 @@ test("POST /api/chat accepts an earlier reply's analyze_pun call and result in t
 
 	assert.equal(res.status, 200);
 	await res.text();
-	assert.equal(model.lastRequest?.messages.length, 5);
+	// The five turns, after Backend's system instruction.
+	assert.equal(model.lastRequest?.messages.length, 6);
 });
 
 // The route checks the whole /analyze contract, rules between fields
@@ -128,7 +129,7 @@ test("POST /api/chat leaves out an earlier result that breaks /analyze's rules, 
 	await res.text();
 	assert.deepEqual(
 		model.lastRequest?.messages.map((message) => message.role),
-		["user"],
+		["system", "user"],
 	);
 });
 
