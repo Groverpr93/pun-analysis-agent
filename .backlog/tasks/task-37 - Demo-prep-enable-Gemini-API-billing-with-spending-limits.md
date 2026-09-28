@@ -4,7 +4,7 @@ title: 'Demo prep: enable Gemini API billing with spending limits'
 status: To Do
 assignee: []
 created_date: '2026-09-27 20:47'
-updated_date: '2026-09-28 19:30'
+updated_date: '2026-09-28 19:56'
 labels: []
 dependencies:
   - TASK-38
@@ -36,7 +36,7 @@ Model: since TASK-38, production uses gemini-flash-lite-latest (then gemini-3.5-
 - [ ] #3 A daily request cap for the Gemini API is set in the Cloud console quotas, sized so the budget can't be exceeded even if the endpoint is abused
 - [ ] #4 On the deployed site, the demo script's questions run back to back without a rate-limit error, checked after billing is enabled
 - [ ] #5 docs/local-setup.md (or the relevant doc) records the billing setup, the limits and where to change them
-- [ ] #6 The demo model is pinned by its exact id (not a -latest alias) and recorded in the docs: Flash-Lite as chosen in TASK-38 (gemini-flash-lite-latest served gemini-3.5-flash-lite on 2026-09-28), or Flash if the demo switches back with billing. Pin it through DEFAULT_GEMINI_MODEL in backend/src/config.ts, or GEMINI_MODEL on the Cloud Run service
+- [ ] #6 The demo's models are pinned by exact id (no -latest alias) and recorded in the docs. On Flash-Lite, as chosen in TASK-38: replace the ladder's first model, gemini-flash-lite-latest (which served gemini-3.5-flash-lite on 2026-09-28), with the rehearsed id in GEMINI_MODEL_LADDER (backend/src/config.ts), keeping the other two models as fallbacks. If the demo switches to Flash with billing, decide and record either Flash alone through GEMINI_MODEL on the Cloud Run service (setting it replaces the ladder, so a Flash 503 fails the reply with no fallback) or Flash at the head of GEMINI_MODEL_LADDER (a code change that keeps step-down)
 <!-- AC:END -->
 
 ## Definition of Done
@@ -44,7 +44,6 @@ Model: since TASK-38, production uses gemini-flash-lite-latest (then gemini-3.5-
 - [ ] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
-- [ ] #4 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
 
 ## Implementation Notes
@@ -57,4 +56,6 @@ TASK-38 outcome (2026-09-28, @yaisiel.torres): production switched to gemini-fla
 2026-09-28 (TASK-42, later): MODEL_STALL_LIMIT_MS is 15 s, not 30 s as noted above; the re-check matters more at 15 s.
 
 2026-09-28 (TASK-44): MODEL_STALL_LIMIT_MS is back to 30 s and now lives in packages/timeouts/index.js. If Flash's time to first chunk needs a longer stall limit, the module's tests will require raising CLOUD_RUN_REQUEST_TIMEOUT_MS (400 s) above about 35 s, and FRONTEND_SILENCE_LIMIT_MS (75 s) for any longer silence; see docs/engineering-practices.md's 'Shared timeouts' for the deploy order.
+
+2026-09-28 (TASK-43): production now uses a ladder of models (GEMINI_MODEL_LADDER in backend/src/config.ts: gemini-flash-lite-latest -> gemini-3.1-flash-lite -> gemini-2.5-flash-lite) and steps down when one fails. DEFAULT_GEMINI_MODEL no longer exists, and GEMINI_MODEL now replaces the whole ladder with one model, retried with backoff but never stepped down from. AC #6 was rewritten to match: pinning Flash through GEMINI_MODEL gives up the fallback that TASK-38/41 showed Flash needs (503 on 3 of 3 attempts). Any change to the ladder's models should repeat TASK-45's cross-model continuity check for the new ones, and TASK-32 AC #4's stall-limit measurement. Also removed DoD #4, a duplicate of #3.
 <!-- SECTION:NOTES:END -->
