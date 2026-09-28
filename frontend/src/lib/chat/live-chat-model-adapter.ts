@@ -3,12 +3,12 @@ import type {
 	ChatModelRunOptions,
 } from "@assistant-ui/react";
 import { FlowErrorEvent, parseGenkitFlowStream } from "./genkit-flow-stream";
-import { getMessageText } from "./message-text";
 import {
 	applyMessage,
 	assertEveryCallAnswered,
 	type ReplyParts,
 } from "./reply-parts";
+import { toChatRequestMessage } from "./request-messages";
 
 // What the chat's error box shows. Whatever actually went wrong goes to the
 // console instead, since it's written for developers (e.g. "Failed to fetch").
@@ -99,12 +99,7 @@ export const createLiveChatModelAdapter = (
 				"Content-Type": "application/json",
 				"X-Firebase-AppCheck": appCheckToken,
 			},
-			body: JSON.stringify({
-				messages: messages.map((message) => ({
-					role: message.role,
-					content: getMessageText(message),
-				})),
-			}),
+			body: JSON.stringify({ messages: messages.map(toChatRequestMessage) }),
 			signal: abortSignal,
 		}).catch((error: unknown) => failWith(NO_REPLY_MESSAGE, error));
 

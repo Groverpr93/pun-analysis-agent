@@ -103,7 +103,10 @@ describe("createLiveChatModelAdapter", () => {
 		expect(JSON.parse(init.body as string)).toEqual({
 			messages: [
 				{ role: "user", content: "Tell me a pun" },
-				{ role: "assistant", content: "Why did the baker quit?" },
+				{
+					role: "assistant",
+					content: [{ type: "text", text: "Why did the baker quit?" }],
+				},
 				{ role: "user", content: "Why?\n\nExplain it." },
 			],
 		});

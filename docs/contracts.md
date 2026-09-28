@@ -94,7 +94,7 @@ Gemini can call `analyze_pun` on several texts at once, and can call it again in
 
 `output` is always a well-formed `/analyze`-shaped object per that endpoint's own graceful-degradation design (a sense-selection failure comes back as `sense_source: "llm_fallback"`, and an Inference that can't judge the text, can't be reached, or answers with something that breaks the `/analyze` rules above, as the undetermined result; never a raw error) — so the tool never needs a separate error signal at this layer.
 
-Frontend's `ChatModelAdapter` gives each `analyze_pun` `toolRequest` part its own assistant-ui `{ type: "tool-call", toolCallId, toolName, args, result }` part. It sets that part's `result` from the `toolResponse` with the same `ref`, whenever that arrives. A call whose `toolResponse` never arrives (the turn failed, see "Failed replies" below) has to be settled by Frontend.
+Frontend's `ChatModelAdapter` gives each `analyze_pun` `toolRequest` part its own assistant-ui `{ type: "tool-call", toolCallId, toolName, args, result }` part. It sets that part's `result` from the `toolResponse` with the same `ref`, whenever that arrives. A call whose `toolResponse` never arrives (the turn failed, see "Failed replies" below) has to be settled by Frontend. On later turns it resends each call that got its result as a request `tool-call` part (`toolCallId` as `ref`, `toolName` as `name`, `args` as `input`, `result` as `output`), and leaves out any that didn't.
 
 This closes sync point 3 in [`project-spec.md`](project-spec.md)'s "Sync points."
 
