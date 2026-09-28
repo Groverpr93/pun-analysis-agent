@@ -1,11 +1,11 @@
 ---
 id: TASK-42
 title: 'Backend: fail a stalled Gemini stream instead of holding /api/chat open'
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 14:45'
-updated_date: '2026-09-28 16:33'
+updated_date: '2026-09-28 17:58'
 labels: []
 dependencies: []
 references:
@@ -65,3 +65,9 @@ Validation: backend pnpm test 131/131 (3 consecutive runs), tsc --noEmit, biome 
 
 2026-09-28: a MODEL_STALL_LIMIT_MS env var override was added and then reverted before commit. The user wants one source of truth for the waiting chain's timeouts (TASK-44, which decides overrides are local-only, refused on Cloud Run); a production override would bypass it, and a local-only one adds little over editing the constant, so it's left to TASK-44 rather than built twice.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Backend now fails a Gemini call that goes quiet instead of holding /api/chat open. failStalledModelCalls (backend/src/flows/stall-guard.ts) is a per-model-call idle timer, restarted on every streamed chunk; after MODEL_STALL_LIMIT_MS (15 s, provisional; TASK-32 measures it) it aborts the call's request and fails it with DEADLINE_EXCEEDED, detail { cause: 'model_stalled' }, which the route maps to TASK-23's busy message and logs. The call is raced against its user-or-stall signal, so either ends it even if the model ignores the signal, and a stop that comes first stays a cancel. analyze_pun runs between model calls, so Inference's wait never counts. docs/contracts.md documents the limit and the bound Frontend relies on: once a reply has started, an event at least every 35 s (15 s + INFERENCE_TIMEOUT_MS), within Cloud Run's 300 s cap. TASK-28 was restated against it; TASK-43 (model ladder) and TASK-44 (one source of truth for timeouts) were added. Verified by 131/131 backend tests (8 fake-timer unit tests, flow and route stall tests, each mutation-checked), tsc and biome, plus independent code and architectural reviews. Merged in #69 (331d388).
+<!-- SECTION:FINAL_SUMMARY:END -->
