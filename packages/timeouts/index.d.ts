@@ -10,3 +10,7 @@ export declare const FRONTEND_SILENCE_LIMIT_MS: number;
 export declare const BASELINE_REPLY_WORST_CASE_MS: number;
 export declare const CLOUD_RUN_MARGIN_MS: number;
 export declare const RETRY_BUDGET_MS: number;
+export declare const BACKOFF_ATTEMPTS_PER_MODEL: number;
+export declare const FIRST_BACKOFF_MS: number;
+export declare const BACKOFF_JITTER_PERCENT: number;
+export declare const LONGEST_BACKOFF_WAIT_MS: number;

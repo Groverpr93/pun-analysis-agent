@@ -153,7 +153,9 @@ test("an App Check rejection is one WARNING entry with the reason and no stack",
 	});
 });
 
-test("a failed /api/chat is one ERROR entry with the upstream detail and stack", async () => {
+// The model is the flow's only one, so it's retried, but never stepped
+// down from, before the reply fails.
+test("a failed /api/chat is a WARNING entry per retry, then one ERROR entry with the upstream detail and stack", async () => {
 	const { model, chatFlow } = buildMockChatFlow(genkit({}));
 	const app = new Hono();
 	app.post("/api/chat", createChatHandler(chatFlow));
@@ -173,7 +175,26 @@ test("a failed /api/chat is one ERROR entry with the upstream detail and stack",
 	});
 	await res.text();
 
-	const entry = onlyEntry();
+	const entries = lines.map((line) => JSON.parse(line));
+	assert.deepEqual(
+		entries
+			.slice(0, -1)
+			.map(({ severity, message, model, attempt, status }) => ({
+				severity,
+				message,
+				model,
+				attempt,
+				status,
+			})),
+		[1, 2].map((attempt) => ({
+			severity: "WARNING",
+			message: "chat: model call failed, retrying",
+			model: "mockModel",
+			attempt,
+			status: "UNAVAILABLE",
+		})),
+	);
+	const entry = entries.at(-1);
 	assert.equal(entry.severity, "ERROR");
 	assert.equal(entry.message, "/api/chat flow failed");
 	assert.deepEqual(entry.detail, { error: { code: 503 } });

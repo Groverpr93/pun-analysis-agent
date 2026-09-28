@@ -4,7 +4,7 @@ import type { AddressInfo } from "node:net";
 import { afterEach, beforeEach, mock, test } from "node:test";
 import { expressHandler } from "@genkit-ai/express";
 import express from "express";
-import { genkit } from "genkit";
+import { GenkitError, genkit } from "genkit";
 import { logger } from "genkit/logging";
 import type { MockRespond } from "genkit/testing";
 import { Hono } from "hono";
@@ -27,9 +27,12 @@ import { buildMockChatFlow } from "../helpers/build-mock-chat-flow.ts";
  * ever changes, this test — not a production incident — is what catches it.
  */
 
-// Both handlers log flow failures; stubbed so the error-path tests don't
-// print full stack traces.
-beforeEach(() => mock.method(logger, "error", () => {}));
+// Both handlers log flow failures, and the model ladder its retries;
+// stubbed so the error-path tests don't print full stack traces.
+beforeEach(() => {
+	mock.method(logger, "error", () => {});
+	mock.method(logger, "warn", () => {});
+});
 afterEach(() => mock.restoreAll());
 
 const input = { messages: [{ role: "user", content: "Tell me a pun" }] };
@@ -113,6 +116,26 @@ test("Hono handler's bytes for an analyze_pun turn match the real @genkit-ai/exp
 	// Guards against both sides dropping the tool chunks alike.
 	assert.match(honoBody, /"toolRequest"/);
 	assert.match(honoBody, /"toolResponse"/);
+	assert.equal(honoBody, genkitBody);
+});
+
+// The model ladder's keepalives are empty messages, which flow.stream()
+// would skip; the real handler writes every chunk, and ours must too.
+test("Hono handler's bytes for a retried reply, keepalives included, match the real @genkit-ai/express handler's", async () => {
+	// Each handler's request fails once, then answers.
+	let calls = 0;
+	const { honoBody, genkitBody } = await compareWireBytes(
+		(_request, { sendChunk }) => {
+			if (calls++ % 2 === 0) {
+				throw new GenkitError({ status: "UNAVAILABLE", message: "busy" });
+			}
+			sendChunk("Otters hold hands so they don't drift apart.");
+			return { text: "Otters hold hands so they don't drift apart." };
+		},
+	);
+
+	// Guards against both sides dropping the keepalives alike.
+	assert.match(honoBody, /^data: {"message":""}\n\n/);
 	assert.equal(honoBody, genkitBody);
 });
 

@@ -540,7 +540,7 @@ test("chatFlow sends no further model requests once the reply is aborted", async
 		},
 		inferenceUrl: "http://inference.test",
 	});
-	const flow = createChatFlow(ai, model, [analyzePun]);
+	const flow = createChatFlow(ai, [model], [analyzePun]);
 
 	const { stream, output } = flow.stream(
 		{ messages: [{ role: "user", content: "Is 'I lost interest' a pun?" }] },
@@ -569,7 +569,7 @@ const stallAi = genkit({});
 const { model: stallModel, chatFlow: shortLimitFlow } = buildMockChatFlow(
 	stallAi,
 	{
-		stallLimitMs: STALL_LIMIT_MS,
+		flowOptions: { stallLimitMs: STALL_LIMIT_MS },
 		// Inference takes several times the limit to answer.
 		analyzeFetch: async (...args) => {
 			await new Promise((resolve) => setTimeout(resolve, 3 * STALL_LIMIT_MS));
@@ -631,7 +631,11 @@ test("chatFlow aborts a stalled model call's own request", {
 				});
 			}),
 	);
-	const flow = createChatFlow(ai, model, [], { stallLimitMs: STALL_LIMIT_MS });
+	// No backoff, so its retries of the stalled call don't wait for real.
+	const flow = createChatFlow(ai, [model], [], {
+		stallLimitMs: STALL_LIMIT_MS,
+		firstBackoffMs: 0,
+	});
 
 	await assert.rejects(flow({ messages: [{ role: "user", content: "Hi" }] }));
 	await modelAborted;
@@ -646,7 +650,7 @@ async function countCallsOfEndlessToolUse(maxToolRounds?: number) {
 	let inferenceCalls = 0;
 	const answer = answeringWith(PUN_ANALYZE_RESULT);
 	const { model: loopingModel, chatFlow } = buildMockChatFlow(genkit({}), {
-		maxToolRounds,
+		flowOptions: { maxToolRounds },
 		analyzeFetch: (...args) => {
 			inferenceCalls++;
 			return answer(...args);

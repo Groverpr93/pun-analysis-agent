@@ -33,12 +33,17 @@ if (!isLogFormat(logFormat)) {
 	);
 }
 
-// Unset (or empty, as a bare `GEMINI_MODEL=` line in .env.local leaves it)
-// means the production model: Flash-Lite, chosen in TASK-38 for its free
-// tier and availability. Set it to try another Gemini model without a code
-// change, or on the deploy to switch back to Flash (e.g. gemini-flash-latest)
-// once billing is on (TASK-37).
-const DEFAULT_GEMINI_MODEL = "gemini-flash-lite-latest";
+// The Gemini models /api/chat tries, in order, when one fails (TASK-43;
+// flows/model-ladder.ts). All Flash-Lite, chosen in TASK-38 for its free
+// tier and availability; quota and capacity are per model, so another one
+// often answers when the first can't. gemini-3.1-flash-lite shuts down no
+// earlier than 2027-05-07; gemini-2.5-flash-lite is open only to projects
+// that used it before, which this one has.
+export const GEMINI_MODEL_LADDER = [
+	"gemini-flash-lite-latest",
+	"gemini-3.1-flash-lite",
+	"gemini-2.5-flash-lite",
+];
 
 const parsedAllowedOrigins = process.env.CORS_ORIGIN?.split(",")
 	.map((origin) => origin.trim())
@@ -46,7 +51,13 @@ const parsedAllowedOrigins = process.env.CORS_ORIGIN?.split(",")
 
 export const config = {
 	port: Number(process.env.PORT ?? 8080),
-	geminiModel: process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL,
+	// Unset (or empty, as a bare `GEMINI_MODEL=` line in .env.local leaves
+	// it) means GEMINI_MODEL_LADDER. Set, it replaces the ladder with that one
+	// model, which still gets the ladder's backoff but never steps down: to
+	// try another Gemini model without a code change, or to measure one model
+	// on its own (TASK-41). Switching production to Flash (TASK-37) this way
+	// would also give up the ladder's fallback.
+	geminiModel: process.env.GEMINI_MODEL || undefined,
 	inferenceUrl: process.env.INFERENCE_URL ?? "http://localhost:8000",
 	allowedOrigins:
 		parsedAllowedOrigins && parsedAllowedOrigins.length > 0

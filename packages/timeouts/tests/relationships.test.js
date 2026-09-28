@@ -9,6 +9,7 @@ const {
 	CLOUD_RUN_REQUEST_TIMEOUT_MS,
 	FRONTEND_SILENCE_LIMIT_MS,
 	FRONTEND_SILENCE_MARGIN_MS,
+	LONGEST_BACKOFF_WAIT_MS,
 	MAX_SILENCE_MS,
 	MAX_TOOL_ROUNDS,
 	MODEL_STALL_LIMIT_MS,
@@ -36,15 +37,27 @@ test("a reply's retry budget fits at least one retry within Cloud Run's timeout"
 	// A failed attempt costs at most one stall limit, not the two per call
 	// the baseline counts: TASK-43 only retries a call that failed before
 	// its first chunk. The attempt that replaces it is already in the
-	// baseline. TASK-43 adds its longest backoff wait here, and a test that
-	// the wait fits within the stall limit (so its keepalives keep
-	// MAX_SILENCE_MS).
-	const oneRetry = MODEL_STALL_LIMIT_MS;
+	// baseline, so one retry is the failed attempt plus the wait before the
+	// next one.
+	const oneRetry = MODEL_STALL_LIMIT_MS + LONGEST_BACKOFF_WAIT_MS;
 	assert.ok(
 		RETRY_BUDGET_MS >= oneRetry,
 		`RETRY_BUDGET_MS is ${RETRY_BUDGET_MS} ms, less than one retry ` +
 			`(${oneRetry} ms): the reply's worst case leaves no room to retry ` +
 			`within Cloud Run's ${CLOUD_RUN_REQUEST_TIMEOUT_MS} ms timeout`,
+	);
+});
+
+// The model ladder sends a keepalive when an attempt fails and when a wait
+// ends, so the longest silence while it retries is the longer of one
+// attempt (the stall limit) and one wait. A wait longer than the stall
+// limit would stretch MAX_SILENCE_MS, which Frontend's limit is set against.
+test("the longest backoff wait fits within the stall limit, so retries keep MAX_SILENCE_MS", () => {
+	assert.ok(
+		LONGEST_BACKOFF_WAIT_MS <= MODEL_STALL_LIMIT_MS,
+		`LONGEST_BACKOFF_WAIT_MS is ${LONGEST_BACKOFF_WAIT_MS} ms, longer than ` +
+			`MODEL_STALL_LIMIT_MS (${MODEL_STALL_LIMIT_MS} ms): a retrying reply ` +
+			`would go longer than MAX_SILENCE_MS without an event`,
 	);
 });
 

@@ -1,4 +1,4 @@
-import { MAX_TOOL_ROUNDS, MODEL_STALL_LIMIT_MS } from "@pun-agent/timeouts";
+import { MAX_TOOL_ROUNDS } from "@pun-agent/timeouts";
 import type {
 	GenerateResponseChunk,
 	Genkit,
@@ -13,7 +13,7 @@ import {
 	analyzePunInputSchema,
 	analyzeResultSchema,
 } from "../tools/analyze-pun.ts";
-import { failStalledModelCalls } from "./stall-guard.ts";
+import { type ModelLadderOptions, modelLadder } from "./model-ladder.ts";
 import { SYSTEM_INSTRUCTION } from "./system-instruction.ts";
 import { numberToolRequests } from "./tool-request-refs.ts";
 
@@ -162,24 +162,25 @@ const hasToolPart = (chunk: GenerateResponseChunk) =>
 	chunk.content.some((part) => part.toolRequest || part.toolResponse);
 
 /**
- * Builds the chat flow: a conversation with `model`, which may call `tools`
- * (analyze_pun in production) before replying. Takes `ai`/`model`/`tools`
- * as parameters (rather than importing the production instances directly)
- * so tests can substitute a Genkit test-double model and a tool backed by a
- * fixture, without touching real Gemini or Inference, per
+ * Builds the chat flow: a conversation with the first of `models` that
+ * answers (see modelLadder), which may call `tools` (analyze_pun in
+ * production) before replying. Takes `ai`/`models`/`tools` as parameters
+ * (rather than importing the production instances directly) so tests can
+ * substitute Genkit test-double models and a tool backed by a fixture,
+ * without touching real Gemini or Inference, per
  * docs/engineering-practices.md's "Backend in isolation" section.
- * `stallLimitMs` and `maxToolRounds` are there for the same reason: tests
- * shorten them rather than wait out the real MODEL_STALL_LIMIT_MS or run
- * MAX_TOOL_ROUNDS rounds.
+ * `maxToolRounds` and `ladderOptions` are there for the same reason: tests
+ * shorten the stall limit and backoff rather than wait them out, or run
+ * fewer than MAX_TOOL_ROUNDS rounds.
  */
 export function createChatFlow(
 	ai: Genkit,
-	model: ModelArgument,
+	models: ModelArgument[],
 	tools: ToolArgument[],
 	{
-		stallLimitMs = MODEL_STALL_LIMIT_MS,
 		maxToolRounds = MAX_TOOL_ROUNDS,
-	}: { stallLimitMs?: number; maxToolRounds?: number } = {},
+		...ladderOptions
+	}: Omit<ModelLadderOptions, "onKeepalive"> & { maxToolRounds?: number } = {},
 ) {
 	return ai.defineFlow(
 		{
@@ -190,7 +191,9 @@ export function createChatFlow(
 		},
 		async (input, { sendChunk, abortSignal }) => {
 			const { stream, response } = ai.generateStream({
-				model,
+				// Genkit builds each model request from this one; modelLadder
+				// then decides which model it actually goes to.
+				model: models[0],
 				system: SYSTEM_INSTRUCTION,
 				messages: toGenkitMessages(input.messages),
 				tools,
@@ -200,12 +203,20 @@ export function createChatFlow(
 				// The request's signal (routes/chat.ts): when the user stops or
 				// leaves, no further model turns go to Gemini.
 				abortSignal,
-				// numberToolRequests is per reply, so refs are unique across all of
-				// the reply's tool calls. failStalledModelCalls wraps each model call
-				// on its own, so time spent in tools between calls never counts. It
-				// goes last, closest to the model, so anything that retries a call
-				// (TASK-43) wraps it and gives each attempt its own timer.
-				use: [numberToolRequests(), failStalledModelCalls(stallLimitMs)],
+				// Both are per reply: numberToolRequests, so refs are unique across
+				// all of the reply's tool calls, and modelLadder, so the model that
+				// answered first answers the rest. modelLadder applies the stall
+				// limit to each attempt at each model call on its own, so time spent
+				// in tools between calls never counts. Its keepalives are empty
+				// messages (docs/contracts.md), so waiting out a backoff never adds
+				// to the reply's longest silence.
+				use: [
+					numberToolRequests(),
+					modelLadder(ai, models, {
+						...ladderOptions,
+						onKeepalive: () => sendChunk(""),
+					}),
+				],
 			});
 			// The whole reply, across model turns. Genkit's response.text is only
 			// the last turn's, which leaves out any text the model sent before
