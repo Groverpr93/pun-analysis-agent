@@ -1,11 +1,11 @@
 ---
 id: TASK-26
 title: 'Backend: run TypeScript with Node 24 type stripping instead of tsx'
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-23 13:46'
-updated_date: '2026-09-24 02:19'
+updated_date: '2026-09-28 08:42'
 labels:
   - backend
   - tooling
@@ -21,18 +21,18 @@ Node 24 (the repo floor since the Node 24 upgrade, PR #33) runs .ts files direct
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 backend `dev` and `test` scripts run on plain `node` (no tsx), and tsx is removed from backend devDependencies and the lockfile
-- [ ] #2 tsconfig rejects TypeScript syntax that type stripping cannot run, so it fails at typecheck rather than at runtime
-- [ ] #3 `pnpm --filter backend build` still emits runnable JS in dist/ (the Docker image starts and serves /health)
-- [ ] #4 Backend tests, lint and scripts/verify-setup.mjs pass
-- [ ] #5 Docs that mention tsx for the backend are updated
+- [x] #1 backend `dev` and `test` scripts run on plain `node` (no tsx), and tsx is removed from backend devDependencies and the lockfile
+- [x] #2 tsconfig rejects TypeScript syntax that type stripping cannot run, so it fails at typecheck rather than at runtime
+- [x] #3 `pnpm --filter backend build` still emits runnable JS in dist/ (the Docker image starts and serves /health)
+- [x] #4 Backend tests, lint and scripts/verify-setup.mjs pass
+- [x] #5 Docs that mention tsx for the backend are updated
 <!-- AC:END -->
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
-- [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
-- [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
+- [x] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
+- [x] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
+- [x] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
 
 ## Implementation Plan
@@ -59,4 +59,12 @@ Lockfile regenerated from scratch (its own commit): pnpm restores the lockfile f
 verify-setup.mjs now fails when the running Node major is below engines.node (checked both ways: passes on 24.21; with engines temporarily at >=99 it reports "Node 24.21.0 is older than engines.node").
 
 PR #35 review: went back to an explicit glob, `node --test "tests/**/*.test.ts"`, so the script shows where tests live and default discovery can't later pick up a co-located src/*.test.ts plus its dist/ copy. Double quotes (not single) so cmd.exe strips them and Node still gets the glob on native Windows. Verified on Node 24.21: 13/13; narrowing to tests/routes runs 5, confirming Node applies the glob; a non-matching glob exits 0 with zero tests, which is why the quoting matters.
+
+Closure check (2026-09-28): AC #3 observed on main: Deploy Backend run 36046598515 (6c933b1, #35) built and pushed the image, deployed it, and passed 'Smoke-test /health on the deployed service'. On main, backend dev/test run on plain node; tsconfig has erasableSyntaxOnly, verbatimModuleSyntax and rewriteRelativeImportExtensions; pnpm-lock.yaml has no tsx or esbuild package entries (the only 'tsx' left is in vite@8.3.0's optional peerDependencies declaration). DoD #2: architectural review not needed (dev tooling only; no contract, topology or deploy-target change).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Backend dev and test now run TypeScript directly on Node 24 (type stripping) instead of tsx. tsconfig rejects non-erasable syntax and needs explicit type-only imports, relative imports use .ts, and tsc rewrites them to .js in dist. The tsx/esbuild resolutions were removed with a lockfile regeneration, and verify-setup.mjs enforces engines.node. Verified with 13/13 backend tests, lint, verify-setup, and the post-merge deploy (run 36046598515), whose Docker image served /health.
+<!-- SECTION:FINAL_SUMMARY:END -->

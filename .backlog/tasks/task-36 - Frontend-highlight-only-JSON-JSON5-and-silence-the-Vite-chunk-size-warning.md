@@ -1,11 +1,11 @@
 ---
 id: TASK-36
 title: 'Frontend: highlight only JSON/JSON5 and silence the Vite chunk-size warning'
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-27 20:18'
-updated_date: '2026-09-27 20:40'
+updated_date: '2026-09-28 08:42'
 labels:
   - frontend
 dependencies: []
@@ -20,18 +20,18 @@ The Deploy Frontend build warns that chunks exceed 500 kB (https://github.com/te
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 JSON and JSON5 code blocks are syntax-highlighted with the site palette, including JSONC fences and upper-case fence names
-- [ ] #2 Code blocks in any other language render as plain code without errors
-- [ ] #3 The production build emits no Shiki grammar chunks other than JSON/JSON5, and no WASM engine is fetched at runtime (react-shiki still emits an unreachable Oniguruma WASM chunk)
-- [ ] #4 The build no longer prints the chunk-size warning, and the limit still catches meaningful growth of the main chunk
-- [ ] #5 Tests fail if JSON5 highlighting, language aliases, the plain-code fallback for other languages, or the fallback when the highlighter fails to load regresses
+- [x] #1 JSON and JSON5 code blocks are syntax-highlighted with the site palette, including JSONC fences and upper-case fence names
+- [x] #2 Code blocks in any other language render as plain code without errors
+- [x] #3 The production build emits no Shiki grammar chunks other than JSON/JSON5, and no WASM engine is fetched at runtime (react-shiki still emits an unreachable Oniguruma WASM chunk)
+- [x] #4 The build no longer prints the chunk-size warning, and the limit still catches meaningful growth of the main chunk
+- [x] #5 Tests fail if JSON5 highlighting, language aliases, the plain-code fallback for other languages, or the fallback when the highlighter fails to load regresses
 <!-- AC:END -->
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
-- [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
-- [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
+- [x] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
+- [x] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
+- [x] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
 
 ## Implementation Plan
@@ -52,4 +52,12 @@ react-shiki still emits the Oniguruma WASM chunk (its named-engine table), but i
 Mutation-checked the new tests: dropping the json5 grammar fails the JSON5 test; adding a python grammar fails the plain-fallback test.
 
 Review follow-ups: highlighter is now a required prop (react-shiki/core throws without one); langAlias maps json/json5/jsonc case-insensitively (jsonc -> json5 grammar); tests cover highlighter-creation failure and aliases (mutation-checked: empty langAlias fails JSON and jsonc); loader rewritten as async try/catch; dropped a defaultColor that is a no-op with a single theme.
+
+Post-merge (2026-09-28): Deploy Frontend run 36349548950 (677ba90, #53) built 10 JS chunks. The only Shiki grammars are json and json5, the main index is 1,090.18 kB (333 kB gzip) under chunkSizeWarningLimit 1150, and the log has no chunk-size warning. The wasm chunk (622 kB) is emitted but never fetched, as AC #3 allows. Docs: docs/design/frontend-design.md 'Code highlighting' describes the JSON/JSON5-only highlighter. DoD #2: not needed (frontend-only; no contract or topology change, and no new dependency).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Code highlighting now uses a fine-grained Shiki core highlighter with only the JSON/JSON5 grammars (json/json5/jsonc, any case) on the JavaScript regex engine. Other languages render as plain code, and so does everything if the highlighter fails to load. chunkSizeWarningLimit sits just above the main chunk. Verified with mutation-checked tests (JSON5 highlighting, aliases, plain fallback, load failure), a vite preview network check (no WASM fetched), and the production deploy build (run 36349548950): 313 -> 10 JS chunks and no chunk-size warning.
+<!-- SECTION:FINAL_SUMMARY:END -->
