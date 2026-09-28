@@ -4,6 +4,7 @@ title: 'Artifact Registry: make image retention match what we expect'
 status: To Do
 assignee: []
 created_date: '2026-09-28 09:46'
+updated_date: '2026-09-28 10:06'
 labels: []
 dependencies:
   - TASK-14
@@ -11,7 +12,7 @@ references:
   - docs/local-setup.md
   - .github/workflows/deploy-backend.yml
   - .github/workflows/deploy-inference.yml
-priority: medium
+priority: high
 type: chore
 ordinal: 39000
 ---
@@ -35,3 +36,9 @@ The shared `pun-agent` Docker repo (us-east1) has cleanup policies keep-5-most-r
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+2026-09-28: Yai approved this task and wants it done soon. Ruled out one cause: the repo's cleanupPolicyDryRun is unset (false), so the policies are not in dry-run mode.
+<!-- SECTION:NOTES:END -->

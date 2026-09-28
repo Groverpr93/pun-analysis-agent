@@ -1,11 +1,11 @@
 ---
 id: TASK-14
 title: Deploy inference to Cloud Run via CI
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-17 23:40'
-updated_date: '2026-09-28 10:03'
+updated_date: '2026-09-28 10:19'
 due_date: '2026-09-21'
 labels: []
 milestone: m-4
@@ -26,10 +26,10 @@ deploy-inference.yml is currently a placeholder, identical in structure to deplo
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Pushing to main with a change under inference/** builds the container and deploys it to Cloud Run
+- [x] #1 Pushing to main with a change under inference/** builds the container and deploys it to Cloud Run
 - [x] #2 The Cloud Billing account / card-on-file requirement from docs/project-spec.md's stack notes is satisfied for the shared GCP project (or confirmed already satisfied)
-- [ ] #3 Required secrets/config are documented in docs/local-setup.md and consumed from GitHub Secrets
-- [ ] #4 The deployed Cloud Run URL responds on whatever inference/ currently exposes, even before the real classifier/WSD logic lands
+- [x] #3 Required secrets/config are documented in docs/local-setup.md and consumed from GitHub Secrets
+- [x] #4 The deployed Cloud Run URL responds on whatever inference/ currently exposes, even before the real classifier/WSD logic lands
 <!-- AC:END -->
 
 ## Definition of Done
@@ -69,4 +69,12 @@ From TASK-17 (PR #25): the Inference image now carries ~206 MB of WordNet data (
 2026-09-28 review fixes: code + architectural review subagents run. Applied in this change: build-time data check (RUN as app user asserting WordNet + Wiktionary senses for "interest"; verified it fails the build for a bad WN_DATA_DIR and for a missing wiktionary.sqlite); deploy re-applies pun-agent-runtime's roles/run.invoker on every deploy (Yai chose this over a manual one-time grant); --invoker-iam-check added; 403-test comment corrected (--no-allow-unauthenticated does remove allUsers; the test guards against gcloud only warning if that fails); "only Backend can invoke" wording corrected (project admins can too); URL passed via env in both smoke steps; path-filter trade-off documented. Follow-ups: TASK-39 (WordNet own stage, deferred by Yai), TASK-40 (registry retention: 3 versions per push; cleanup not deleting). Notes added to TASK-11 (ID-token fetch etc.), TASK-32 (depends on TASK-16 in practice), TASK-19 (memory/image size). Docs drift (engineering-practices.md:33/35, project-spec.md:113/127, contracts.md auth note + :78, backend comments, eval/README.md) goes in a separate follow-up commit.
 
 AC #2 evidence: gcloud billing projects describe pun-agent -> billingEnabled: true, billingAccountName billingAccounts/014653-B96948-6A92FE (2026-09-28). DoD: code review + architectural review subagents done (findings and fixes in notes above); docs drift fixed in a separate commit (engineering-practices.md, project-spec.md, contracts.md [contract access note flagged], eval/README.md, stale comments in backend/src/app.ts and analyze-pun.ts). AC #1, #3, #4 stay open until the first main deploy proves them (deploy + push, GCP_SA_KEY consumed, both smoke tests passing).
+
+Post-merge evidence (2026-09-28): Deploy Inference run 36408316228 on 8f0c662 (#58) succeeded: tests, build+push, deploy, invoker grant, and both smoke tests. Checked directly afterwards: service pun-agent-inference (us-east1) runs as pun-agent-inference@, max 1 instance; its IAM policy has exactly one binding (roles/run.invoker -> pun-agent-runtime@); anonymous GET /openapi.json -> 403 on both https://pun-agent-inference-203365930808.us-east1.run.app and the legacy rlm5dfjheq-ue URL; with an ID token -> 200 (0.07 s warm); POST /analyze -> 500 (NotImplementedError, expected until TASK-16). GCP_SA_KEY consumed via google-github-actions/auth. Artifact Registry repo 143 MB -> 393 MB after the first push (inference: 3 versions), leaving ~107 MB of the 0.5 GB free tier: TASK-40.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Inference now deploys to Cloud Run from CI as an IAM-private service (pun-agent-inference). deploy-inference.yml mirrors deploy-backend.yml (PR build only; main: test-python.yml gate, push, deploy with --no-allow-unauthenticated --invoker-iam-check under a no-roles runtime SA, re-applies pun-agent-runtime's run.invoker grant, smoke-tests 403 anonymous / 200 with an ID token). The Dockerfile is multi-stage with uv only at build time: the old uv run CMD fetched from GitHub on every cold start. It runs as non-root on $PORT, and a build-time check fails the image if WordNet or Wiktionary can't be read. Compressed image 327 -> 219 MB. Also added actionlint to lint.yml, and documented the deploy in local-setup.md, with a contract access note in contracts.md. Verified by local container tests (offline start, non-root lookups, SIGTERM), deliberately broken builds and workflows, code + architectural reviews, and the first main deploy plus direct checks of 403/200 and the service's IAM policy. Follow-ups: TASK-39 (WordNet stage), TASK-40 (registry retention, now urgent at 393 MB), TASK-11 (ID-token fetch).
+<!-- SECTION:FINAL_SUMMARY:END -->
