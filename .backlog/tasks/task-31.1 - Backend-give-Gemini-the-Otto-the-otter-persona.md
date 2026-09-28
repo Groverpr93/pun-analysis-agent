@@ -4,7 +4,7 @@ title: 'Backend: give Gemini the Otto the otter persona'
 status: To Do
 assignee: []
 created_date: '2026-09-27 15:02'
-updated_date: '2026-09-28 11:28'
+updated_date: '2026-09-28 13:50'
 labels: []
 milestone: m-5
 dependencies:
@@ -12,6 +12,7 @@ dependencies:
 references:
   - backend/src/flows/chat.ts
   - docs/project-spec.md
+  - backend/src/flows/system-instruction.ts
 parent_task_id: TASK-31
 type: feature
 project: backend

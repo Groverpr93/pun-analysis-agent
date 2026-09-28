@@ -6,7 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-09-20 10:04'
-updated_date: '2026-09-28 11:17'
+updated_date: '2026-09-28 13:50'
 labels:
   - wsd
 milestone: m-6
@@ -16,6 +16,7 @@ dependencies:
 references:
   - docs/design/sense-selection.md
   - docs/contracts.md
+  - backend/src/flows/system-instruction.ts
 project: backend
 ordinal: 20000
 ---

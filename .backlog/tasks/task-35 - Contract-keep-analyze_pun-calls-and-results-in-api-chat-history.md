@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@claude'
 created_date: '2026-09-27 18:55'
-updated_date: '2026-09-28 11:32'
+updated_date: '2026-09-28 13:50'
 labels: []
 dependencies:
   - TASK-9
@@ -68,6 +68,8 @@ Decision (user): a resent output that breaks the /analyze rules is dropped with 
 Tool description reword (#62): analyze_pun calls per reply on gemini-flash-lite-latest, 3 runs each, before -> after: new phrase 1,1,1 -> 1,1,1; follow-up with resent history 0,0,0 -> 0,0,0; follow-up with text-only history 1,1,1 -> 0,0,0; new phrase later in the chat 1,1,1 -> 1,1,1. Ran into the 15 requests/minute free-tier limit, which the deployed app shares.
 Deployed check (after #62 3ded50c and #63 656dc55 deploys succeeded): on pun-agent.web.app, the follow-up request carried the earlier reply as [tool-call analyze_pun ref=call_703344 is_pun=null, text] (captured request body), and 'What exactly did it return?' was answered as is_pun: null with no confidence or explanation, with no new tool call. That follow-up took 28.7s (Cloud Run request log); the next follow-up with the same resent history took 5.2s, so it was a one-off slow Gemini reply (the past 7 days' max was 19.6s). No 'left out' warnings or errors in the Backend logs.
 Final checks on main 656dc55: Backend 116/116, Frontend 141/141, Biome clean.
+
+Correction (2026-09-28, found while closing TASK-12): the analyze_pun tool-description reword this task's notes and final summary attribute to #62 never merged. It is commit ef56106 on claude/task-35-tool-history, which isn't in PR #62 (whose commits are 5ca98fa, 6048513, 32d0c59), so #62 shipped the old "whenever the user asks ... to explain one" wording. The "once per new text, not again for follow-ups" description now on main came from TASK-12 (#64), whose system instruction also tells Gemini to answer follow-ups from earlier analyze_pun results. The before/after measurements above were taken with ef56106's wording. TASK-12's live checks with #64's wording and instruction gave the same result (0 calls on follow-ups and on repeated text, with both resent and text-only history, 3/3 runs).
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
