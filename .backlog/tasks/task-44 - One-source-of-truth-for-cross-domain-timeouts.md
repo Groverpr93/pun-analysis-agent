@@ -5,6 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 16:31'
+updated_date: '2026-09-28 18:28'
 labels: []
 dependencies:
   - TASK-42
@@ -47,3 +48,14 @@ Known costs to plan for: backend/Dockerfile's 'pnpm deploy --legacy' assumes no 
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+2026-09-28 (from TASK-43's planning, implemented in a separate thread): TASK-43 adds values to /api/chat's waiting chain that this module should own. Until TASK-44 lands, they live in Backend (planned: backend/src/flows/model-ladder.ts; name may change, check TASK-43's final summary).
+- Backoff per ladder rung: 3 attempts, waits of 1 s then 2 s, plus a little jitter. A 429 steps down with no wait.
+- Keepalives: while retrying, Backend sends data: {"message": ""} when an attempt fails and again when its wait ends. That's why the maximum silence (MODEL_STALL_LIMIT_MS + INFERENCE_TIMEOUT_MS = 35 s) doesn't change. It holds only while the longest backoff wait is <= the stall limit, so that's a relationship worth a test here (AC #2).
+- Retry budget per reply: 90 s, derived as Cloud Run request timeout (300 s) - baseline worst case (190 s) - margin (20 s). Baseline = 6 model calls x MODEL_STALL_LIMIT_MS (15 s) + 5 tool rounds x INFERENCE_TIMEOUT_MS (20 s). 6 calls because Genkit's default maxTurns is 5 (generate/action.js: maxTurns ?? 5, i.e. 5 tool rounds). Failed attempts and backoff waits count against the budget; a retry starts only if spent + wait + stall limit fits.
+- So a reply's documented worst case (AC #2's Cloud Run relationship) = baseline + retry budget = 280 s. When AC #3 sets --timeout explicitly, derive the budget from it rather than restating 90 s, and make maxTurns an explicit input if the flow ever sets it.
+- TASK-43 doesn't create the shared module and leaves docs/contracts.md's silence numbers as they are, to avoid colliding with this task. It may add a sentence about keepalives and the retry budget next to the existing timeout paragraphs.
+<!-- SECTION:NOTES:END -->
