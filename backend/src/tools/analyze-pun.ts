@@ -84,8 +84,8 @@ export const UNDETERMINED_ANALYZE_RESULT: AnalyzeResult = {
 
 /**
  * How long analyze_pun waits for Inference, covering its Cloud Run cold
- * start. Provisional and unmeasured: Inference isn't deployed yet, so this
- * is a guess until TASK-32 measures a real cold start and
+ * start. Provisional and unmeasured: the cold start can't be measured until
+ * /analyze answers (TASK-16), so this is a guess until TASK-32 measures it and
  * records it in docs/contracts.md, which Frontend relies on as the
  * worst-case wait.
  */

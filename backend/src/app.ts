@@ -36,8 +36,8 @@ if (config.appCheckEnforced) {
 	);
 }
 
-// Answered by a fixture until Inference's /analyze is deployed (TASK-14);
-// TASK-11 swaps fixtureFetch for the real fetch.
+// Answered by a fixture until TASK-11 swaps fixtureFetch for a real fetch,
+// which has to carry an ID token: Inference's Cloud Run service is private.
 const analyzePun = createAnalyzePunTool(ai, {
 	fetch: fixtureFetch,
 	inferenceUrl: config.inferenceUrl,

@@ -26,17 +26,7 @@ jobs:
       build: ${{ matrix.build }}
 
   test-python:
-    name: Pytest (inference)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v7
-      - working-directory: inference
-        run: uv sync --locked
-      - working-directory: inference
-        run: uv run python -m wn download oewn:2025
-      - working-directory: inference
-        run: uv run pytest
+    uses: ./.github/workflows/test-python.yml
 
   test-eval:
     name: Unittest (eval)

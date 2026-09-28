@@ -20,6 +20,17 @@ jobs:
       - run: pnpm run lint
       - run: pnpm run check:mermaid
 
+  # Type-checks workflow expressions (e.g. a misspelled step id or output) and
+  # runs shellcheck over every run: script, which otherwise only fail when the
+  # workflow runs, and for the deploys that's on main. The image bundles
+  # shellcheck; the tag pins actionlint's version.
+  lint-actions:
+    name: actionlint (GitHub Actions workflows)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker run --rm -v "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.12 -color
+
   lint-python:
     name: Ruff (${{ matrix.package }})
     runs-on: ubuntu-latest

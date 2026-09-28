@@ -6,7 +6,7 @@ title: >-
 status: To Do
 assignee: []
 created_date: '2026-09-20 10:04'
-updated_date: '2026-09-23 10:29'
+updated_date: '2026-09-28 09:47'
 labels:
   - wsd
 milestone: m-6
@@ -40,3 +40,9 @@ Steps 4-5 of docs/design/sense-selection.md's approach, plus Tier 1: score each 
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+From TASK-14 (2026-09-28): the Inference Cloud Run service runs with Cloud Run's default 512 MiB memory (deploy-inference.yml sets no --memory) and the image is already ~219 MB compressed against Artifact Registry's 0.5 GB free tier (shared with Backend). A torch-based dependency (sentence-transformers) would likely exceed both: an out-of-memory instance crashes, and Backend then returns the undetermined result for every call. Check memory and image size when adding it, set --memory in deploy-inference.yml if needed, and fill in AGENTS.md's TBD memory budget.
+<!-- SECTION:NOTES:END -->

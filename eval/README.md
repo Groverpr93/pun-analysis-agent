@@ -48,13 +48,15 @@ An undetermined response (`is_pun: null`, Inference couldn't judge the text) is 
 - `undetermined_rows` and `detection_coverage` (determined rows / successful rows) show how often it answered at all. Always read coverage next to `is_pun`, since answering undetermined whenever unsure would otherwise inflate precision/recall.
 - `is_pun_end_to_end` scores undetermined as "not a pun", which is what a chat user sees.
 
-`response_rate` is the separate share of rows whose request succeeded; transport failures (HTTP errors, timeouts, malformed JSON) are failed requests, never undetermined predictions. The analyzer is an injectable callable (a live HTTP call or a fixture), so it can run against a real Inference deployment or a deterministic fixture without changing the scoring logic.
+`response_rate` is the separate share of rows whose request succeeded; transport failures (HTTP errors, timeouts, malformed JSON) are failed requests, never undetermined predictions. The analyzer is an injectable callable (a live HTTP call or a fixture), so it can run against a real Inference instance or a deterministic fixture without changing the scoring logic.
 
 Run against a live Inference instance:
 
 ```bash
 uv run python evaluate_dataset.py --endpoint http://127.0.0.1:8000/analyze
 ```
+
+That's a local `uv run uvicorn main:app` by default (see [`../docs/local-setup.md`](../docs/local-setup.md)). The deployed service is private, so the evaluator can't call it directly: every row would fail with a 403. To evaluate the deployed image, `gcloud run services proxy pun-agent-inference --region=us-east1 --port=8000` serves it on `localhost:8000` with your credentials attached, which needs `roles/run.invoker` on the service. It runs on a single instance shared with production (`--max-instances=1`), so avoid full runs while it's serving users, and raise `--timeout` above a cold start.
 
 Run against gold-label fixtures to sanity-check the evaluator itself (no HTTP calls):
 

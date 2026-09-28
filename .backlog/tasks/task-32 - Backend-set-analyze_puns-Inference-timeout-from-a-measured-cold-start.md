@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-27 15:25'
-updated_date: '2026-09-27 16:08'
+updated_date: '2026-09-28 09:47'
 labels: []
 milestone: m-4
 dependencies:
@@ -42,4 +42,6 @@ TASK-9 added INFERENCE_TIMEOUT_MS (backend/src/tools/analyze-pun.ts) with a prov
 
 <!-- SECTION:NOTES:BEGIN -->
 Carries TASK-9's former AC #5, removed from TASK-9 on 2026-09-27: 'The Inference timeout is a named constant whose value is based on a measured Inference cold start on Cloud Run ... and the value and measurement are recorded in docs/contracts.md so Frontend can rely on the worst-case wait.' The constant already exists (INFERENCE_TIMEOUT_MS, backend/src/tools/analyze-pun.ts); contracts.md also states the per-reply worst case (up to 5 rounds x the timeout), which must be updated with the measured value.
+
+From TASK-14's architectural review (2026-09-28): AC #1 measures time to the first successful /analyze, but /analyze answers 500 (NotImplementedError) until TASK-16, and the dominant cold-start cost (spaCy/WordNet loads, and torch if TASK-19 adds sentence-transformers) only appears once the real model runs. So this effectively depends on TASK-16, and should be re-measured if TASK-19 changes the model. The service is IAM-private: measuring needs roles/run.invoker (or project admin) and an ID token, e.g. `curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" <url>/analyze`.
 <!-- SECTION:NOTES:END -->

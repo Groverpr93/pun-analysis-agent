@@ -64,6 +64,31 @@ gcloud services api-keys get-key-string <NEW_KEY_UID> --project=gen-lang-client-
 
 The `tr -d '\n'` matters: `--format='value(...)'` adds a trailing newline, which would make Gemini reject the key. Redeploy (re-run the workflow) so new instances pick up the `latest` version, then delete the old key.
 
+### Inference deploy (CI only)
+
+[`deploy-inference.yml`](../.github/workflows/deploy-inference.yml) builds [`inference/Dockerfile`](../inference/Dockerfile) on every pull request that touches `inference/` (build only). On pushes to `main` it first runs the inference tests (via [`test-python.yml`](../.github/workflows/test-python.yml), the same workflow `test.yml` calls), then pushes the image to Artifact Registry, deploys it to Cloud Run and smoke-tests it, authenticating with the same `GCP_SA_KEY`. It needs no other GitHub secret.
+
+Unlike Backend, the service is **private**: Cloud Run itself rejects any request without a Google-signed ID token from an identity allowed to invoke it. Backend's runtime service account is the only one granted `roles/run.invoker` on the service; project-level admins, including the CI deployer, can invoke it through their project roles. So you can't `curl` the deployed `/analyze` anonymously, and Backend's call to it has to carry an ID token (TASK-11). Every deploy re-applies Backend's invoker grant (a no-op once present), so a recreated service or a grant removed by hand is restored rather than leaving every Backend call to degrade to the undetermined result. The deploy then smoke-tests both sides: an anonymous request must get a 403, and a request with the deployer's own ID token must succeed. It checks `/openapi.json` rather than `/analyze`, which answers 500 until the classifier lands (TASK-16).
+
+The image keeps `uv` in its build stage only and starts `uvicorn` straight from the venv. `uv run` in the image would re-check the lockfile on every container start, which fetches `en-core-web-sm`'s metadata from GitHub (the container exits if it can't), so each Cloud Run cold start would depend on GitHub. The last build step looks up a word in WordNet and Wiktionary as the runtime user, so a broken data path fails the build (on pull requests too) instead of deploying: the smoke test never touches that data, and a Wiktionary failure only logs and returns no senses at runtime.
+
+One-time GCP setup it relies on, alongside Backend's:
+
+| Resource | Where | Notes |
+|---|---|---|
+| Cloud Run service `pun-agent-inference` | `pun-agent`, `us-east1` | created by the first deploy. Private (`--no-allow-unauthenticated`), `--min-instances=0`, `--max-instances=1` |
+| Service account `pun-agent-inference@pun-agent.iam.gserviceaccount.com` | `pun-agent` | the identity the service runs as; no roles at all, since Inference's data is baked into the image. Created 2026-09-28 (TASK-14) |
+| Docker repo `pun-agent` | Artifact Registry, `us-east1` | shared with Backend, under `inference/`. The image is ~219 MB compressed (measured 2026-09-28) and the repo already held ~143 MB of Backend images, so the 0.5 GB free tier has little headroom; TASK-39 and TASK-40 track keeping it under |
+
+Backend's `roles/run.invoker` grant isn't in this table because the deploy manages it.
+
+To call the deployed service yourself, your own account needs `roles/run.invoker` (or a role that includes it) on the service, then:
+
+```bash
+curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" \
+  https://<pun-agent-inference URL>/openapi.json
+```
+
 ## Inference (`inference/`)
 
 Python + [`uv`](https://docs.astral.sh/uv/) (fast, reproducible dependency management — resolves and installs into a project-local `.venv` without needing a separate virtualenv command) + FastAPI + `ruff`.
@@ -162,9 +187,12 @@ pnpm run check:mermaid
 # inside inference/ or eval/
 uv run ruff check .
 uv run ruff format --check .
+
+# from the repo root, with Docker running — lints .github/workflows/ (actionlint + shellcheck)
+docker run --rm -v "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.12 -color
 ```
 
-[`.github/workflows/lint.yml`](../.github/workflows/lint.yml) and [`.github/workflows/test.yml`](../.github/workflows/test.yml) run all of the above (lint/mermaid/ruff lint and format, and the frontend/backend test suites plus the frontend's production build, respectively) on every push/PR, so failures show up in CI even if you skip running them locally.
+[`.github/workflows/lint.yml`](../.github/workflows/lint.yml) and [`.github/workflows/test.yml`](../.github/workflows/test.yml) run all of the above (lint/mermaid/ruff lint and format/actionlint, and the frontend/backend/inference test suites plus the frontend's production build, respectively) on every push/PR, so failures show up in CI even if you skip running them locally.
 
 ### Pre-commit hook
 

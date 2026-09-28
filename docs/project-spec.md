@@ -110,7 +110,7 @@ This domain can work independently once the contract is agreed — no dependency
 
 **Work:**
 - Build a held-out test set of puns/non-puns
-- Run it directly against Inference's `/analyze` endpoint for precision/recall on detection
+- Run it directly against Inference's `/analyze` endpoint for precision/recall on detection (a local `uvicorn` by default: the deployed service is private, see [`local-setup.md`](local-setup.md))
 - Run a subset through the full pipeline to evaluate explanation quality
 
 **Contract consumed:** same `/analyze` schema as Backend — can start as soon as Inference publishes the contract, in parallel with Backend/Frontend work.
@@ -124,6 +124,6 @@ The only hard dependencies across domains:
 2. **Before Frontend wires up its streaming display:** agree the `/api/chat` streaming shape (Backend ↔ Frontend)
 3. **Before Frontend builds tool-call rendering:** agree the shape of `tool-call` events within the `/api/chat` Genkit stream (Backend ↔ Frontend) — this is Phase 2 of the progressive-enhancement plan in [`engineering-practices.md`](engineering-practices.md); Phase 1's plain-text stream shape from sync point 2 doesn't need it. Closed: the shape is in [`contracts.md`](contracts.md)'s `/api/chat` section.
 
-Deploying adds configuration links on top of those contracts, each documented in [`local-setup.md`](local-setup.md): the frontend build needs the backend's Cloud Run URL (`VITE_BACKEND_URL`), the backend's CORS allowlist names the frontend's origin (`backend/src/config.ts`), Firebase App Check ties the two to the same Firebase project (the frontend's Firebase config and reCAPTCHA key, and the backend's `firebaseProjectId`; see [`contracts.md`](contracts.md)), and once Backend calls the deployed Inference (TASK-11; until then `analyze_pun` answers from a fixture) the backend needs Inference's URL (`INFERENCE_URL`).
+Deploying adds configuration links on top of those contracts, each documented in [`local-setup.md`](local-setup.md): the frontend build needs the backend's Cloud Run URL (`VITE_BACKEND_URL`), the backend's CORS allowlist names the frontend's origin (`backend/src/config.ts`), Firebase App Check ties the two to the same Firebase project (the frontend's Firebase config and reCAPTCHA key, and the backend's `firebaseProjectId`; see [`contracts.md`](contracts.md)), and once Backend calls the deployed Inference (TASK-11; until then `analyze_pun` answers from a fixture) the backend needs Inference's URL (`INFERENCE_URL`). Inference's Cloud Run service is private, so that call also needs a Google-signed ID token for Backend's runtime service account, which holds `roles/run.invoker` on the service (applied by [`deploy-inference.yml`](../.github/workflows/deploy-inference.yml)).
 
 Everything else — model choice, dataset selection, UI styling — is independently swappable within a domain without breaking another.
