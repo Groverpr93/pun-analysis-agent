@@ -3,7 +3,11 @@ import { afterEach, beforeEach, mock, test } from "node:test";
 import { genkit } from "genkit";
 import { logger } from "genkit/logging";
 import { createChatFlow } from "../../src/flows/chat.ts";
-import { SYSTEM_INSTRUCTION } from "../../src/flows/system-instruction.ts";
+import {
+	PERSONA,
+	PURPOSE,
+	SYSTEM_INSTRUCTION,
+} from "../../src/flows/system-instruction.ts";
 import {
 	type AnalyzeResult,
 	createAnalyzePunTool,
@@ -258,6 +262,18 @@ test("chatFlow gives the model Backend's system instruction", async () => {
 		role: "system",
 		content: [{ text: SYSTEM_INSTRUCTION }],
 	});
+});
+
+// Deliberately couples to the paragraphs, not their wording: rewording Otto
+// or the scope rules passes, but dropping either from SYSTEM_INSTRUCTION fails.
+test("chatFlow's system instruction includes Otto's persona and the pun-analysis purpose", async () => {
+	model.respondWith("ok");
+
+	await chatFlow({ messages: [{ role: "user", content: "Hi" }] });
+
+	const systemText = model.lastRequest?.messages[0]?.content[0]?.text;
+	assert.ok(systemText?.includes(PERSONA), "persona missing");
+	assert.ok(systemText?.includes(PURPOSE), "purpose missing");
 });
 
 // Kept, a client's system message would come after Backend's, and the real

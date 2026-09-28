@@ -1,9 +1,10 @@
 ---
 id: TASK-31
 title: Otto the otter persona
-status: To Do
+status: In Progress
 assignee: []
 created_date: '2026-09-27 15:02'
+updated_date: '2026-09-28 14:01'
 labels: []
 milestone: m-5
 dependencies: []
