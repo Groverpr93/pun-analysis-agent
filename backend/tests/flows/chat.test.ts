@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, mock, test } from "node:test";
+import { MAX_TOOL_ROUNDS } from "@pun-agent/timeouts";
 import { GenkitError, genkit } from "genkit";
 import { logger } from "genkit/logging";
 import { createChatFlow } from "../../src/flows/chat.ts";
@@ -568,7 +569,7 @@ const stallAi = genkit({});
 const { model: stallModel, chatFlow: shortLimitFlow } = buildMockChatFlow(
 	stallAi,
 	{
-		ladderOptions: { stallLimitMs: STALL_LIMIT_MS },
+		flowOptions: { stallLimitMs: STALL_LIMIT_MS },
 		// Inference takes several times the limit to answer.
 		analyzeFetch: async (...args) => {
 			await new Promise((resolve) => setTimeout(resolve, 3 * STALL_LIMIT_MS));
@@ -638,4 +639,50 @@ test("chatFlow aborts a stalled model call's own request", {
 
 	await assert.rejects(flow({ messages: [{ role: "user", content: "Hi" }] }));
 	await modelAborted;
+});
+
+// Each tool round is followed by one more model call, so a reply makes at
+// most maxToolRounds + 1 model calls and maxToolRounds rounds of Inference
+// calls: the counts @pun-agent/timeouts' BASELINE_REPLY_WORST_CASE_MS is
+// built on. Runs a reply whose model calls analyze_pun every time, and
+// counts both.
+async function countCallsOfEndlessToolUse(maxToolRounds?: number) {
+	let inferenceCalls = 0;
+	const answer = answeringWith(PUN_ANALYZE_RESULT);
+	const { model: loopingModel, chatFlow } = buildMockChatFlow(genkit({}), {
+		flowOptions: { maxToolRounds },
+		analyzeFetch: (...args) => {
+			inferenceCalls++;
+			return answer(...args);
+		},
+	});
+	let modelCalls = 0;
+	loopingModel.respondWith(() => {
+		modelCalls++;
+		return { toolRequests: [toolRequest] };
+	});
+
+	await assert.rejects(
+		chatFlow({
+			messages: [{ role: "user", content: "Is 'I lost interest' a pun?" }],
+		}),
+		(err) => err instanceof GenkitError && err.status === "ABORTED",
+	);
+	return { modelCalls, inferenceCalls };
+}
+
+// A limit other than both Genkit's default (5) and MAX_TOOL_ROUNDS shows
+// the flow passes on the one it's given.
+test("chatFlow stops a reply after maxToolRounds rounds of tool calls", async () => {
+	assert.deepEqual(await countCallsOfEndlessToolUse(1), {
+		modelCalls: 2,
+		inferenceCalls: 1,
+	});
+});
+
+test("chatFlow allows MAX_TOOL_ROUNDS rounds of tool calls by default", async () => {
+	assert.deepEqual(await countCallsOfEndlessToolUse(), {
+		modelCalls: MAX_TOOL_ROUNDS + 1,
+		inferenceCalls: MAX_TOOL_ROUNDS,
+	});
 });

@@ -22,7 +22,7 @@ We're building a conversational agent that detects and explains puns in text. Th
 - Consolidating onto one Google Cloud project means one shared card/billing account for the whole team instead of separate Vercel, Render, and Hugging Face accounts — simpler credential-sharing, one place to check quota.
 - **Card required, but no expected charges:** Cloud Run requires a Cloud Billing account attached to the project (a card on file), even to use the Always Free tier. Usage for a class project of this size should stay well within free-tier limits, so no actual charges are expected — the card is for Google's fraud verification, not billing.
 - Genkit is provider-agnostic like the Vercel AI SDK: the tool-calling code written against Gemini can be pointed at Claude or another model later with a plugin swap.
-- `frontend/` and `backend/` share one pnpm workspace at the repo root (one lockfile, one Biome config) since they're both Node/TypeScript packages; `inference/` and `eval/` are separate `uv` projects since their dependencies don't overlap.
+- `frontend/` and `backend/` share one pnpm workspace at the repo root (one lockfile, one Biome config) since they're both Node/TypeScript packages, together with `packages/timeouts/`, the timeouts both of them read (see "Sync points" below); `inference/` and `eval/` are separate `uv` projects since their dependencies don't overlap.
 - **Caveat:** Cloud Run scales to zero when idle, so the first request after a quiet period still has a cold start — meaningfully faster than Render's free tier, but not instant. Gemini's free tier can also throttle under heavy concurrent use. Rehearse a run before any live demo to make sure nothing's cold.
 
 ---
@@ -119,10 +119,12 @@ This domain can work independently once the contract is agreed — no dependency
 
 ## Sync points
 
-The only hard dependencies across domains:
+The only hard dependencies across domains, besides the shared timeouts below:
 1. **Day one:** agree the `/analyze` request/response schema (Inference ↔ Backend, Data/Eval). Frontend depends on it too: it renders `analyze_pun` results, and resends saved ones in `/api/chat` history, which Backend checks against the current rules (a result that no longer matches is left out rather than failing the request; see [`contracts.md`](contracts.md)).
 2. **Before Frontend wires up its streaming display:** agree the `/api/chat` streaming shape (Backend ↔ Frontend)
 3. **Before Frontend builds tool-call rendering:** agree the shape of `tool-call` events within the `/api/chat` Genkit stream (Backend ↔ Frontend) — this is Phase 2 of the progressive-enhancement plan in [`engineering-practices.md`](engineering-practices.md); Phase 1's plain-text stream shape from sync point 2 doesn't need it. Closed: the shape is in [`contracts.md`](contracts.md)'s `/api/chat` section.
+
+Frontend and Backend also share one piece of code: [`packages/timeouts`](../packages/timeouts/index.js), the timeouts of `/api/chat`'s waiting chain (from Frontend's App Check wait to Cloud Run's request timeout, which `deploy-backend.yml` sets from it). Both sides import it, its tests check the values still fit together, and changing one follows the deploy order in [`engineering-practices.md`](engineering-practices.md)'s "Shared timeouts".
 
 Deploying adds configuration links on top of those contracts, each documented in [`local-setup.md`](local-setup.md): the frontend build needs the backend's Cloud Run URL (`VITE_BACKEND_URL`), the backend's CORS allowlist names the frontend's origin (`backend/src/config.ts`), Firebase App Check ties the two to the same Firebase project (the frontend's Firebase config and reCAPTCHA key, and the backend's `firebaseProjectId`; see [`contracts.md`](contracts.md)), and once Backend calls the deployed Inference (TASK-11; until then `analyze_pun` answers from a fixture) the backend needs Inference's URL (`INFERENCE_URL`). Inference's Cloud Run service is private, so that call also needs a Google-signed ID token for Backend's runtime service account, which holds `roles/run.invoker` on the service (applied by [`deploy-inference.yml`](../.github/workflows/deploy-inference.yml)).
 

@@ -1,3 +1,4 @@
+import { MAX_TOOL_ROUNDS } from "@pun-agent/timeouts";
 import type {
 	GenerateResponseChunk,
 	Genkit,
@@ -12,11 +13,7 @@ import {
 	analyzePunInputSchema,
 	analyzeResultSchema,
 } from "../tools/analyze-pun.ts";
-import {
-	MAX_TOOL_ROUNDS,
-	type ModelLadderOptions,
-	modelLadder,
-} from "./model-ladder.ts";
+import { type ModelLadderOptions, modelLadder } from "./model-ladder.ts";
 import { SYSTEM_INSTRUCTION } from "./system-instruction.ts";
 import { numberToolRequests } from "./tool-request-refs.ts";
 
@@ -172,14 +169,18 @@ const hasToolPart = (chunk: GenerateResponseChunk) =>
  * substitute Genkit test-double models and a tool backed by a fixture,
  * without touching real Gemini or Inference, per
  * docs/engineering-practices.md's "Backend in isolation" section.
- * `ladderOptions` is there for the same reason: tests shorten the stall
- * limit and backoff rather than wait them out.
+ * `maxToolRounds` and `ladderOptions` are there for the same reason: tests
+ * shorten the stall limit and backoff rather than wait them out, or run
+ * fewer than MAX_TOOL_ROUNDS rounds.
  */
 export function createChatFlow(
 	ai: Genkit,
 	models: ModelArgument[],
 	tools: ToolArgument[],
-	ladderOptions: Omit<ModelLadderOptions, "onKeepalive"> = {},
+	{
+		maxToolRounds = MAX_TOOL_ROUNDS,
+		...ladderOptions
+	}: Omit<ModelLadderOptions, "onKeepalive"> & { maxToolRounds?: number } = {},
 ) {
 	return ai.defineFlow(
 		{
@@ -196,6 +197,9 @@ export function createChatFlow(
 				system: SYSTEM_INSTRUCTION,
 				messages: toGenkitMessages(input.messages),
 				tools,
+				// Part of the bound on the reply's worst case, which must fit in
+				// Cloud Run's request timeout (@pun-agent/timeouts).
+				maxTurns: maxToolRounds,
 				// The request's signal (routes/chat.ts): when the user stops or
 				// leaves, no further model turns go to Gemini.
 				abortSignal,
@@ -206,9 +210,6 @@ export function createChatFlow(
 				// in tools between calls never counts. Its keepalives are empty
 				// messages (docs/contracts.md), so waiting out a backoff never adds
 				// to the reply's longest silence.
-				// Explicitly Genkit's default: RETRY_BUDGET_MS and docs/contracts.md
-				// count on at most 5 rounds of tool calls, so 6 model calls.
-				maxTurns: MAX_TOOL_ROUNDS,
 				use: [
 					numberToolRequests(),
 					modelLadder(ai, models, {

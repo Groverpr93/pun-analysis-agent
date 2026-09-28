@@ -10,11 +10,16 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 # npm rather than Corepack, which Node stops bundling from v25.
 RUN npm install -g "$(node -p 'require("./package.json").packageManager.split("+")[0]')"
 COPY backend/package.json backend/
+# Backend's one workspace dependency: the shared timeouts (docs/contracts.md).
+COPY packages/timeouts/package.json packages/timeouts/
 RUN pnpm install --frozen-lockfile --filter backend
+COPY packages/timeouts/ packages/timeouts/
 COPY backend/ backend/
 RUN pnpm --filter backend run build
 # A production-only node_modules for the runtime stage, at the locked
-# versions. --legacy because backend has no workspace dependencies to inject.
+# versions. --legacy copies @pun-agent/timeouts into it like any other
+# dependency; the newer deploy would need injectWorkspacePackages, which also
+# changes how every workspace package is linked in local dev.
 # On a dev machine this command also strips devDependencies from the
 # workspace's own node_modules; in this throwaway build stage that's harmless.
 RUN pnpm --filter backend deploy --legacy --prod --frozen-lockfile /prod/backend

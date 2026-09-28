@@ -3,11 +3,11 @@ id: TASK-43
 title: >-
   Backend: step down a ladder of Flash-Lite models, with backoff, when Gemini
   fails
-status: To Do
+status: In Progress
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 15:05'
-updated_date: '2026-09-28 16:27'
+updated_date: '2026-09-28 18:28'
 labels: []
 dependencies:
   - TASK-42
@@ -50,6 +50,20 @@ Genkit's built-in retry() and fallback() middleware were reviewed and don't fit:
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Plan
+
+<!-- SECTION:PLAN:BEGIN -->
+1. config.ts: GEMINI_MODEL, if set, overrides the ladder (a one-model ladder: backoff, no step-down); unset leaves config.geminiModel undefined and uses the default ladder gemini-flash-lite-latest -> gemini-3.1-flash-lite -> gemini-2.5-flash-lite.
+2. New per-reply model middleware (flows/model-ladder.ts), modelled on Genkit's fallback(): resolveModel per rung and call it with onChunk + abortSignal; failStalledModelCalls wraps each attempt, so every attempt gets its own stall timer.
+3. Retry policy: UNAVAILABLE, DEADLINE_EXCEEDED (including stalls) and INTERNAL (Gemini 500) back off, then step down; RESOURCE_EXHAUSTED steps down right away; anything else, including errors that aren't GenkitErrors, fails at once. Nothing is retried after the call's first chunk, and a user stop (during a call or a wait) ends the reply with no more requests.
+4. Backoff per rung: 3 attempts, waits of 1 s then 2 s with a little jitter. Per-reply retry budget 90 s = 300 s Cloud Run timeout - 190 s baseline (6 calls x 15 s stall + 5 tool rounds x 20 s Inference) - 20 s margin. A retry starts only if spent + wait + stall limit fits.
+5. Pegging: the first model call that succeeds fixes the model for the rest of the reply; later failures back off on that model only, then fail with TASK-23's wording.
+6. Keepalives: data: {"message": ""} when an attempt fails and when its wait ends, so contracts.md's 35 s maximum silence is unchanged (holds while the longest wait <= stall limit).
+7. Log every retry and step-down with model, attempt and cause.
+8. Tests with Genkit test-double models per rung and fake timers, each failing if backoff, step-down, the 429 short-circuit, pegging, no-retry-after-first-chunk, the budget or stop handling is removed.
+9. Docs: contracts.md gets keepalives and the retry budget; local-setup.md covers GEMINI_MODEL's new meaning. Coordinate with TASK-44 (notes left there); code review + architectural review.
+<!-- SECTION:PLAN:END -->
 
 ## Implementation Notes
 

@@ -8,3 +8,6 @@
 !backend/package.json
 !backend/tsconfig.json
 !backend/src/
+!packages/timeouts/package.json
+!packages/timeouts/index.js
+!packages/timeouts/index.d.ts

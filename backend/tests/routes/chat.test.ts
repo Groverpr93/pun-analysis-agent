@@ -300,7 +300,7 @@ test("POST /api/chat sends the busy message, and logs the cause, when the model 
 	const stallAi = genkit({});
 	const { model: stallModel, chatFlow: shortLimitFlow } = buildMockChatFlow(
 		stallAi,
-		{ ladderOptions: { stallLimitMs: 200 } },
+		{ flowOptions: { stallLimitMs: 200 } },
 	);
 	const stallApp = new Hono();
 	stallApp.post("/api/chat", createChatHandler(shortLimitFlow));

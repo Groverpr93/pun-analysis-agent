@@ -11,7 +11,7 @@ on:
   workflow_call:
     inputs:
       package:
-        description: Workspace package to test (frontend or backend)
+        description: Workspace package to test (frontend, backend or @pun-agent/timeouts)
         type: string
         required: true
       build:

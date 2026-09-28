@@ -16,6 +16,7 @@
 		"@assistant-ui/react-markdown": "^0.14.16",
 		"@base-ui/react": "^1.8.0",
 		"@fontsource-variable/geist": "^5.3.0",
+		"@pun-agent/timeouts": "workspace:*",
 		"@tailwindcss/vite": "^4.3.3",
 		"class-variance-authority": "^0.7.1",
 		"cn": "^0.3.0",

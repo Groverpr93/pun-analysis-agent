@@ -16,6 +16,7 @@
 	"dependencies": {
 		"@genkit-ai/google-genai": "1.42.0",
 		"@hono/node-server": "^2.1.1",
+		"@pun-agent/timeouts": "workspace:*",
 		"firebase-admin": "^14.5.0",
 		"genkit": "1.42.0",
 		"hono": "^4.13.7"

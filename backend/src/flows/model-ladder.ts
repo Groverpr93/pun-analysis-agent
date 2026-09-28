@@ -1,4 +1,11 @@
 import {
+	BACKOFF_ATTEMPTS_PER_MODEL,
+	BACKOFF_JITTER_PERCENT,
+	FIRST_BACKOFF_MS,
+	MODEL_STALL_LIMIT_MS,
+	RETRY_BUDGET_MS,
+} from "@pun-agent/timeouts";
+import {
 	type Genkit,
 	GenkitError,
 	type ModelArgument,
@@ -10,7 +17,7 @@ import type {
 	GenerateResponseData,
 	ModelMiddlewareWithOptions,
 } from "genkit/model";
-import { failStalledModelCalls, MODEL_STALL_LIMIT_MS } from "./stall-guard.ts";
+import { failStalledModelCalls } from "./stall-guard.ts";
 
 /**
  * What the ladder does after a model call fails before its first chunk:
@@ -54,53 +61,6 @@ export const actionForModelFailure = (err: unknown): ModelFailureAction =>
 		? (ACTION_BY_STATUS[err.status] ?? "fail")
 		: "fail";
 
-/**
- * The backoff every model on the ladder gets, per model call: up to
- * ATTEMPTS_PER_MODEL attempts, waiting FIRST_BACKOFF_MS before the second
- * and doubling for each one after (1 s, then 2 s), each wait lengthened by
- * up to BACKOFF_JITTER of itself at random so retries don't fall in step.
- *
- * The longest wait (2.5 s with jitter) must stay below MODEL_STALL_LIMIT_MS:
- * the ladder sends a keepalive when an attempt fails and when a wait ends,
- * so the longest silence it leaves is the longer of one attempt (the stall
- * limit) and one wait, and docs/contracts.md's maximum silence between
- * events assumes that's the stall limit.
- */
-export const ATTEMPTS_PER_MODEL = 3;
-export const FIRST_BACKOFF_MS = 1_000;
-export const BACKOFF_JITTER = 0.25;
-
-/**
- * How long one reply may spend on failed attempts and backoff waits, in
- * total, across all its model calls. It keeps a reply's worst case under
- * Cloud Run's request timeout (300 s, the default, since deploy-backend.yml
- * sets none), which would otherwise cut the reply off with no error event:
- *
- *     300 s  Cloud Run's request timeout
- *   - 190 s  a reply with no retries: 6 model calls (MAX_TOOL_ROUNDS of
- *            tool calls, plus the answer) x 15 s MODEL_STALL_LIMIT_MS, and
- *            MAX_TOOL_ROUNDS x 20 s INFERENCE_TIMEOUT_MS
- *   -  20 s  margin for what neither counts: cold start, time between steps
- *   =  90 s
- *
- * Only failed attempts that are followed by another attempt count against
- * it, by the time they took, with the wait that follows: a reply's last
- * attempt at each model call is already in the 190 s. So a retry starts only
- * if everything spent so far, plus its wait, fits.
- *
- * It doesn't bound the time spent streaming, which a healthy reply may take
- * as long as it needs. TASK-44 moves these values into one module shared
- * with Frontend, and derives this one from Cloud Run's timeout.
- */
-export const RETRY_BUDGET_MS = 90_000;
-
-/**
- * The most rounds of tool calls one reply may make: Genkit's own default
- * maxTurns, set explicitly by the chat flow so that a Genkit upgrade can't
- * change the RETRY_BUDGET_MS arithmetic above without a code change here.
- */
-export const MAX_TOOL_ROUNDS = 5;
-
 export type ModelLadderOptions = {
 	/** Called when an attempt fails and the ladder carries on, and after each wait. */
 	onKeepalive?: () => void;
@@ -140,8 +100,11 @@ const wait = (ms: number, signal: AbortSignal | undefined) =>
  * which model answered, and how much of the retry budget the reply spent.
  *
  * For each model call:
- * - Each model gets up to ATTEMPTS_PER_MODEL attempts, with backoff between
- *   them. When they run out, or a 429 skips them, the next model is tried.
+ * - Each model gets up to BACKOFF_ATTEMPTS_PER_MODEL attempts, with the
+ *   backoff @pun-agent/timeouts defines between them. When they run out, or
+ *   a 429 skips them, the next model is tried. Each failed attempt is
+ *   followed by a keepalive, and so is each wait, which is why the backoff's
+ *   longest wait must stay within the stall limit.
  * - Each attempt has its own stall limit (failStalledModelCalls), so a
  *   stalled attempt is retried like any other retryable failure.
  * - Only a failure before the attempt streamed anything is retried: after
@@ -152,7 +115,12 @@ const wait = (ms: number, signal: AbortSignal | undefined) =>
  *   (docs/contracts.md), and a signature is only known to hold for the
  *   model that made it.
  * - A user stop, during an attempt or a wait, ends the call at once.
- * - When the retry budget can't cover another attempt, the call fails
+ * - The reply's retry budget (RETRY_BUDGET_MS, @pun-agent/timeouts) bounds
+ *   its retries in total, across all its model calls: each failed attempt
+ *   that another attempt follows counts, by the time it took, with the wait
+ *   after it. A model call's last attempt doesn't: it's already in
+ *   BASELINE_REPLY_WORST_CASE_MS. So a retry or step-down starts only if
+ *   everything spent so far, plus its wait, fits; otherwise the call fails
  *   with the last attempt's error, whose status routes/chat.ts turns into
  *   TASK-23's user-facing message.
  *
@@ -206,7 +174,7 @@ export function modelLadder(
 		const ladder = pegged ? [pegged] : models;
 
 		for (const [rung, model] of ladder.entries()) {
-			for (let attempt = 1; attempt <= ATTEMPTS_PER_MODEL; attempt++) {
+			for (let attempt = 1; attempt <= BACKOFF_ATTEMPTS_PER_MODEL; attempt++) {
 				const startedAt = Date.now();
 				let streamed = false;
 				try {
@@ -233,7 +201,7 @@ export function modelLadder(
 					if (streamed || signal?.aborted || action === "fail") throw err;
 
 					const stepDown =
-						action === "stepDown" || attempt === ATTEMPTS_PER_MODEL;
+						action === "stepDown" || attempt === BACKOFF_ATTEMPTS_PER_MODEL;
 					const nextModel = stepDown ? ladder.at(rung + 1) : model;
 					if (!nextModel) throw err;
 
@@ -241,7 +209,7 @@ export function modelLadder(
 						? 0
 						: firstBackoffMs *
 							2 ** (attempt - 1) *
-							(1 + BACKOFF_JITTER * random());
+							(1 + (BACKOFF_JITTER_PERCENT / 100) * random());
 					retrySpentMs += Date.now() - startedAt;
 					// Only a GenkitError gets this far (anything else fails above).
 					const { status, detail } = err as GenkitError;
