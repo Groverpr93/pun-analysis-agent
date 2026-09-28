@@ -282,3 +282,40 @@ test("POST /api/chat neither logs nor sends an error when the client disconnects
 	assert.equal(logError.mock.callCount(), 0);
 	assert.doesNotMatch(body, /^error: /m);
 });
+
+// Without the stall guard the reply never ends: fail instead of hanging.
+test("POST /api/chat sends the busy message, and logs the cause, when the model stalls", {
+	timeout: 5_000,
+}, async () => {
+	// Its own flow, so the stall limit can be short enough to wait out.
+	const stallAi = genkit({});
+	const { model: stallModel, chatFlow: shortLimitFlow } = buildMockChatFlow(
+		stallAi,
+		{ stallLimitMs: 200 },
+	);
+	const stallApp = new Hono();
+	stallApp.post("/api/chat", createChatHandler(shortLimitFlow));
+	stallModel.respondWith(() => new Promise(() => {}));
+
+	const res = await stallApp.request("/api/chat", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ messages: [{ role: "user", content: "hi" }] }),
+	});
+	const body = await res.text();
+
+	assert.equal(
+		body,
+		`error: ${JSON.stringify({
+			error: {
+				status: "DEADLINE_EXCEEDED",
+				message:
+					"The assistant is busy right now. Please try again in a moment.",
+			},
+		})}\n\n`,
+	);
+	const [, metadata] = logError.mock.calls[0]?.arguments ?? [];
+	assert.deepEqual(metadata, {
+		detail: { cause: "model_stalled", stallLimitMs: 200 },
+	});
+});

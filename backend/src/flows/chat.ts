@@ -12,6 +12,7 @@ import {
 	analyzePunInputSchema,
 	analyzeResultSchema,
 } from "../tools/analyze-pun.ts";
+import { failStalledModelCalls, MODEL_STALL_LIMIT_MS } from "./stall-guard.ts";
 import { SYSTEM_INSTRUCTION } from "./system-instruction.ts";
 import { numberToolRequests } from "./tool-request-refs.ts";
 
@@ -166,11 +167,14 @@ const hasToolPart = (chunk: GenerateResponseChunk) =>
  * so tests can substitute a Genkit test-double model and a tool backed by a
  * fixture, without touching real Gemini or Inference, per
  * docs/engineering-practices.md's "Backend in isolation" section.
+ * `stallLimitMs` is there for the same reason: tests shorten it rather
+ * than wait out the real MODEL_STALL_LIMIT_MS.
  */
 export function createChatFlow(
 	ai: Genkit,
 	model: ModelArgument,
 	tools: ToolArgument[],
+	{ stallLimitMs = MODEL_STALL_LIMIT_MS }: { stallLimitMs?: number } = {},
 ) {
 	return ai.defineFlow(
 		{
@@ -188,8 +192,12 @@ export function createChatFlow(
 				// The request's signal (routes/chat.ts): when the user stops or
 				// leaves, no further model turns go to Gemini.
 				abortSignal,
-				// Per reply, so refs are unique across all of the reply's tool calls.
-				use: [numberToolRequests()],
+				// numberToolRequests is per reply, so refs are unique across all of
+				// the reply's tool calls. failStalledModelCalls wraps each model call
+				// on its own, so time spent in tools between calls never counts. It
+				// goes last, closest to the model, so anything that retries a call
+				// (TASK-43) wraps it and gives each attempt its own timer.
+				use: [numberToolRequests(), failStalledModelCalls(stallLimitMs)],
 			});
 			// The whole reply, across model turns. Genkit's response.text is only
 			// the last turn's, which leaves out any text the model sent before

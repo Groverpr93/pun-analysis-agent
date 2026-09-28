@@ -4,7 +4,7 @@ title: 'Demo prep: enable Gemini API billing with spending limits'
 status: To Do
 assignee: []
 created_date: '2026-09-27 20:47'
-updated_date: '2026-09-28 10:08'
+updated_date: '2026-09-28 16:27'
 labels: []
 dependencies:
   - TASK-38
@@ -51,4 +51,8 @@ Model: since TASK-38, production uses gemini-flash-lite-latest (then gemini-3.5-
 
 <!-- SECTION:NOTES:BEGIN -->
 TASK-38 outcome (2026-09-28, @yaisiel.torres): production switched to gemini-flash-lite-latest (then gemini-3.5-flash-lite): 5/5 correct, 2 calls per question, no failures, while gemini-flash-latest 503'd on 2 of 4 questions. Its free tier (15/min, 500/day) may make billing unnecessary for the demo; billing stays the route if the demo switches back to Flash, which is now a deploy setting (GEMINI_MODEL) rather than a code change. Flash's missing replies are TASK-41 (Low).
+
+2026-09-28 (TASK-42): before switching production to Flash (a thinking model, silent before its first chunk), re-check MODEL_STALL_LIMIT_MS (backend/src/flows/stall-guard.ts, 30 s provisional) against Flash's time to first chunk, per TASK-32 AC #4; too low a limit fails healthy Flash replies as stalls.
+
+2026-09-28 (TASK-42, later): MODEL_STALL_LIMIT_MS is 15 s, not 30 s as noted above; the re-check matters more at 15 s.
 <!-- SECTION:NOTES:END -->

@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, mock, test } from "node:test";
-import { genkit } from "genkit";
+import { GenkitError, genkit } from "genkit";
 import { logger } from "genkit/logging";
 import { createChatFlow } from "../../src/flows/chat.ts";
 import {
@@ -12,7 +12,10 @@ import {
 	type AnalyzeResult,
 	createAnalyzePunTool,
 } from "../../src/tools/analyze-pun.ts";
-import { PUN_ANALYZE_RESULT } from "../fixtures/analyze-results.ts";
+import {
+	answeringWith,
+	PUN_ANALYZE_RESULT,
+} from "../fixtures/analyze-results.ts";
 import { buildMockChatFlow } from "../helpers/build-mock-chat-flow.ts";
 
 /**
@@ -553,4 +556,82 @@ test("chatFlow sends no further model requests once the reply is aborted", async
 	});
 
 	assert.equal(modelRequestsSent, 1);
+});
+
+// The stall guard itself is tested in stall-guard.test.ts; these check the
+// flow wires it around each model call, with a limit short enough to wait
+// out for real.
+// Long enough that a mock model call, even the process's first, never
+// takes it; short enough to wait out for real.
+const STALL_LIMIT_MS = 200;
+const stallAi = genkit({});
+const { model: stallModel, chatFlow: shortLimitFlow } = buildMockChatFlow(
+	stallAi,
+	{
+		stallLimitMs: STALL_LIMIT_MS,
+		// Inference takes several times the limit to answer.
+		analyzeFetch: async (...args) => {
+			await new Promise((resolve) => setTimeout(resolve, 3 * STALL_LIMIT_MS));
+			return answeringWith(PUN_ANALYZE_RESULT)(...args);
+		},
+	},
+);
+beforeEach(() => stallModel.reset());
+
+// Without the stall guard the reply never ends: fail instead of hanging.
+test("chatFlow fails a reply whose model call stalls", {
+	timeout: 5_000,
+}, async () => {
+	stallModel.respondWith(() => new Promise(() => {}));
+
+	await assert.rejects(
+		shortLimitFlow({ messages: [{ role: "user", content: "Hi" }] }),
+		(err) =>
+			err instanceof GenkitError &&
+			err.status === "DEADLINE_EXCEEDED" &&
+			(err.detail as { cause?: string })?.cause === "model_stalled",
+	);
+});
+
+// analyze_pun runs between model calls, so a slow Inference (bounded by
+// INFERENCE_TIMEOUT_MS instead) never counts as the model stalling.
+test("chatFlow doesn't count analyze_pun's wait on Inference against the stall limit", async () => {
+	stallModel.respondWith((request, { sendChunk }) => {
+		if (request.messages.at(-1)?.role !== "tool") {
+			return { toolRequests: [toolRequest] };
+		}
+		sendChunk("Yes, it's a pun.");
+		return "Yes, it's a pun.";
+	});
+
+	const reply = await shortLimitFlow({
+		messages: [{ role: "user", content: "Is 'I lost interest' a pun?" }],
+	});
+
+	assert.equal(reply, "Yes, it's a pun.");
+});
+
+// The unit tests check the guard aborts the signal it hands on; this checks
+// Genkit passes that signal all the way to the model, which is what frees
+// the Gemini connection (the plugin hands the signal to its fetch).
+test("chatFlow aborts a stalled model call's own request", {
+	timeout: 5_000,
+}, async () => {
+	const ai = genkit({});
+	const { promise: modelAborted, resolve: markAborted } =
+		Promise.withResolvers<void>();
+	const model = ai.defineModel(
+		{ name: "stallingModel", apiVersion: "v2", supports: { tools: true } },
+		(_request, { abortSignal }) =>
+			new Promise((_resolve, reject) => {
+				abortSignal?.addEventListener("abort", () => {
+					markAborted();
+					reject(abortSignal.reason);
+				});
+			}),
+	);
+	const flow = createChatFlow(ai, model, [], { stallLimitMs: STALL_LIMIT_MS });
+
+	await assert.rejects(flow({ messages: [{ role: "user", content: "Hi" }] }));
+	await modelAborted;
 });

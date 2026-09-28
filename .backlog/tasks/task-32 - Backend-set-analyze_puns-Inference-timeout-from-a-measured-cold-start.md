@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-27 15:25'
-updated_date: '2026-09-28 09:47'
+updated_date: '2026-09-28 16:24'
 labels: []
 milestone: m-4
 dependencies:
@@ -28,7 +28,8 @@ TASK-9 added INFERENCE_TIMEOUT_MS (backend/src/tools/analyze-pun.ts) with a prov
 <!-- AC:BEGIN -->
 - [ ] #1 Inference's cold start on Cloud Run is measured on the deployed service (time to first successful /analyze after scale-to-zero), over several runs, with the method recorded
 - [ ] #2 INFERENCE_TIMEOUT_MS is set from that measurement with its margin explained next to the constant
-- [ ] #3 docs/contracts.md records the measured value and drops the 'provisional and unmeasured' wording, so Frontend can rely on the worst-case wait
+- [ ] #3 docs/contracts.md records the measured value and drops the 'provisional and unmeasured' wording, and updates the maximum silence between /api/chat events (MODEL_STALL_LIMIT_MS + INFERENCE_TIMEOUT_MS) that Frontend's limit (TASK-28) is set against
+- [ ] #4 MODEL_STALL_LIMIT_MS (TASK-42, backend/src/flows/stall-guard.ts) is set from measured Gemini time to first chunk and longest gap between chunks, over TASK-38's prompt set, for every model production can run: the configured GEMINI_MODEL and, once TASK-43 lands, each model on its ladder; its margin is explained next to the constant and in docs/contracts.md
 <!-- AC:END -->
 
 ## Definition of Done
@@ -44,4 +45,8 @@ TASK-9 added INFERENCE_TIMEOUT_MS (backend/src/tools/analyze-pun.ts) with a prov
 Carries TASK-9's former AC #5, removed from TASK-9 on 2026-09-27: 'The Inference timeout is a named constant whose value is based on a measured Inference cold start on Cloud Run ... and the value and measurement are recorded in docs/contracts.md so Frontend can rely on the worst-case wait.' The constant already exists (INFERENCE_TIMEOUT_MS, backend/src/tools/analyze-pun.ts); contracts.md also states the per-reply worst case (up to 5 rounds x the timeout), which must be updated with the measured value.
 
 From TASK-14's architectural review (2026-09-28): AC #1 measures time to the first successful /analyze, but /analyze answers 500 (NotImplementedError) until TASK-16, and the dominant cold-start cost (spaCy/WordNet loads, and torch if TASK-19 adds sentence-transformers) only appears once the real model runs. So this effectively depends on TASK-16, and should be re-measured if TASK-19 changes the model. The service is IAM-private: measuring needs roles/run.invoker (or project admin) and an ID token, e.g. `curl -H "Authorization: Bearer $(gcloud auth print-identity-token)" <url>/analyze`.
+
+2026-09-28: MODEL_STALL_LIMIT_MS was added to this task at the user's request when TASK-42 set it provisionally. Measuring it doesn't need Inference (a local Backend with APP_CHECK=off, as in TASK-38, is enough), so it needn't wait for TASK-16 like the cold-start measurement does.
+
+2026-09-28 (TASK-42 architectural review): Frontend no longer relies on the per-reply Inference total (5 rounds x INFERENCE_TIMEOUT_MS) as its worst-case wait; it relies on the maximum silence between events in docs/contracts.md. AC #3 was reworded to match, and AC #4 widened from 'TASK-43's ladder' to every model production can run, since GEMINI_MODEL is configurable and -latest aliases move.
 <!-- SECTION:NOTES:END -->
