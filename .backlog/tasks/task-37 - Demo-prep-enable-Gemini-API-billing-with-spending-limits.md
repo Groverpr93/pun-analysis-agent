@@ -4,7 +4,7 @@ title: 'Demo prep: enable Gemini API billing with spending limits'
 status: To Do
 assignee: []
 created_date: '2026-09-27 20:47'
-updated_date: '2026-09-28 16:27'
+updated_date: '2026-09-28 19:30'
 labels: []
 dependencies:
   - TASK-38
@@ -55,4 +55,6 @@ TASK-38 outcome (2026-09-28, @yaisiel.torres): production switched to gemini-fla
 2026-09-28 (TASK-42): before switching production to Flash (a thinking model, silent before its first chunk), re-check MODEL_STALL_LIMIT_MS (backend/src/flows/stall-guard.ts, 30 s provisional) against Flash's time to first chunk, per TASK-32 AC #4; too low a limit fails healthy Flash replies as stalls.
 
 2026-09-28 (TASK-42, later): MODEL_STALL_LIMIT_MS is 15 s, not 30 s as noted above; the re-check matters more at 15 s.
+
+2026-09-28 (TASK-44): MODEL_STALL_LIMIT_MS is back to 30 s and now lives in packages/timeouts/index.js. If Flash's time to first chunk needs a longer stall limit, the module's tests will require raising CLOUD_RUN_REQUEST_TIMEOUT_MS (400 s) above about 35 s, and FRONTEND_SILENCE_LIMIT_MS (75 s) for any longer silence; see docs/engineering-practices.md's 'Shared timeouts' for the deploy order.
 <!-- SECTION:NOTES:END -->

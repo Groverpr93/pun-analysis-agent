@@ -1,3 +1,4 @@
+import { INFERENCE_TIMEOUT_MS } from "@pun-agent/timeouts";
 import type { Genkit } from "genkit";
 import { z } from "genkit";
 import { logger } from "genkit/logging";
@@ -81,16 +82,6 @@ export const UNDETERMINED_ANALYZE_RESULT: AnalyzeResult = {
 	confidence: null,
 	sense_source: null,
 };
-
-/**
- * How long analyze_pun waits for Inference, covering its Cloud Run cold
- * start. Provisional and unmeasured: the cold start can't be measured until
- * /analyze answers (TASK-16), so this is a guess until TASK-32 measures it and
- * records it in docs/contracts.md. With MODEL_STALL_LIMIT_MS, it sets the
- * longest silence in a reply there, which Frontend's own limit is set
- * against.
- */
-export const INFERENCE_TIMEOUT_MS = 20_000;
 
 /** Why a call to Inference didn't produce a result, as logged. */
 type InferenceFailure = "timeout" | "unreachable" | "non_2xx" | "malformed";

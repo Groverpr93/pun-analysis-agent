@@ -20,6 +20,8 @@ jobs:
           # every pull request that touches it.
           - package: backend
             build: false
+          - package: "@pun-agent/timeouts"
+            build: false
     uses: ./.github/workflows/test-js.yml
     with:
       package: ${{ matrix.package }}

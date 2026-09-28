@@ -21,7 +21,7 @@ Put local secrets in `.env` / `.env.local` files inside the relevant package fol
 
 ### Frontend deploy (CI only)
 
-[`deploy-frontend.yml`](../.github/workflows/deploy-frontend.yml) builds `frontend/` and deploys it to Firebase Hosting (`pun-agent.web.app`) on every push to `main` that touches `frontend/**`, the root `package.json`/`pnpm-lock.yaml`/`pnpm-workspace.yaml`, or the workflow itself (or a manual run on `main`), via [`FirebaseExtended/action-hosting-deploy`](https://github.com/FirebaseExtended/action-hosting-deploy). Its build step sets `VITE_CHAT_ADAPTER=live` and `VITE_BACKEND_URL` to the Cloud Run URL below, so the deployed site talks to the real Backend; those vars live only in the workflow, so local builds and CI tests stay on the stub. It first runs the frontend tests through the same [`test-js.yml`](../.github/workflows/test-js.yml) that `test.yml` uses, and deploys only if they pass; deploys run one at a time, and a newer push replaces a run still waiting. The target Firebase project ID (`pun-agent`) is committed in [`frontend/.firebaserc`](../frontend/.firebaserc) — not a secret, since a project ID isn't sensitive.
+[`deploy-frontend.yml`](../.github/workflows/deploy-frontend.yml) builds `frontend/` and deploys it to Firebase Hosting (`pun-agent.web.app`) on every push to `main` that touches `frontend/**`, `packages/timeouts/**`, the root `package.json`/`pnpm-lock.yaml`/`pnpm-workspace.yaml`, or the workflow itself (or a manual run on `main`), via [`FirebaseExtended/action-hosting-deploy`](https://github.com/FirebaseExtended/action-hosting-deploy). Its build step sets `VITE_CHAT_ADAPTER=live` and `VITE_BACKEND_URL` to the Cloud Run URL below, so the deployed site talks to the real Backend; those vars live only in the workflow, so local builds and CI tests stay on the stub. It first runs the frontend tests and the shared timeouts' tests through the same [`test-js.yml`](../.github/workflows/test-js.yml) that `test.yml` uses, and deploys only if they pass; deploys run one at a time, and a newer push replaces a run still waiting. The target Firebase project ID (`pun-agent`) is committed in [`frontend/.firebaserc`](../frontend/.firebaserc) — not a secret, since a project ID isn't sensitive.
 
 The Firebase web config and the reCAPTCHA Enterprise site key used for App Check are committed in [`frontend/src/lib/firebase/app-check.ts`](../frontend/src/lib/firebase/app-check.ts). They're public by design and ship in the bundle. The key was created in the Google Cloud console (Security → reCAPTCHA) as a score-based website key for `pun-agent.web.app` and `pun-agent.firebaseapp.com` only, and registered for the web app under Firebase's App Check → Apps. Serving the site from another domain means adding it to that key, and to Backend's CORS allowlist.
 
@@ -42,13 +42,13 @@ No local Firebase login is required to develop `frontend/` day-to-day; this secr
 
 ### Backend deploy (CI only)
 
-[`deploy-backend.yml`](../.github/workflows/deploy-backend.yml) builds [`backend/Dockerfile`](../backend/Dockerfile) on every pull request that touches the backend (build only, so a broken image fails the PR). On pushes to `main` it first runs the backend tests (via [`test-js.yml`](../.github/workflows/test-js.yml)), then also pushes the image to Artifact Registry, deploys it to Cloud Run and smoke-tests `/health`, authenticating with the same `GCP_SA_KEY`. It needs no other GitHub secret: the Gemini key never passes through CI.
+[`deploy-backend.yml`](../.github/workflows/deploy-backend.yml) builds [`backend/Dockerfile`](../backend/Dockerfile) on every pull request that touches the backend (build only, so a broken image fails the PR). It also runs on changes to `packages/timeouts/**`, which the image is built with. On pushes to `main` it first runs the backend tests and the shared timeouts' tests (via [`test-js.yml`](../.github/workflows/test-js.yml)), then also pushes the image to Artifact Registry, deploys it to Cloud Run and smoke-tests `/health`, authenticating with the same `GCP_SA_KEY`. It needs no other GitHub secret: the Gemini key never passes through CI.
 
 One-time GCP setup it relies on (already done, see TASK-13's notes):
 
 | Resource | Where | Notes |
 |---|---|---|
-| Cloud Run service `pun-agent-backend` | `pun-agent`, `us-east1` | `https://pun-agent-backend-203365930808.us-east1.run.app`. Public (`--allow-unauthenticated`), so `/api/*` checks a Firebase App Check token inside the app (TASK-25; see [`contracts.md`](contracts.md)), and the deploy smoke-tests that it does, `--min-instances=0`, `--max-instances=1` |
+| Cloud Run service `pun-agent-backend` | `pun-agent`, `us-east1` | `https://pun-agent-backend-203365930808.us-east1.run.app`. Public (`--allow-unauthenticated`), so `/api/*` checks a Firebase App Check token inside the app (TASK-25; see [`contracts.md`](contracts.md)), and the deploy smoke-tests that it does, `--min-instances=0`, `--max-instances=1`, and `--timeout` from `CLOUD_RUN_REQUEST_TIMEOUT_MS` in [`packages/timeouts`](../packages/timeouts/index.js) |
 | Service account `pun-agent-runtime@pun-agent.iam.gserviceaccount.com` | `pun-agent` | the identity the service runs as; can read only the secret below, no project-level roles |
 | Secret `gemini-api-key-runtime` | `pun-agent` Secret Manager | the production Gemini key, mounted as `GEMINI_API_KEY` |
 | Gemini API key `pun-agent-runtime` | `gen-lang-client-0125403786` (no billing, free tier) | restricted to the Gemini API |
@@ -214,7 +214,7 @@ uv run ruff format --check .
 docker run --rm -v "$PWD:/repo" --workdir /repo rhysd/actionlint:1.7.12 -color
 ```
 
-[`.github/workflows/lint.yml`](../.github/workflows/lint.yml) and [`.github/workflows/test.yml`](../.github/workflows/test.yml) run all of the above (lint/mermaid/ruff lint and format/actionlint, and the frontend/backend/inference test suites plus the frontend's production build, respectively) on every push/PR, so failures show up in CI even if you skip running them locally.
+[`.github/workflows/lint.yml`](../.github/workflows/lint.yml) and [`.github/workflows/test.yml`](../.github/workflows/test.yml) run all of the above (lint/mermaid/ruff lint and format/actionlint, and the frontend/backend/shared-timeouts/inference test suites plus the frontend's production build, respectively) on every push/PR, so failures show up in CI even if you skip running them locally.
 
 ### Pre-commit hook
 

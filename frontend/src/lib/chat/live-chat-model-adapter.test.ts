@@ -3,6 +3,7 @@ import type {
 	ChatModelRunResult,
 	ThreadMessage,
 } from "@assistant-ui/react";
+import { APP_CHECK_TIMEOUT_MS } from "@pun-agent/timeouts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { punResult, undeterminedResult } from "./fixtures/analyze-results";
 import { byteStreamOf, utf8 } from "./fixtures/byte-stream";
@@ -13,10 +14,7 @@ import {
 	recordedToolCallStream,
 	recordedToolCallThenErrorStream,
 } from "./fixtures/recorded-genkit-streams";
-import {
-	APP_CHECK_TIMEOUT_MS,
-	createLiveChatModelAdapter,
-} from "./live-chat-model-adapter";
+import { createLiveChatModelAdapter } from "./live-chat-model-adapter";
 
 const CHAT_URL = "http://backend.test/api/chat";
 const APP_CHECK_TOKEN = "test-app-check-token";

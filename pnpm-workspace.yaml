@@ -1,6 +1,7 @@
 packages:
   - "frontend"
   - "backend"
+  - "packages/timeouts"
 allowBuilds:
   # Its postinstall writes Firebase web-app config for Firebase App Hosting's
   # auto-init. It arrives through firebase-admin, which doesn't use that.

@@ -23,4 +23,4 @@ cd frontend && pnpm install
 cd eval && uv sync
 ```
 
-`frontend` and `backend` share a pnpm workspace, so `pnpm install` from the repo root also works for both. It also installs a git pre-commit hook that formats staged files, so run it once even if you only work in `inference/` or `eval/` (see [`docs/local-setup.md`](docs/local-setup.md)'s "Pre-commit hook").
+`frontend`, `backend` and `packages/timeouts` (the timeouts both of them read; see [`docs/contracts.md`](docs/contracts.md)) share a pnpm workspace, so `pnpm install` from the repo root also works for all three. It also installs a git pre-commit hook that formats staged files, so run it once even if you only work in `inference/` or `eval/` (see [`docs/local-setup.md`](docs/local-setup.md)'s "Pre-commit hook").

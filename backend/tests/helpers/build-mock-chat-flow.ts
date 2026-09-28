@@ -10,18 +10,21 @@ import {
 /**
  * Pairs a mockModel with a chatFlow built on it, on the given registry,
  * wired to an analyze_pun tool whose Inference is `analyzeFetch` (by
- * default, one that finds a pun in any text). `stallLimitMs` shortens
- * the flow's stall limit (MODEL_STALL_LIMIT_MS by default).
+ * default, one that finds a pun in any text). `stallLimitMs` and
+ * `maxToolRounds` shorten the flow's own (MODEL_STALL_LIMIT_MS and
+ * MAX_TOOL_ROUNDS by default).
  */
 export function buildMockChatFlow(
 	ai: Genkit,
 	{
 		analyzeFetch = answeringWith(PUN_ANALYZE_RESULT),
 		stallLimitMs,
+		maxToolRounds,
 		...options
 	}: MockModelOptions & {
 		analyzeFetch?: typeof fetch;
 		stallLimitMs?: number;
+		maxToolRounds?: number;
 	} = {},
 ) {
 	// Declares tool support, as Gemini does; otherwise Genkit warns on
@@ -36,6 +39,9 @@ export function buildMockChatFlow(
 	});
 	return {
 		model,
-		chatFlow: createChatFlow(ai, model, [analyzePun], { stallLimitMs }),
+		chatFlow: createChatFlow(ai, model, [analyzePun], {
+			stallLimitMs,
+			maxToolRounds,
+		}),
 	};
 }

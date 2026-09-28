@@ -1,0 +1,16 @@
+{
+	"name": "@pun-agent/timeouts",
+	"private": true,
+	"version": "0.0.0",
+	"description": "The timeouts of /api/chat's waiting chain, shared by Frontend and Backend",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"default": "./index.js"
+		}
+	},
+	"scripts": {
+		"test": "node --test \"tests/**/*.test.js\""
+	}
+}

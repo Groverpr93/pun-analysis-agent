@@ -1,3 +1,4 @@
+import { MAX_TOOL_ROUNDS, MODEL_STALL_LIMIT_MS } from "@pun-agent/timeouts";
 import type {
 	GenerateResponseChunk,
 	Genkit,
@@ -12,7 +13,7 @@ import {
 	analyzePunInputSchema,
 	analyzeResultSchema,
 } from "../tools/analyze-pun.ts";
-import { failStalledModelCalls, MODEL_STALL_LIMIT_MS } from "./stall-guard.ts";
+import { failStalledModelCalls } from "./stall-guard.ts";
 import { SYSTEM_INSTRUCTION } from "./system-instruction.ts";
 import { numberToolRequests } from "./tool-request-refs.ts";
 
@@ -167,14 +168,18 @@ const hasToolPart = (chunk: GenerateResponseChunk) =>
  * so tests can substitute a Genkit test-double model and a tool backed by a
  * fixture, without touching real Gemini or Inference, per
  * docs/engineering-practices.md's "Backend in isolation" section.
- * `stallLimitMs` is there for the same reason: tests shorten it rather
- * than wait out the real MODEL_STALL_LIMIT_MS.
+ * `stallLimitMs` and `maxToolRounds` are there for the same reason: tests
+ * shorten them rather than wait out the real MODEL_STALL_LIMIT_MS or run
+ * MAX_TOOL_ROUNDS rounds.
  */
 export function createChatFlow(
 	ai: Genkit,
 	model: ModelArgument,
 	tools: ToolArgument[],
-	{ stallLimitMs = MODEL_STALL_LIMIT_MS }: { stallLimitMs?: number } = {},
+	{
+		stallLimitMs = MODEL_STALL_LIMIT_MS,
+		maxToolRounds = MAX_TOOL_ROUNDS,
+	}: { stallLimitMs?: number; maxToolRounds?: number } = {},
 ) {
 	return ai.defineFlow(
 		{
@@ -189,6 +194,9 @@ export function createChatFlow(
 				system: SYSTEM_INSTRUCTION,
 				messages: toGenkitMessages(input.messages),
 				tools,
+				// Part of the bound on the reply's worst case, which must fit in
+				// Cloud Run's request timeout (@pun-agent/timeouts).
+				maxTurns: maxToolRounds,
 				// The request's signal (routes/chat.ts): when the user stops or
 				// leaves, no further model turns go to Gemini.
 				abortSignal,

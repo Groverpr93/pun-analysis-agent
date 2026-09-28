@@ -2,6 +2,7 @@ import type {
 	ChatModelAdapter,
 	ChatModelRunOptions,
 } from "@assistant-ui/react";
+import { APP_CHECK_TIMEOUT_MS } from "@pun-agent/timeouts";
 import { FlowErrorEvent, parseGenkitFlowStream } from "./genkit-flow-stream";
 import {
 	applyMessage,
@@ -43,17 +44,13 @@ function failWith(userMessage: string, cause: unknown): never {
 }
 
 /**
- * How long to wait for an App Check token. Normally it's cached, but a
- * blocked reCAPTCHA script (e.g. by an ad-blocker) leaves the SDK waiting
- * forever, and assistant-ui keeps the reply "running" until run() settles.
- */
-export const APP_CHECK_TIMEOUT_MS = 10_000;
-
-/**
  * Waits for the App Check token, but stops waiting if the user presses stop
  * (rejecting with the signal's AbortError, so the reply shows as cancelled)
- * or after APP_CHECK_TIMEOUT_MS. Once the token has settled, its own outcome
- * stands, just as fetch errors are judged by the error itself (see isAbort).
+ * or after APP_CHECK_TIMEOUT_MS: a blocked reCAPTCHA script (e.g. by an
+ * ad-blocker) leaves the SDK waiting forever, and assistant-ui keeps the
+ * reply "running" until run() settles. Once the token has settled, its own
+ * outcome stands, just as fetch errors are judged by the error itself (see
+ * isAbort).
  */
 const waitForAppCheckToken = (
 	token: Promise<string>,

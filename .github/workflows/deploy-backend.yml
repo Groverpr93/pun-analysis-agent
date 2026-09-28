@@ -7,15 +7,16 @@ name: Deploy Backend
 # App Check token). The Cloud Run setup (runtime service account, Gemini key
 # secret, image repo) is documented in docs/local-setup.md.
 #
-# The root package.json / lockfile / workspace paths are included because the
-# image is built from them; a frontend-only dependency bump therefore also
-# redeploys an unchanged backend. Accepted: rare, and it costs one cold start.
+# The root package.json / lockfile / workspace paths and packages/timeouts
+# are included because the image is built from them; a frontend-only
+# dependency bump therefore also redeploys an unchanged backend. Accepted: rare, and it costs one cold start.
 
 on:
   push:
     branches: [main]
     paths:
       - "backend/**"
+      - "packages/timeouts/**"
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
@@ -23,6 +24,7 @@ on:
   pull_request:
     paths:
       - "backend/**"
+      - "packages/timeouts/**"
       - "package.json"
       - "pnpm-lock.yaml"
       - "pnpm-workspace.yaml"
@@ -47,11 +49,15 @@ env:
 
 jobs:
   # test.yml already covers pull requests; this gates the deploy itself.
+  # The timeouts' own tests check they still fit together (docs/contracts.md).
   test:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    strategy:
+      matrix:
+        package: [backend, "@pun-agent/timeouts"]
     uses: ./.github/workflows/test-js.yml
     with:
-      package: backend
+      package: ${{ matrix.package }}
 
   build-and-deploy:
     name: Build image (and deploy on main)
@@ -63,6 +69,16 @@ jobs:
       - uses: actions/checkout@v7
       - run: echo "IMAGE=${REGION}-docker.pkg.dev/${PROJECT_ID}/pun-agent/backend" >> "$GITHUB_ENV"
       - uses: docker/setup-buildx-action@v4
+      # Cloud Run's request timeout, from the shared timeouts module, in the
+      # whole seconds gcloud takes. Read on pull requests too, so a module
+      # that can't be read fails the PR rather than the deploy.
+      - id: timeouts
+        run: |
+          seconds=$(node --input-type=module -e '
+            import { CLOUD_RUN_REQUEST_TIMEOUT_MS } from "./packages/timeouts/index.js";
+            console.log(CLOUD_RUN_REQUEST_TIMEOUT_MS / 1000);
+          ')
+          echo "cloud-run-timeout=${seconds}s" >> "$GITHUB_OUTPUT"
 
       - if: env.DEPLOY == 'true'
         uses: google-github-actions/auth@v3
@@ -104,6 +120,7 @@ jobs:
             --allow-unauthenticated
             --min-instances=0
             --max-instances=1
+            --timeout=${{ steps.timeouts.outputs.cloud-run-timeout }}
 
       - if: env.DEPLOY == 'true'
         name: Smoke-test /health on the deployed service

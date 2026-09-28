@@ -7,7 +7,7 @@ Instructions for any agent (Claude Code or otherwise) working in this repo.
 If your local environment isn't set up yet, start with [`docs/agent-setup.md`](docs/agent-setup.md) — tool-agnostic setup instructions any agent can follow to bootstrap this repo on a fresh machine.
 
 Before making a change — especially one that touches more than one domain — read:
-- [`docs/local-setup.md`](docs/local-setup.md) for how each package (`inference/`, `backend/`, `frontend/`, `eval/`) is installed and run locally.
+- [`docs/local-setup.md`](docs/local-setup.md) for how each package (`inference/`, `backend/`, `frontend/`, `eval/`, plus `packages/timeouts/`, the timeouts Frontend and Backend share) is installed and run locally.
 - [`docs/project-spec.md`](docs/project-spec.md) for the stack, architecture, and which domain owns what.
 - [`docs/engineering-practices.md`](docs/engineering-practices.md) for cross-domain isolation, testing, dev-experience, and the progressive-enhancement order Backend/Frontend get built in.
 - [`docs/contracts.md`](docs/contracts.md) for the exact `/analyze` and `/api/chat` schemas. Treat these as the source of truth — if a change requires altering either shape, update `contracts.md` in the same change and flag it, since both sides of the contract depend on it.
