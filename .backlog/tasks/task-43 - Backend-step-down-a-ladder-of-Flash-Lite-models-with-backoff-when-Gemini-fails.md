@@ -7,7 +7,7 @@ status: In Progress
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 15:05'
-updated_date: '2026-09-28 19:43'
+updated_date: '2026-09-28 19:55'
 labels: []
 dependencies:
   - TASK-42
@@ -75,4 +75,6 @@ From TASK-42's architectural review (2026-09-28): the stall guard is innermost a
 2026-09-28: Implemented. Decisions: keepalives (data: {"message": ""}) rather than a bounded ladder, so MAX_SILENCE_MS doesn't grow; routes/chat.ts moved from flow.stream() to flow.run(onChunk) because Genkit's stream() iterator drops falsy chunks (verified: express handler writes every chunk, and the new wire-format test pins keepalive bytes to it). Non-GenkitErrors fail rather than retry, which includes network failures (the Gemini plugin rethrows them as plain Errors). The explicit signal?.aborted check in the ladder is unreachable through Genkit (the stall guard's race rejects with the AbortError first) and is kept as defence in depth. Budget rule corrected from the plan's first draft: spent (failed attempts that another attempt follows, plus waits) + next wait <= RETRY_BUDGET_MS; the extra stall-limit term double-counted the call's last attempt. After TASK-44 (#72) merged, all values come from @pun-agent/timeouts (stall 30 s, budget 80 s, 3 tool rounds, 400 s Cloud Run timeout); the backoff moved there too, with relationship tests that LONGEST_BACKOFF_WAIT_MS <= MODEL_STALL_LIMIT_MS and that one retry (stall + longest wait) fits the budget.
 Validation: backend 166/166 (tsc clean), packages/timeouts 7/7, frontend 141/141. Ladder tests mutation-checked: removing backoff, step-down, the 429 short-circuit, pegging, the no-retry-after-chunk guard, the budget, attempt charging, keepalives, jitter, fail-classification, or the registry lookup key each fails a test; LONGEST_BACKOFF_WAIT_MS drifting from the ladder's formula fails the jitter test. Reviews: code review and architectural review (pre-merge), plus a review of the merge onto TASK-44; all findings fixed or noted.
 Not done: no live check against Gemini. gemini-3.1-flash-lite and gemini-2.5-flash-lite haven't been called with this project's key, and TASK-35's thought-signature check hasn't been re-run against them (contracts.md says so). Suggested follow-ups, not created: that live/signature check; TASK-37 AC #6 still names the removed DEFAULT_GEMINI_MODEL, and pinning Flash via GEMINI_MODEL now also gives up the ladder.
+
+2026-09-28: The cross-model check (reachability of the lower models with this key, and follow-ups whose unsigned history was made by another model) is TASK-45. Timing measurements for the ladder's models stay in TASK-32 AC #4.
 <!-- SECTION:NOTES:END -->
