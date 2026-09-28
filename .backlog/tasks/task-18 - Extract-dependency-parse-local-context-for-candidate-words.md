@@ -1,10 +1,10 @@
 ---
 id: TASK-18
 title: Extract dependency-parse local context for candidate words
-status: In Progress
+status: Done
 assignee: []
 created_date: '2026-09-20 10:04'
-updated_date: '2026-09-28 21:26'
+updated_date: '2026-09-28 21:32'
 labels:
   - wsd
 milestone: m-6
@@ -53,6 +53,8 @@ Also corrected docs/design/sense-selection.md's Step 3 example: it said dough is
 PR #36 review (Yai, 2026-09-26): (1) extract_candidates and local_contexts now both take the parsed Doc instead of text, so each sentence is parsed once and a text/candidate mismatch can't happen; _token_for, its ValueError check (which an out-of-range index bypassed with IndexError) and the mismatch and parse-count tests were removed. (2) The raw parse head often isn't a predicate (pobj gives the preposition, conj gives the sibling noun), and TASK-19's selectional-preference seeds are keyed by (predicate, relation), so the pair is cleaned up here: conj -> climb to the first conjunct (a loop, since spaCy chains lists), pobj -> relation prep_<prep> with the preposition's head as predicate (prep_ chosen over UD-style obl: to match spaCy's other labels), nsubj with an acomp/attr sibling -> that complement as predicate (be/look/seem accept any subject). This reverses the earlier note: batter is now nsubj/ready, matching the design doc's original target, which is restored in docs/design/sense-selection.md step 3 along with a description of the pair format. Verified each rule by removing it (and turning the conj loop into a single hop): at least one test fails every time.
 
 PR #36 approval round (Yai, 2026-09-27): added a copula complement rule, the mirror of the subject rule: an acomp/attr complement reports the subject as its predicate ('was ready' -> acomp / batter), falling back to the verb when it has no nsubj child ('I used to be a banker' -> attr / be, since I is the subject of used). So for complements, predicate holds a noun and TASK-19 asks which sense fits the subject; documented in the local_contexts docstring and design doc step 3. Added the missing attr test ('was a lefty'), made the in-order test compare the full list, and noted in the design doc that prep_<prep> is our label, not spaCy's. Re-checked every rule by removing it (conj, single-hop conj, pobj, copula subject, attr, complement, ROOT): at least one test fails each time.
+
+Merged in PR #36 as ffe2497 (2026-09-28) after two review rounds with Yai.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
