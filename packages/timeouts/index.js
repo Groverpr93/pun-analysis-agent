@@ -38,7 +38,8 @@ export const INFERENCE_TIMEOUT_MS = 20_000;
  * normal Flash-Lite time to first chunk, since a limit that's too short
  * fails healthy replies whose first chunk is slow. It was briefly halved to
  * 15 s to leave room for TASK-43's retries within Cloud Run's timeout, then
- * restored once capping MAX_TOOL_ROUNDS at 2 made that room (TASK-44). The
+ * restored once capping MAX_TOOL_ROUNDS and raising
+ * CLOUD_RUN_REQUEST_TIMEOUT_MS made that room (TASK-44). The
  * cost is a smaller RETRY_BUDGET_MS and a longer MAX_SILENCE_MS for
  * Frontend to wait out. TASK-32 measures it.
  */
