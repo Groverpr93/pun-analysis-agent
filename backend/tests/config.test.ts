@@ -82,18 +82,15 @@ for (const value of ["", "JSON", "jsonl", "text"]) {
 	});
 }
 
-// Production sets no GEMINI_MODEL, so this default is the production model.
-test("uses gemini-flash-lite-latest when GEMINI_MODEL is unset", async () => {
-	assert.equal(
-		(await loadConfigWith(undefined)).geminiModel,
-		"gemini-flash-lite-latest",
-	);
+// Production sets no GEMINI_MODEL, so genkit.ts uses GEMINI_MODEL_LADDER.
+test("leaves geminiModel unset when GEMINI_MODEL is unset", async () => {
+	assert.equal((await loadConfigWith(undefined)).geminiModel, undefined);
 });
 
 // What a bare `GEMINI_MODEL=` line in .env.local leaves behind.
-test("uses gemini-flash-lite-latest when GEMINI_MODEL is empty", async () => {
+test("leaves geminiModel unset when GEMINI_MODEL is empty", async () => {
 	const config = await loadConfigWith(undefined, { geminiModel: "" });
-	assert.equal(config.geminiModel, "gemini-flash-lite-latest");
+	assert.equal(config.geminiModel, undefined);
 });
 
 test("uses the model GEMINI_MODEL names", async () => {

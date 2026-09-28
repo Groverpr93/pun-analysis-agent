@@ -4,7 +4,7 @@ import { cors } from "hono/cors";
 import { config } from "./config.ts";
 import { verifyAppCheckToken } from "./firebase.ts";
 import { createChatFlow } from "./flows/chat.ts";
-import { ai, chatModel } from "./genkit.ts";
+import { ai, chatModels } from "./genkit.ts";
 import { createJsonLogSink } from "./logging.ts";
 import { appCheck } from "./middleware/app-check.ts";
 import { createChatHandler } from "./routes/chat.ts";
@@ -42,5 +42,5 @@ const analyzePun = createAnalyzePunTool(ai, {
 	fetch: fixtureFetch,
 	inferenceUrl: config.inferenceUrl,
 });
-const chatFlow = createChatFlow(ai, chatModel, [analyzePun]);
+const chatFlow = createChatFlow(ai, chatModels, [analyzePun]);
 app.post("/api/chat", createChatHandler(chatFlow));

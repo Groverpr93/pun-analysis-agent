@@ -18,8 +18,10 @@ let logError: Mock<typeof logger.error>;
 
 beforeEach(() => {
 	model.reset();
-	// Stubbed so error-path tests don't print full stack traces.
+	// Stubbed so error-path tests don't print full stack traces, or the
+	// model ladder's retry warnings.
 	logError = mock.method(logger, "error", () => {});
+	mock.method(logger, "warn", () => {});
 });
 afterEach(() => mock.restoreAll());
 
@@ -194,14 +196,21 @@ const postChat = (signal?: AbortSignal) =>
 		signal,
 	});
 
+/** An empty message: the model ladder's keepalive while it retries. */
+const KEEPALIVE = `data: ${JSON.stringify({ message: "" })}\n\n`;
+
 const errorEventFor = async (failure: Error) => {
 	model.respondWith(() => {
 		throw failure;
 	});
 	const res = await postChat();
 	const body = await res.text();
-	assert.match(body, /^error: .*\n\n$/s);
-	return { body, event: JSON.parse(body.slice("error: ".length)) };
+	// A retryable failure is retried first, with keepalives, so only the
+	// last event is the error.
+	const keepalives = body.match(/^(?:data: {"message":""}\n\n)*/)?.[0] ?? "";
+	const errorEvent = body.slice(keepalives.length);
+	assert.match(errorEvent, /^error: .*\n\n$/s);
+	return { body, event: JSON.parse(errorEvent.slice("error: ".length)) };
 };
 
 const failures = [
@@ -291,7 +300,7 @@ test("POST /api/chat sends the busy message, and logs the cause, when the model 
 	const stallAi = genkit({});
 	const { model: stallModel, chatFlow: shortLimitFlow } = buildMockChatFlow(
 		stallAi,
-		{ stallLimitMs: 200 },
+		{ ladderOptions: { stallLimitMs: 200 } },
 	);
 	const stallApp = new Hono();
 	stallApp.post("/api/chat", createChatHandler(shortLimitFlow));
@@ -304,9 +313,10 @@ test("POST /api/chat sends the busy message, and logs the cause, when the model 
 	});
 	const body = await res.text();
 
+	// Retried twice, each time with a keepalive before and after the wait.
 	assert.equal(
 		body,
-		`error: ${JSON.stringify({
+		`${KEEPALIVE.repeat(4)}error: ${JSON.stringify({
 			error: {
 				status: "DEADLINE_EXCEEDED",
 				message:

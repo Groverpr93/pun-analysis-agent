@@ -1,6 +1,7 @@
 import type { Genkit } from "genkit";
 import { type MockModelOptions, mockModel } from "genkit/testing";
 import { createChatFlow } from "../../src/flows/chat.ts";
+import type { ModelLadderOptions } from "../../src/flows/model-ladder.ts";
 import { createAnalyzePunTool } from "../../src/tools/analyze-pun.ts";
 import {
 	answeringWith,
@@ -10,18 +11,22 @@ import {
 /**
  * Pairs a mockModel with a chatFlow built on it, on the given registry,
  * wired to an analyze_pun tool whose Inference is `analyzeFetch` (by
- * default, one that finds a pun in any text). `stallLimitMs` shortens
- * the flow's stall limit (MODEL_STALL_LIMIT_MS by default).
+ * default, one that finds a pun in any text). The model is the flow's
+ * only model, so a failure is retried but never stepped down from.
+ * `ladderOptions` go to the flow's model ladder; the backoff between
+ * retries defaults to none here, so a test of a failing model doesn't
+ * wait out seconds of real backoff (model-ladder.test.ts covers the
+ * backoff itself).
  */
 export function buildMockChatFlow(
 	ai: Genkit,
 	{
 		analyzeFetch = answeringWith(PUN_ANALYZE_RESULT),
-		stallLimitMs,
+		ladderOptions,
 		...options
 	}: MockModelOptions & {
 		analyzeFetch?: typeof fetch;
-		stallLimitMs?: number;
+		ladderOptions?: Omit<ModelLadderOptions, "onKeepalive">;
 	} = {},
 ) {
 	// Declares tool support, as Gemini does; otherwise Genkit warns on
@@ -36,6 +41,9 @@ export function buildMockChatFlow(
 	});
 	return {
 		model,
-		chatFlow: createChatFlow(ai, model, [analyzePun], { stallLimitMs }),
+		chatFlow: createChatFlow(ai, [model], [analyzePun], {
+			firstBackoffMs: 0,
+			...ladderOptions,
+		}),
 	};
 }

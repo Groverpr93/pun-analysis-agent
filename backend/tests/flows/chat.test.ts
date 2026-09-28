@@ -539,7 +539,7 @@ test("chatFlow sends no further model requests once the reply is aborted", async
 		},
 		inferenceUrl: "http://inference.test",
 	});
-	const flow = createChatFlow(ai, model, [analyzePun]);
+	const flow = createChatFlow(ai, [model], [analyzePun]);
 
 	const { stream, output } = flow.stream(
 		{ messages: [{ role: "user", content: "Is 'I lost interest' a pun?" }] },
@@ -568,7 +568,7 @@ const stallAi = genkit({});
 const { model: stallModel, chatFlow: shortLimitFlow } = buildMockChatFlow(
 	stallAi,
 	{
-		stallLimitMs: STALL_LIMIT_MS,
+		ladderOptions: { stallLimitMs: STALL_LIMIT_MS },
 		// Inference takes several times the limit to answer.
 		analyzeFetch: async (...args) => {
 			await new Promise((resolve) => setTimeout(resolve, 3 * STALL_LIMIT_MS));
@@ -630,7 +630,9 @@ test("chatFlow aborts a stalled model call's own request", {
 				});
 			}),
 	);
-	const flow = createChatFlow(ai, model, [], { stallLimitMs: STALL_LIMIT_MS });
+	const flow = createChatFlow(ai, [model], [], {
+		stallLimitMs: STALL_LIMIT_MS,
+	});
 
 	await assert.rejects(flow({ messages: [{ role: "user", content: "Hi" }] }));
 	await modelAborted;

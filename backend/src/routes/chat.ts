@@ -42,8 +42,12 @@ const toUserFacingError = (err: unknown) => {
  * (`data: {"message": ...}\n\n` chunks, then a final `data: {"result": ...}\n\n`)
  * per docs/contracts.md — verified against @genkit-ai/express's real
  * `expressHandler` source rather than assumed, since Hono has no built-in
- * equivalent. `flow` is injected so production wiring (app.ts) and tests
- * (a flow built on a mock model) share this same handler code.
+ * equivalent. Like that handler, it runs the flow with an `onChunk`
+ * callback rather than reading `flow.stream()`, whose iterator skips falsy
+ * chunks: the model ladder's keepalives are empty strings
+ * (flows/model-ladder.ts), and they have to reach the client. `flow` is
+ * injected so production wiring (app.ts) and tests (a flow built on a mock
+ * model) share this same handler code.
  */
 export function createChatHandler(flow: ChatFlow) {
 	return async (c: Context) => {
@@ -63,15 +67,22 @@ export function createChatHandler(flow: ChatFlow) {
 		c.header("Transfer-Encoding", "chunked");
 
 		return honoStream(c, async (writer) => {
+			// onChunk is called synchronously and doesn't wait for a write to
+			// finish, so each event is chained onto the one before it, keeping
+			// them in order; awaiting `writes` surfaces a failed write.
+			let writes: Promise<unknown> = Promise.resolve();
+			const send = (event: "data" | "error", payload: unknown) => {
+				writes = writes.then(() =>
+					writer.write(`${event}: ${JSON.stringify(payload)}\n\n`),
+				);
+			};
 			try {
-				const { stream: chunks, output } = flow.stream(parsed.data, {
+				const { result } = await flow.run(parsed.data, {
 					abortSignal: c.req.raw.signal,
+					onChunk: (chunk: unknown) => send("data", { message: chunk }),
 				});
-				for await (const chunk of chunks) {
-					await writer.write(`data: ${JSON.stringify({ message: chunk })}\n\n`);
-				}
-				const result = await output;
-				await writer.write(`data: ${JSON.stringify({ result })}\n\n`);
+				send("data", { result });
+				await writes;
 			} catch (err) {
 				// The user hit stop or left: nobody is listening, and it isn't a failure.
 				if (c.req.raw.signal.aborted) return;
@@ -85,9 +96,8 @@ export function createChatHandler(flow: ChatFlow) {
 				// has the detail, and it's the only entry for failures that don't
 				// come from a Gemini request.
 				logger.error("/api/chat flow failed", { detail }, err);
-				await writer.write(
-					`error: ${JSON.stringify({ error: toUserFacingError(err) })}\n\n`,
-				);
+				send("error", { error: toUserFacingError(err) });
+				await writes;
 			}
 		});
 	};
