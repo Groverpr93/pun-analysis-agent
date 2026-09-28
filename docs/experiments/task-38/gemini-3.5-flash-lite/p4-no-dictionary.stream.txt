@@ -1,0 +1,16 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_423965"},"metadata":{"thoughtSignature":"EmAKXgFpFH0TGn6EuyFiRzT93ArKIZg96o4qFaNV+oLRal6y2ePntuUV+P11K81VBCWdR5O+T6cDDQ1D2kudTJWsEL5dySCzarcBru3ghvvvulVVXUnSlfJueERc52GXS9E="}}]}}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_423965","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Yes"}
+
+data: {"message":", absolutely! It is a classic pun based on homophones (words that sound the same or"}
+
+data: {"message":" very similar when spoken aloud). \n\n* **\"Seafood\"** sounds identical to **\"see food\"**."}
+
+data: {"message":" \n\nThe joke sets you up to think you're following a healthy nutritional diet (\"seafood diet\"), but the punchline reveals"}
+
+data: {"message":" a humorous double meaning—you just look at food and consume it!"}
+
+data: {"result":"Yes, absolutely! It is a classic pun based on homophones (words that sound the same or very similar when spoken aloud). \n\n* **\"Seafood\"** sounds identical to **\"see food\"**. \n\nThe joke sets you up to think you're following a healthy nutritional diet (\"seafood diet\"), but the punchline reveals a humorous double meaning—you just look at food and consume it!"}
+

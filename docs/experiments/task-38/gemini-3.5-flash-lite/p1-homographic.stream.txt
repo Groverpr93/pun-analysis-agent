@@ -1,0 +1,16 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"Why did the tomato blush? Because it saw the salad dressing."},"ref":"call_423148"},"metadata":{"thoughtSignature":"EmAKXgFpFH0TFKajIxHz6YpY8S5xr703LBcp4MeesbONi0jhRNBFyM2PzjYlBEKTm/xzVcYhEtAsrGQBgJxAbvMLfOet7Z+x4htNhcYCigOxcKltUB8WdLcaKCV4+yjF2aI="}}]}}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_423148","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Yes,"}
+
+data: {"message":" that is definitely a pun! \n\nHere is why: the punchline relies"}
+
+data: {"message":" on a double meaning (a homonym) of the phrase **\"salad dressing.\"** \n\n1. **Meaning"}
+
+data: {"message":" one (Context):** Putting oil, vinegar, or other liquids on a salad.\n2. **Meaning two (Visual"}
+
+data: {"message":"):** A tomato seeing the vegetables \"getting dressed\" (putting on their clothes), which causes it to blush out of embarrassment."}
+
+data: {"result":"Yes, that is definitely a pun! \n\nHere is why: the punchline relies on a double meaning (a homonym) of the phrase **\"salad dressing.\"** \n\n1. **Meaning one (Context):** Putting oil, vinegar, or other liquids on a salad.\n2. **Meaning two (Visual):** A tomato seeing the vegetables \"getting dressed\" (putting on their clothes), which causes it to blush out of embarrassment."}
+

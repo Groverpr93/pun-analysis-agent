@@ -1,0 +1,16 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"The baker quit making doughnuts because he was tired of the hole business."},"ref":"call_354611"},"metadata":{"thoughtSignature":"EmAKXgFpFH0TQouevJkQVMUAVybLTU5wzjn5dkaDk1SwYSGVXsUlZQa1d2skplmiyMi6CBknJprx4bPsR2GFE6YngXZpqBNS7qWIQxE7dxTAIXIvZG+SPP7uaUPqsgXceRM="}}]}}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_354611","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Yes,"}
+
+data: {"message":" that is definitely a pun! \n\nIt relies on a play on words with"}
+
+data: {"message":" the phrase **\"hole business,\"** which sounds identical to **\"whole business.\"** \n\n* **Hole business"}
+
+data: {"message":":** A clever nod to the literal hole in the middle of a doughnut.\n* **Whole business:** An idiom meaning"}
+
+data: {"message":" the entirety of an enterprise or line of work (expressing the baker's frustration and decision to quit)."}
+
+data: {"result":"Yes, that is definitely a pun! \n\nIt relies on a play on words with the phrase **\"hole business,\"** which sounds identical to **\"whole business.\"** \n\n* **Hole business:** A clever nod to the literal hole in the middle of a doughnut.\n* **Whole business:** An idiom meaning the entirety of an enterprise or line of work (expressing the baker's frustration and decision to quit)."}
+

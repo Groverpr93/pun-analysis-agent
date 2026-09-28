@@ -1,0 +1,49 @@
+[
+	{
+		"id": "p1-homographic",
+		"modelCalls": 2,
+		"failedAttempts": []
+	},
+	{
+		"id": "p2-homophonic",
+		"modelCalls": null,
+		"failedAttempts": [
+			{
+				"file": "p2-homophonic.failed-1.stream.txt",
+				"failure": "UNAVAILABLE",
+				"modelCalls": 1
+			},
+			{
+				"file": "p2-homophonic.failed-2.stream.txt",
+				"failure": "UNAVAILABLE",
+				"modelCalls": 1
+			}
+		]
+	},
+	{
+		"id": "p3-non-pun",
+		"modelCalls": 2,
+		"failedAttempts": []
+	},
+	{
+		"id": "p4-no-dictionary",
+		"modelCalls": null,
+		"failedAttempts": [
+			{
+				"file": "p4-no-dictionary.failed-1.stream.txt",
+				"failure": "UNAVAILABLE",
+				"modelCalls": 1
+			},
+			{
+				"file": "p4-no-dictionary.failed-2.stream.txt",
+				"failure": "UNAVAILABLE",
+				"modelCalls": 2
+			}
+		]
+	},
+	{
+		"id": "p5-follow-up",
+		"modelCalls": null,
+		"failedAttempts": []
+	}
+]

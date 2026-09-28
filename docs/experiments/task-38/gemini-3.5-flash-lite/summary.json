@@ -1,0 +1,27 @@
+[
+	{
+		"id": "p1-homographic",
+		"modelCalls": 2,
+		"failedAttempts": []
+	},
+	{
+		"id": "p2-homophonic",
+		"modelCalls": 2,
+		"failedAttempts": []
+	},
+	{
+		"id": "p3-non-pun",
+		"modelCalls": 2,
+		"failedAttempts": []
+	},
+	{
+		"id": "p4-no-dictionary",
+		"modelCalls": 2,
+		"failedAttempts": []
+	},
+	{
+		"id": "p5-follow-up",
+		"modelCalls": 2,
+		"failedAttempts": []
+	}
+]

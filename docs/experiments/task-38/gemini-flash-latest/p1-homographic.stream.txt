@@ -1,0 +1,16 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"Why did the tomato blush? Because it saw the salad dressing."},"ref":"call_394139"},"metadata":{"thoughtSignature":"ErMGCrAGAWkUfRNFaFBS73MMZIJyhDMWOnNKttTVndJGd2QYvjxVZ72+jXZLf0+R6k6am3x0SrrBXIIWeJ1d6c5MDsDxBOP1mF4SYaIVMVWDbkiyX43XT+9PyePcHAC3ZuceTsLDyKPRDo848OVD1Ay0rt9K1pAxB8xDD2oSYnSYoP/jX5QhXOg0g7VkDt9sUinG0hRaRsbfZTmMCJyMIZxvspY5TQFjYEmD2xauiYEu9GNo+M6VM0fcBHcA/9mJHraxYlakopV56gdV5yIB5wHv2gfC771Us5zz5tLrg0zF8ZteSAFjMlInXzro+UJOrkygVegY89pxtfyg9KE20dt1hsqScq+aphVlrj35tYulRapgqVW2Bzdrp00eL6S9ukNBYPUGiKH0BWP0z+/tNSXh7bKeBewi5/2Jv7qw6Bbh5uQRKBEWdJUmpbtVwZBPuRqRD/Qg2F3buGqj3+36cB8BDnLl5YSDml7/4iDZfmqC0MNbJn6wDPtVU2JZ6FT4JnHH04rZvsqqP0xsAeqjx8c820uLd2lxapWz2V+6X/PZonf2TPVFa2bn1Yhqr9SCGU69RPAIv2MVqhvmbWZBKqoHpqsmXBBeRqK/vtBV+dYqS05NnONROEUmIP+R0ilF9BO6FWaIKKCXf/biPn0Z578qcwCdq0jCJQpWHTcOuw76RY2TJLXlkFjr4fP4VZE4hRhG5qXe6jG+wS5xXghe8uYZlVw++wDA6OPWxN+9rf2Yb49Snm4ft5C8hqtvQUDaybYKOMlb5KGi6Cy5BZ27OO/9fojZzHR/7ifk4ld1O221TpLYfpl59lxDyOaW9Sw6PSZ7fuFkpo1JozCgoYyWVG9F4g0Ft4WK0EsPk1Sg84gNqBKOF5pLMdmroyOqZRU/yQ7mZKJ1NVMnmjgHkoEUSMF2SVAIcRESv8FjH2kcuCPjTp0aWk83i9sYNj7ThR93N1hfEOkfDkOeFNT2O2ELJrvSsSJyeU9TIHfhageNTbF/9Kb2OxBvLbbGuCnkq16CtZYDVSD/gLfhHB0lth9tiGZYb7PJgS4BttUOtCDVvrxSkYMVZuQoQoaEFh9GIg37Bl+o9pRF"}}]}}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_394139","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"**Yes,"}
+
+data: {"message":" this is a pun!** \n\nIt relies on a double meaning of the word **\"dressing\"**:\n\n1. **Food"}
+
+data: {"message":" meaning:** Salad dressing is the sauce (like ranch or vinaigrette) poured over a salad.\n2. **Action meaning:**"}
+
+data: {"message":" \"Dressing\" also means the act of putting on clothes. \n\nThe humor comes from the personification—the tomato \""}
+
+data: {"message":"blushes\" (turns red) with embarrassment as if it caught the salad in the act of getting dressed."}
+
+data: {"result":"**Yes, this is a pun!** \n\nIt relies on a double meaning of the word **\"dressing\"**:\n\n1. **Food meaning:** Salad dressing is the sauce (like ranch or vinaigrette) poured over a salad.\n2. **Action meaning:** \"Dressing\" also means the act of putting on clothes. \n\nThe humor comes from the personification—the tomato \"blushes\" (turns red) with embarrassment as if it caught the salad in the act of getting dressed."}
+

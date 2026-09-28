@@ -15,8 +15,9 @@ import type {
  * the only way to match results to calls. Genkit copies a toolRequest's
  * `ref` onto its toolResponse, so a ref on every request is enough.
  *
- * gemini-flash-latest on the Developer API supplies its own ids (e.g.
- * "call_56935", seen in TASK-9's smoke test), which are kept. This is the
+ * Gemini Flash and Flash-Lite on the Developer API supply their own ids
+ * (e.g. "call_56935", seen in TASK-9's smoke test and TASK-38's
+ * recordings), which are kept. This is the
  * safety net for a model or API version that leaves them out, which the
  * Gemini plugin allows for (it sets `ref` only when Gemini sends an id).
  *

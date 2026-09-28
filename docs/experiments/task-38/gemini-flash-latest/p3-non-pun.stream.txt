@@ -1,0 +1,10 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I baked sourdough this morning and it has to cool for an hour before slicing."},"ref":"call_459731"},"metadata":{"thoughtSignature":"Er8FCrwFAWkUfRMwfyOiFy+EXW1BkNoqYvpUD3mz1vb7j8Tqvf4ErOIE+EZPd9Lnx8HPZRLJ1Hy3HakET3kQ6T9FLJgFF7/htnPx5Vo8VV779fXrHDG72Iy+2Ec+cgB/5fGm/CfkqRjVrpX4t0/GtvKjL2bvfhFcmDZUJETMB3EIqEjsAO9K8eZS2/fGtPTTnXCIF/IhLykfdEGOpCqvSedzemmpM/R1DJy0PKLiEKswtOLBTI+ZumOFdLOfaMmfMU39y000ol63Ns458cv1+rbmSplH8x7UJ6tE+l0gL96T5AyHSW7kkJOscY5fDdyxSlYbfv/3PUZkvQEyiZntPT3h1AGWUuySwzT57jsBFHNLI/A9BHyhgN+jQP0Z9XXa0X7qIZ8fpqgXZuGyL6sKVtVCW1f2iOAm0a01PD9UXSTGRwdg1WJwlNevchNf3gH21eDyBe3Xte93iqRNla6Fcz+XuPg3VwNO5DFtbfmlnnfSREckMORvnzxQrsG6YXgiU/0zjau+Th18FYN4eIDw52Pu8TOpxwDIWnpvodRz8ngEGkGqk2UeyyK6dWD06hfn9QVUsCUj0ScQhKrB1mtkwCiHBv5mSYX2RUkNlBQKR38YrMUI00kJHSKKNX59Chg//CeN8gNTwAk7y9nP9+xbsWH1MV35qtYZsA4fxOLg2gJaq1cdY1kPv6Z06gSVP//LJ+q5gJgVrnKZMh1cqi1QQjEj7CXEgmHumqzjbRXf6E3cOZ3lVu7jLyXyUa5p26G5tqAaSIBggGWZCUOXWomBsSBMF9WeKL0FQq0ghsIVVARYFM6dJ9It6GmIAkFCYjCzxjRCWCvGxx7s3K5blwtRrdpMs9DVt723HMIvCIi8TL33CPVFONvcodplLLFgFeBhvOMCRuzVOwqZlDDB18A6o49B0/1mmeJ8WY4DsTxnrLoofQ=="}}]}}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_459731","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"No, that is not a pun. It's just a straightforward"}
+
+data: {"message":", literal statement describing standard sourdough baking practice (letting the loaf cool so the crumb finishes setting before you slice it)."}
+
+data: {"result":"No, that is not a pun. It's just a straightforward, literal statement describing standard sourdough baking practice (letting the loaf cool so the crumb finishes setting before you slice it)."}
+

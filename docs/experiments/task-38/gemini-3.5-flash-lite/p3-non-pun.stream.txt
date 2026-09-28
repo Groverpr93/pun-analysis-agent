@@ -1,0 +1,10 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I baked sourdough this morning and it has to cool for an hour before slicing."},"ref":"call_434240"},"metadata":{"thoughtSignature":"EmAKXgFpFH0TOu/4Pf6XfZIrd2faomUgSds29uEYkfKdYOBEK9NZgEivcfKI6+TtwyV8zjHaRcUswejtxCbK0Yrtu+aq2yADyUuu0MRNqz4ZNOfhG7zNRs2GUzTGDuD9T5Y="}}]}}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_434240","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"No,"}
+
+data: {"message":" that is not a pun. It's just a straightforward, literal statement about baking bread!"}
+
+data: {"result":"No, that is not a pun. It's just a straightforward, literal statement about baking bread!"}
+

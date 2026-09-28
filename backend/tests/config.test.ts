@@ -3,7 +3,7 @@ import { afterEach, test } from "node:test";
 
 // config.ts reads process.env once, at import. Each import below gets a
 // fresh copy of the module via a unique query string, so it sees the
-// APP_CHECK, K_SERVICE and LOG_FORMAT values set just before it.
+// APP_CHECK, K_SERVICE, LOG_FORMAT and GEMINI_MODEL values set just before it.
 let importCount = 0;
 const setEnv = (name: string, value: string | undefined) => {
 	if (value === undefined) delete process.env[name];
@@ -11,11 +11,16 @@ const setEnv = (name: string, value: string | undefined) => {
 };
 const loadConfigWith = async (
 	appCheck: string | undefined,
-	{ kService, logFormat }: { kService?: string; logFormat?: string } = {},
+	{
+		kService,
+		logFormat,
+		geminiModel,
+	}: { kService?: string; logFormat?: string; geminiModel?: string } = {},
 ) => {
 	setEnv("APP_CHECK", appCheck);
 	setEnv("K_SERVICE", kService);
 	setEnv("LOG_FORMAT", logFormat);
+	setEnv("GEMINI_MODEL", geminiModel);
 	const module = await import(`../src/config.ts?${importCount++}`);
 	return module.config;
 };
@@ -24,6 +29,7 @@ afterEach(() => {
 	delete process.env.APP_CHECK;
 	delete process.env.K_SERVICE;
 	delete process.env.LOG_FORMAT;
+	delete process.env.GEMINI_MODEL;
 });
 
 test("App Check is enforced when APP_CHECK is unset", async () => {
@@ -75,3 +81,24 @@ for (const value of ["", "JSON", "jsonl", "text"]) {
 		);
 	});
 }
+
+// Production sets no GEMINI_MODEL, so this default is the production model.
+test("uses gemini-flash-lite-latest when GEMINI_MODEL is unset", async () => {
+	assert.equal(
+		(await loadConfigWith(undefined)).geminiModel,
+		"gemini-flash-lite-latest",
+	);
+});
+
+// What a bare `GEMINI_MODEL=` line in .env.local leaves behind.
+test("uses gemini-flash-lite-latest when GEMINI_MODEL is empty", async () => {
+	const config = await loadConfigWith(undefined, { geminiModel: "" });
+	assert.equal(config.geminiModel, "gemini-flash-lite-latest");
+});
+
+test("uses the model GEMINI_MODEL names", async () => {
+	const config = await loadConfigWith(undefined, {
+		geminiModel: "gemini-flash-latest",
+	});
+	assert.equal(config.geminiModel, "gemini-flash-latest");
+});

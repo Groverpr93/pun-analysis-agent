@@ -1,0 +1,16 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet because I only eat fish"},"ref":"call_712789"},"metadata":{"thoughtSignature":"EmAKXgFpFH0TPAArqFMpN7GVxygd0nEWCfc+GZ/yB9kT2J8g6jG9jaqUcM8/AR7T0QRGRx6esEdM8b1SxVLwXffuKlgk+cElUmf+qukFh4jmOex1sJ76Dr4fSRAEOMPSxyg="}}]}}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_712789","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"No,"}
+
+data: {"message":" that version would **not** be a pun! \n\nIf you say you're on a seafood"}
+
+data: {"message":" diet because you *only* eat fish, you are using the word \"seafood\" literally. There's no play"}
+
+data: {"message":" on words, double meaning, or homophone in that sentence anymore. It's just a straightforward, literal statement about your"}
+
+data: {"message":" eating habits!"}
+
+data: {"result":"No, that version would **not** be a pun! \n\nIf you say you're on a seafood diet because you *only* eat fish, you are using the word \"seafood\" literally. There's no play on words, double meaning, or homophone in that sentence anymore. It's just a straightforward, literal statement about your eating habits!"}
+

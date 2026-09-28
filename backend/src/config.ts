@@ -33,12 +33,20 @@ if (!isLogFormat(logFormat)) {
 	);
 }
 
+// Unset (or empty, as a bare `GEMINI_MODEL=` line in .env.local leaves it)
+// means the production model: Flash-Lite, chosen in TASK-38 for its free
+// tier and availability. Set it to try another Gemini model without a code
+// change, or on the deploy to switch back to Flash (e.g. gemini-flash-latest)
+// once billing is on (TASK-37).
+const DEFAULT_GEMINI_MODEL = "gemini-flash-lite-latest";
+
 const parsedAllowedOrigins = process.env.CORS_ORIGIN?.split(",")
 	.map((origin) => origin.trim())
 	.filter(Boolean);
 
 export const config = {
 	port: Number(process.env.PORT ?? 8080),
+	geminiModel: process.env.GEMINI_MODEL || DEFAULT_GEMINI_MODEL,
 	inferenceUrl: process.env.INFERENCE_URL ?? "http://localhost:8000",
 	allowedOrigins:
 		parsedAllowedOrigins && parsedAllowedOrigins.length > 0
