@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-26 13:45'
-updated_date: '2026-09-28 09:29'
+updated_date: '2026-09-28 09:40'
 labels: []
 dependencies: []
 references:
@@ -70,6 +70,8 @@ Post-deploy check (2026-09-28), via gcloud logging read on pun-agent-backend sin
 Implemented follow-up (plan 7-9): logging.ts withReportableStack moves exception.stacktrace to stack_trace on ERROR entries only; the toLogLine JSDoc reserves stack_trace; the chat.ts comment documents the plugin's duplicate entry (also counted twice in Error Reporting). Tests: ERROR entries (with metadata, logged on their own in the plugin's shape, and the /api/chat path) have stack_trace; the analyze_pun WARNING keeps exception.stacktrace and has no stack_trace. Mutation-checked: applying the move at every level fails the WARNING test, and never moving it fails the ERROR tests. 100/100 backend tests pass, biome clean. Code review subagent: no blockers; applied its should-fix (double count in Error Reporting in the comment), the reserved-key JSDoc note and the plugin-shape test. Architectural review not needed (no contract, topology or dependency change). Docs: none mention these fields. Still to do after deploy: a real flow failure groups in Error Reporting, and an analyze_pun warning does not. Probe entries remain in the error-reporting-probe log and as PROBE-A/PROBE-C groups in Error Reporting.
 
 Post-deploy (2026-09-28): #55 (2b661fd) deployed by Deploy Backend run 36402699453 as revision pun-agent-backend-00006-jn4; /health and App Check smoke tests passed. Its entries are one line each with the right severity. No /api/chat failure has happened since, so Error Reporting has only the PROBE-A/C groups. Closed on this evidence, decided with @yaisiel.torres: ACs #1-#3 from production logs (2026-09-27/28); #4 and #5 from tests (console-mode wiring test, 100/100 backend tests). Error Reporting, an extra check that isn't an AC: probe C proved a GenkitError trace in stack_trace is grouped for this service's resource, and tests prove the /api/chat failure path writes stack_trace. Not yet observed live: a real flow failure grouped in Error Reporting (needs a Gemini failure). The analyze_pun WARNING staying out of Error Reporting can't happen in production while analyze_pun uses the fixture, so it moved to TASK-11 as AC #5. DoD #2: no architectural review needed (logging format only; no contract, topology or dependency change). DoD #3: no docs describe these fields.
+
+Filed upstream (2026-09-28): https://github.com/genkit-ai/genkit/issues/6466, which asks the google-genai plugin to stop logging failed requests at ERROR before rethrowing them (logger.debug or no log), so the app decides what to log. Repro verified locally (one failed request logs ERROR twice). @yaisiel.torres offered a PR. If it's fixed upstream, the double-log comment in backend/src/routes/chat.ts becomes stale after the Genkit upgrade.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
