@@ -1,11 +1,11 @@
 ---
 id: TASK-44
 title: One source of truth for cross-domain timeouts
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 16:31'
-updated_date: '2026-09-28 19:30'
+updated_date: '2026-09-28 19:47'
 labels: []
 dependencies:
   - TASK-42
@@ -35,18 +35,18 @@ Known costs to plan for: backend/Dockerfile's 'pnpm deploy --legacy' assumes no 
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 One workspace module holds the waiting chain's timeouts (Inference timeout, model stall limit, App Check token timeout, Frontend's silence limit, Cloud Run request timeout) and the derived maximum silence; Backend and Frontend import them from it, and no copy of those values remains in either
-- [ ] #2 Tests fail if the relationships between them break: Frontend's silence limit above the maximum silence plus the App Check timeout and a stated margin, and Cloud Run's timeout above a reply's documented worst case
-- [ ] #3 deploy-backend.yml sets Cloud Run's --timeout explicitly from the module, both deploy workflows redeploy on a change to it, and the backend image builds with it
-- [ ] #4 docs/contracts.md points to the module for the values instead of restating them, and docs/engineering-practices.md documents the shared module as part of the Frontend/Backend boundary, including deploy order when a value changes
-- [ ] #5 Any env override of a shared timeout works locally only: the server refuses to start with one on Cloud Run, as with APP_CHECK=off
+- [x] #1 One workspace module holds the waiting chain's timeouts (Inference timeout, model stall limit, App Check token timeout, Frontend's silence limit, Cloud Run request timeout) and the derived maximum silence; Backend and Frontend import them from it, and no copy of those values remains in either
+- [x] #2 Tests fail if the relationships between them break: Frontend's silence limit above the maximum silence plus the App Check timeout and a stated margin, and Cloud Run's timeout above a reply's documented worst case
+- [x] #3 deploy-backend.yml sets Cloud Run's --timeout explicitly from the module, both deploy workflows redeploy on a change to it, and the backend image builds with it
+- [x] #4 docs/contracts.md points to the module for the values instead of restating them, and docs/engineering-practices.md documents the shared module as part of the Frontend/Backend boundary, including deploy order when a value changes
+- [x] #5 Any env override of a shared timeout works locally only: the server refuses to start with one on Cloud Run, as with APP_CHECK=off
 <!-- AC:END -->
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
-- [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
-- [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
+- [x] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
+- [x] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
+- [x] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
 
 ## Implementation Plan
@@ -81,4 +81,12 @@ Final values after review (supersede the numbers in steps 1-2 above): MODEL_STAL
 2026-09-28: At the user's request (to be conservative about slow first chunks), MODEL_STALL_LIMIT_MS is back to 30 s. The relationship tests then required FRONTEND_SILENCE_LIMIT_MS >= 50 + 10 + 15 = 75 s, so it's now 75 s (safe in one change: TASK-28 hasn't built the limit yet). Baseline 220 s, RETRY_BUDGET_MS 60 s (still >= one 30 s retry). Decision (B) moved to TASK-28 as AC #5, along with importing FRONTEND_SILENCE_LIMIT_MS (AC #1).
 
 2026-09-28: After the delta review found the 2-round cap fragile (the prompt asks for one call per text but not all in one round, so two texts analyzed in sequence plus an example would take 3 rounds and fail with ABORTED), the user chose MAX_TOOL_ROUNDS = 3 with Cloud Run's timeout raised to 400 s (option B) over tightening the prompt or lowering the stall limit. Retry budget 80 s.
+
+2026-09-28 validation after merge (#72, 63ce5cc): Test, Lint, Deploy Backend and Deploy Frontend all succeeded on main; the live Cloud Run service (revision pun-agent-backend-00014) reports timeoutSeconds 400, set from CLOUD_RUN_REQUEST_TIMEOUT_MS. pnpm test on main: timeouts 6, backend 133, frontend 141. No copy of a chain value remains in backend/src or frontend/src (the only 30_000 is the stub adapter's simulated SLOW_TOOL_CALL_MS, not part of the chain). No env var reads any of them (AC #5 holds by having no overrides; the module header and engineering-practices.md say a future one must be refused on Cloud Run). AC #1 note: FRONTEND_SILENCE_LIMIT_MS lives in the module, but Frontend can't import it until TASK-28 builds the limit (its AC #1 now requires that import).
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Added packages/timeouts (@pun-agent/timeouts), the one place /api/chat's waiting chain is defined. Inputs: Inference timeout 20 s, model stall limit 30 s, App Check timeout 10 s, max tool rounds 3, Cloud Run request timeout 400 s, Frontend silence limit 75 s. Derived: max silence 50 s, baseline worst case 300 s (each model call's tail counted), and a retry budget of 80 s for TASK-43. Backend and Frontend import it. chat.ts passes maxTurns explicitly, and deploy-backend.yml sets Cloud Run's --timeout from it. Both deploy workflows redeploy on it and run its tests, and the backend image ships it via pnpm deploy --legacy. It's plain ESM plus index.d.ts, because Node won't strip types in node_modules. Relationship tests check that the Frontend limit covers silence + App Check + margin, the budget fits a retry, the baseline matches a gap-by-gap walk, and the .d.ts matches the .js. Each test was mutation-checked. Decided with the user during review: count call tails; stall limit back to 30 s; 3 rounds with a 400 s timeout rather than tightening the prompt; the deploy-order CI check moves to TASK-28 (AC #5). Verified: CI and both deploys green on 63ce5cc, and the live service's timeout is 400 s. Code, architectural and delta reviews done. contracts.md, engineering-practices.md and the drift docs updated.
+<!-- SECTION:FINAL_SUMMARY:END -->
