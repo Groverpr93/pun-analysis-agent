@@ -12,7 +12,11 @@ import {
 	analyzePunInputSchema,
 	analyzeResultSchema,
 } from "../tools/analyze-pun.ts";
-import { type ModelLadderOptions, modelLadder } from "./model-ladder.ts";
+import {
+	MAX_TOOL_ROUNDS,
+	type ModelLadderOptions,
+	modelLadder,
+} from "./model-ladder.ts";
 import { SYSTEM_INSTRUCTION } from "./system-instruction.ts";
 import { numberToolRequests } from "./tool-request-refs.ts";
 
@@ -202,6 +206,9 @@ export function createChatFlow(
 				// in tools between calls never counts. Its keepalives are empty
 				// messages (docs/contracts.md), so waiting out a backoff never adds
 				// to the reply's longest silence.
+				// Explicitly Genkit's default: RETRY_BUDGET_MS and docs/contracts.md
+				// count on at most 5 rounds of tool calls, so 6 model calls.
+				maxTurns: MAX_TOOL_ROUNDS,
 				use: [
 					numberToolRequests(),
 					modelLadder(ai, models, {

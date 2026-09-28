@@ -630,8 +630,10 @@ test("chatFlow aborts a stalled model call's own request", {
 				});
 			}),
 	);
+	// No backoff, so its retries of the stalled call don't wait for real.
 	const flow = createChatFlow(ai, [model], [], {
 		stallLimitMs: STALL_LIMIT_MS,
+		firstBackoffMs: 0,
 	});
 
 	await assert.rejects(flow({ messages: [{ role: "user", content: "Hi" }] }));

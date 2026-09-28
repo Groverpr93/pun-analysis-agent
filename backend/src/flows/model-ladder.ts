@@ -61,9 +61,10 @@ export const actionForModelFailure = (err: unknown): ModelFailureAction =>
  * up to BACKOFF_JITTER of itself at random so retries don't fall in step.
  *
  * The longest wait (2.5 s with jitter) must stay below MODEL_STALL_LIMIT_MS:
- * the ladder sends a keepalive before and after each wait, so the longest
- * silence it adds is the longer of the two, and docs/contracts.md's
- * maximum silence between events assumes that's the stall limit.
+ * the ladder sends a keepalive when an attempt fails and when a wait ends,
+ * so the longest silence it leaves is the longer of one attempt (the stall
+ * limit) and one wait, and docs/contracts.md's maximum silence between
+ * events assumes that's the stall limit.
  */
 export const ATTEMPTS_PER_MODEL = 3;
 export const FIRST_BACKOFF_MS = 1_000;
@@ -76,10 +77,9 @@ export const BACKOFF_JITTER = 0.25;
  * sets none), which would otherwise cut the reply off with no error event:
  *
  *     300 s  Cloud Run's request timeout
- *   - 190 s  a reply with no retries: 6 model calls (Genkit's default
- *            maxTurns of 5 tool rounds, plus the answer) x 15 s
- *            MODEL_STALL_LIMIT_MS, and 5 tool rounds x 20 s
- *            INFERENCE_TIMEOUT_MS
+ *   - 190 s  a reply with no retries: 6 model calls (MAX_TOOL_ROUNDS of
+ *            tool calls, plus the answer) x 15 s MODEL_STALL_LIMIT_MS, and
+ *            MAX_TOOL_ROUNDS x 20 s INFERENCE_TIMEOUT_MS
  *   -  20 s  margin for what neither counts: cold start, time between steps
  *   =  90 s
  *
@@ -94,8 +94,15 @@ export const BACKOFF_JITTER = 0.25;
  */
 export const RETRY_BUDGET_MS = 90_000;
 
+/**
+ * The most rounds of tool calls one reply may make: Genkit's own default
+ * maxTurns, set explicitly by the chat flow so that a Genkit upgrade can't
+ * change the RETRY_BUDGET_MS arithmetic above without a code change here.
+ */
+export const MAX_TOOL_ROUNDS = 5;
+
 export type ModelLadderOptions = {
-	/** Called whenever the ladder is about to wait, and when it's done. */
+	/** Called when an attempt fails and the ladder carries on, and after each wait. */
 	onKeepalive?: () => void;
 	stallLimitMs?: number;
 	firstBackoffMs?: number;
@@ -151,7 +158,12 @@ const wait = (ms: number, signal: AbortSignal | undefined) =>
  *
  * The model the reply was started with is never called: `next` would reach
  * only that one, so the ladder calls each model itself. The first model on
- * the ladder should be that one, since Genkit builds the request from it.
+ * the ladder should be that one, since Genkit builds the request from it,
+ * including its ref's `config` and `version`, which then go to every model
+ * on the ladder. So the ladder's models should be bare refs, as
+ * genkit.ts's are, with any config set on the generate call instead. For
+ * the same reason Genkit's traces name that first model even when another
+ * one answered; the ladder's own log entries name the one that ran.
  */
 export function modelLadder(
 	ai: Genkit,
@@ -231,12 +243,9 @@ export function modelLadder(
 							2 ** (attempt - 1) *
 							(1 + BACKOFF_JITTER * random());
 					retrySpentMs += Date.now() - startedAt;
-					const failure = {
-						model: modelName(model),
-						attempt,
-						status: err instanceof GenkitError ? err.status : undefined,
-						detail: err instanceof GenkitError ? err.detail : undefined,
-					};
+					// Only a GenkitError gets this far (anything else fails above).
+					const { status, detail } = err as GenkitError;
+					const failure = { model: modelName(model), attempt, status, detail };
 					if (retrySpentMs + waitMs > retryBudgetMs) {
 						logger.warn(
 							"chat: model call failed and the reply's retry budget is spent",
@@ -259,8 +268,8 @@ export function modelLadder(
 				}
 			}
 		}
-		// Unreachable: each model's last attempt returns, throws, or steps
-		// down, and the last model has nothing to step down to.
+		// Only with no models at all: otherwise each model's last attempt
+		// returns, throws, or steps down, and the last one can't step down.
 		throw new Error("The model ladder ran out of models");
 	};
 }

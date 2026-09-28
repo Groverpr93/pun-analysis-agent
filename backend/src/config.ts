@@ -45,19 +45,18 @@ export const GEMINI_MODEL_LADDER = [
 	"gemini-2.5-flash-lite",
 ];
 
-// Unset (or empty, as a bare `GEMINI_MODEL=` line in .env.local leaves it)
-// means the ladder above. Set, it replaces the ladder with that one model,
-// which still gets the ladder's backoff but never steps down: to try
-// another Gemini model without a code change, to measure one model on its
-// own (TASK-41), or on the deploy to switch back to Flash (e.g.
-// gemini-flash-latest) once billing is on (TASK-37).
-
 const parsedAllowedOrigins = process.env.CORS_ORIGIN?.split(",")
 	.map((origin) => origin.trim())
 	.filter(Boolean);
 
 export const config = {
 	port: Number(process.env.PORT ?? 8080),
+	// Unset (or empty, as a bare `GEMINI_MODEL=` line in .env.local leaves
+	// it) means GEMINI_MODEL_LADDER. Set, it replaces the ladder with that one
+	// model, which still gets the ladder's backoff but never steps down: to
+	// try another Gemini model without a code change, or to measure one model
+	// on its own (TASK-41). Switching production to Flash (TASK-37) this way
+	// would also give up the ladder's fallback.
 	geminiModel: process.env.GEMINI_MODEL || undefined,
 	inferenceUrl: process.env.INFERENCE_URL ?? "http://localhost:8000",
 	allowedOrigins:

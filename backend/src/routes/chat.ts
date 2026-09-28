@@ -68,8 +68,10 @@ export function createChatHandler(flow: ChatFlow) {
 
 		return honoStream(c, async (writer) => {
 			// onChunk is called synchronously and doesn't wait for a write to
-			// finish, so each event is chained onto the one before it, keeping
-			// them in order; awaiting `writes` surfaces a failed write.
+			// finish, so each event is chained onto the one before it: that
+			// keeps them in order, and awaiting `writes` makes sure the last one
+			// is written before the stream closes. (Hono's write swallows its own
+			// errors, e.g. a client that left, so the chain never rejects.)
 			let writes: Promise<unknown> = Promise.resolve();
 			const send = (event: "data" | "error", payload: unknown) => {
 				writes = writes.then(() =>

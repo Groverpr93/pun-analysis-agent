@@ -60,6 +60,9 @@ test("fails the reply on the user's stop", () => {
 // dispatch is part of what's tested. One test-double model per rung,
 // registered once per genkit/testing's mockModel/reset() idiom.
 const ai = genkit({});
+// Each test's own limit: if settle() ever stops being enough for Genkit to
+// reach the ladder's next timer, a test would hang instead of failing.
+const ladderTestOptions = { timeout: 5_000 };
 const rungs = [1, 2, 3].map((n) =>
 	mockModel(ai, { name: `rung-${n}`, info: { supports: { tools: true } } }),
 );
@@ -159,31 +162,35 @@ const waitOut = async (...waitsMs: number[]) => {
 // The backoff: 1 s before the 2nd attempt, 2 s before the 3rd.
 const BACKOFF_WAITS_MS = [1_000, 2_000];
 
-test("retries a failing model with backoff, then steps down to the next", async () => {
-	first.respondWith(failingWith("UNAVAILABLE"));
-	second.respondWith("Answered");
+test(
+	"retries a failing model with backoff, then steps down to the next",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("UNAVAILABLE"));
+		second.respondWith("Answered");
 
-	const response = reply();
-	await settle();
-	assert.deepEqual(requestCounts(), [1, 0, 0]);
-	// Not retried before its wait is over...
-	mock.timers.tick(999);
-	await settle();
-	assert.deepEqual(requestCounts(), [1, 0, 0]);
-	// ...and retried once it is.
-	mock.timers.tick(1);
-	await settle();
-	assert.deepEqual(requestCounts(), [2, 0, 0]);
-	mock.timers.tick(1_999);
-	await settle();
-	assert.deepEqual(requestCounts(), [2, 0, 0]);
-	mock.timers.tick(1);
+		const response = reply();
+		await settle();
+		assert.deepEqual(requestCounts(), [1, 0, 0]);
+		// Not retried before its wait is over...
+		mock.timers.tick(999);
+		await settle();
+		assert.deepEqual(requestCounts(), [1, 0, 0]);
+		// ...and retried once it is.
+		mock.timers.tick(1);
+		await settle();
+		assert.deepEqual(requestCounts(), [2, 0, 0]);
+		mock.timers.tick(1_999);
+		await settle();
+		assert.deepEqual(requestCounts(), [2, 0, 0]);
+		mock.timers.tick(1);
 
-	assert.equal((await response).text, "Answered");
-	assert.deepEqual(requestCounts(), [3, 1, 0]);
-});
+		assert.equal((await response).text, "Answered");
+		assert.deepEqual(requestCounts(), [3, 1, 0]);
+	},
+);
 
-test("gives every model the same backoff", async () => {
+test("gives every model the same backoff", ladderTestOptions, async () => {
 	first.respondWith(failingWith("UNAVAILABLE"));
 	second.respondWith(failingWith("UNAVAILABLE"));
 	third.respondWith("Answered");
@@ -200,105 +207,136 @@ test("gives every model the same backoff", async () => {
 	assert.deepEqual(requestCounts(), [3, 3, 1]);
 });
 
-test("steps straight down on a 429, skipping the rest of the backoff", async () => {
-	first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
-	second.respondWith("Answered");
+test(
+	"steps straight down on a 429, skipping the rest of the backoff",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+		second.respondWith("Answered");
 
-	// No time passes: the step-down doesn't wait.
-	assert.equal((await reply()).text, "Answered");
-	assert.deepEqual(requestCounts(), [1, 1, 0]);
-});
+		// No time passes: the step-down doesn't wait.
+		assert.equal((await reply()).text, "Answered");
+		assert.deepEqual(requestCounts(), [1, 1, 0]);
+	},
+);
 
-test("fails with the last model's error once every model has failed", async () => {
-	for (const rung of rungs) rung.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+test(
+	"fails with the last model's error once every model has failed",
+	ladderTestOptions,
+	async () => {
+		for (const rung of rungs)
+			rung.respondWith(failingWith("RESOURCE_EXHAUSTED"));
 
-	await assert.rejects(
-		reply(),
-		(err) => err instanceof GenkitError && err.status === "RESOURCE_EXHAUSTED",
-	);
-	assert.deepEqual(requestCounts(), [1, 1, 1]);
-});
+		await assert.rejects(
+			reply(),
+			(err) =>
+				err instanceof GenkitError && err.status === "RESOURCE_EXHAUSTED",
+		);
+		assert.deepEqual(requestCounts(), [1, 1, 1]);
+	},
+);
 
-test("fails at once on a failure no retry would fix", async () => {
-	first.respondWith(failingWith("INVALID_ARGUMENT"));
+test(
+	"fails at once on a failure no retry would fix",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("INVALID_ARGUMENT"));
 
-	const failed = assert.rejects(
-		reply(),
-		(err) => err instanceof GenkitError && err.status === "INVALID_ARGUMENT",
-	);
-	// Time for a retry, had there been one.
-	await waitOut(...BACKOFF_WAITS_MS);
+		const failed = assert.rejects(
+			reply(),
+			(err) => err instanceof GenkitError && err.status === "INVALID_ARGUMENT",
+		);
+		// Time for a retry, had there been one.
+		await waitOut(...BACKOFF_WAITS_MS);
 
-	await failed;
-	assert.deepEqual(requestCounts(), [1, 0, 0]);
-});
+		await failed;
+		assert.deepEqual(requestCounts(), [1, 0, 0]);
+	},
+);
 
 // Another attempt would stream the reply's text a second time.
-test("doesn't retry a model call that already streamed a chunk", async () => {
-	first.respondWith((_request, { sendChunk }) => {
-		sendChunk("Yes, ");
-		throw genkitError("UNAVAILABLE");
-	});
-	second.respondWith("Answered");
-
-	const failed = assert.rejects(
-		reply(),
-		(err) => err instanceof GenkitError && err.status === "UNAVAILABLE",
-	);
-	// Time for a retry, had there been one.
-	await waitOut(...BACKOFF_WAITS_MS);
-
-	await failed;
-	assert.deepEqual(requestCounts(), [1, 0, 0]);
-});
-
-test("sends the reply's later model calls only to the model that answered", async () => {
-	first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
-	second.respondWith(toolThenAnswer);
-
-	assert.equal((await reply({ tools: true })).text, "Answered");
-	// The second model call went to the second model, not back to the first.
-	assert.deepEqual(requestCounts(), [1, 2, 0]);
-});
-
-test("fails the reply, rather than stepping down, when the pegged model fails through its backoff", async () => {
-	first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
-	second.respondWith((request) => {
-		if (request.messages.at(-1)?.role === "tool") {
+test(
+	"doesn't retry a model call that already streamed a chunk",
+	ladderTestOptions,
+	async () => {
+		first.respondWith((_request, { sendChunk }) => {
+			sendChunk("Yes, ");
 			throw genkitError("UNAVAILABLE");
-		}
-		return { toolRequests: [{ name: "lookup", input: {} }] };
-	});
-	third.respondWith("Answered");
+		});
+		second.respondWith("Answered");
 
-	const failed = assert.rejects(
-		reply({ tools: true }),
-		(err) => err instanceof GenkitError && err.status === "UNAVAILABLE",
-	);
-	await waitOut(...BACKOFF_WAITS_MS);
+		const failed = assert.rejects(
+			reply(),
+			(err) => err instanceof GenkitError && err.status === "UNAVAILABLE",
+		);
+		// Time for a retry, had there been one.
+		await waitOut(...BACKOFF_WAITS_MS);
 
-	await failed;
-	// The second model's first call, then its 3 attempts at the second call.
-	assert.deepEqual(requestCounts(), [1, 4, 0]);
-});
+		await failed;
+		assert.deepEqual(requestCounts(), [1, 0, 0]);
+	},
+);
 
-test("fails the reply at once when the pegged model returns a 429", async () => {
-	second.respondWith((request) => {
-		if (request.messages.at(-1)?.role === "tool") {
-			throw genkitError("RESOURCE_EXHAUSTED");
-		}
-		return { toolRequests: [{ name: "lookup", input: {} }] };
-	});
-	first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+test(
+	"sends the reply's later model calls only to the model that answered",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+		second.respondWith(toolThenAnswer);
 
-	await assert.rejects(
-		reply({ tools: true }),
-		(err) => err instanceof GenkitError && err.status === "RESOURCE_EXHAUSTED",
-	);
-	assert.deepEqual(requestCounts(), [1, 2, 0]);
-});
+		assert.equal((await reply({ tools: true })).text, "Answered");
+		// The second model call went to the second model, not back to the first.
+		assert.deepEqual(requestCounts(), [1, 2, 0]);
+	},
+);
 
-test("retries a stalled model call", async () => {
+test(
+	"fails the reply, rather than stepping down, when the pegged model fails through its backoff",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+		second.respondWith((request) => {
+			if (request.messages.at(-1)?.role === "tool") {
+				throw genkitError("UNAVAILABLE");
+			}
+			return { toolRequests: [{ name: "lookup", input: {} }] };
+		});
+		third.respondWith("Answered");
+
+		const failed = assert.rejects(
+			reply({ tools: true }),
+			(err) => err instanceof GenkitError && err.status === "UNAVAILABLE",
+		);
+		await waitOut(...BACKOFF_WAITS_MS);
+
+		await failed;
+		// The second model's first call, then its 3 attempts at the second call.
+		assert.deepEqual(requestCounts(), [1, 4, 0]);
+	},
+);
+
+test(
+	"fails the reply at once when the pegged model returns a 429",
+	ladderTestOptions,
+	async () => {
+		second.respondWith((request) => {
+			if (request.messages.at(-1)?.role === "tool") {
+				throw genkitError("RESOURCE_EXHAUSTED");
+			}
+			return { toolRequests: [{ name: "lookup", input: {} }] };
+		});
+		first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+
+		await assert.rejects(
+			reply({ tools: true }),
+			(err) =>
+				err instanceof GenkitError && err.status === "RESOURCE_EXHAUSTED",
+		);
+		assert.deepEqual(requestCounts(), [1, 2, 0]);
+	},
+);
+
+test("retries a stalled model call", ladderTestOptions, async () => {
 	const STALL_LIMIT_MS = 5_000;
 	first.respondWith(() => new Promise(() => {}));
 	second.respondWith("Answered");
@@ -311,162 +349,190 @@ test("retries a stalled model call", async () => {
 	assert.deepEqual(requestCounts(), [3, 1, 0]);
 });
 
-test("ends the reply, with no more requests, when the user stops during a wait", async () => {
-	const stop = new AbortController();
-	first.respondWith(failingWith("UNAVAILABLE"));
+test(
+	"ends the reply, with no more requests, when the user stops during a wait",
+	ladderTestOptions,
+	async () => {
+		const stop = new AbortController();
+		first.respondWith(failingWith("UNAVAILABLE"));
 
-	const stopped = assert.rejects(
-		reply({ abortSignal: stop.signal }),
-		(err) => err === stop.signal.reason,
-	);
-	await settle();
-	stop.abort();
-	await waitOut(...BACKOFF_WAITS_MS);
+		const stopped = assert.rejects(
+			reply({ abortSignal: stop.signal }),
+			(err) => err === stop.signal.reason,
+		);
+		await settle();
+		stop.abort();
+		await waitOut(...BACKOFF_WAITS_MS);
 
-	await stopped;
-	assert.deepEqual(requestCounts(), [1, 0, 0]);
-	// Only the failure before the stop is logged as a retry.
-	assert.equal(warn.mock.callCount(), 1);
-});
+		await stopped;
+		assert.deepEqual(requestCounts(), [1, 0, 0]);
+		// Only the failure before the stop is logged as a retry.
+		assert.equal(warn.mock.callCount(), 1);
+	},
+);
 
 // A 429, so no wait (which a stop also ends) comes between the failure
 // and the next model.
-test("ends the reply, with no more requests, when the user stops during a call", async () => {
-	const stop = new AbortController();
-	first.respondWith(() => {
-		stop.abort();
-		throw genkitError("RESOURCE_EXHAUSTED");
-	});
+test(
+	"ends the reply, with no more requests, when the user stops during a call",
+	ladderTestOptions,
+	async () => {
+		const stop = new AbortController();
+		first.respondWith(() => {
+			stop.abort();
+			throw genkitError("RESOURCE_EXHAUSTED");
+		});
 
-	await assert.rejects(reply({ abortSignal: stop.signal }));
-	assert.deepEqual(requestCounts(), [1, 0, 0]);
-	// A stop isn't a failure: nothing is retried, so nothing is logged.
-	assert.equal(warn.mock.callCount(), 0);
-});
+		await assert.rejects(reply({ abortSignal: stop.signal }));
+		assert.deepEqual(requestCounts(), [1, 0, 0]);
+		// A stop isn't a failure: nothing is retried, so nothing is logged.
+		assert.equal(warn.mock.callCount(), 0);
+	},
+);
 
 // Budget 4 s. Each failed attempt takes 1 s. Attempt 1 fails (1 s spent)
 // and waits 1 s (2 s); attempt 2 fails (3 s), and its 2 s wait would take
 // the reply to 5 s, so the reply fails instead. (Assertions on a failing
 // reply are attached before time moves on, so its rejection is handled.)
-test("fails the reply when the retry budget can't cover the next wait", async () => {
-	first.respondWith(async () => {
-		await new Promise((resolve) => setTimeout(resolve, 1_000));
-		throw genkitError("UNAVAILABLE");
-	});
+test(
+	"fails the reply when the retry budget can't cover the next wait",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(async () => {
+			await new Promise((resolve) => setTimeout(resolve, 1_000));
+			throw genkitError("UNAVAILABLE");
+		});
 
-	const failed = assert.rejects(
-		reply({ retryBudgetMs: 4_000 }),
-		(err) => err instanceof GenkitError && err.status === "UNAVAILABLE",
-	);
-	// Time for the whole ladder, had the budget not stopped it.
-	await waitOut(1_000, 1_000, 1_000, 2_000, 1_000);
+		const failed = assert.rejects(
+			reply({ retryBudgetMs: 4_000 }),
+			(err) => err instanceof GenkitError && err.status === "UNAVAILABLE",
+		);
+		// Time for the whole ladder, had the budget not stopped it.
+		await waitOut(1_000, 1_000, 1_000, 2_000, 1_000);
 
-	await failed;
-	assert.deepEqual(requestCounts(), [2, 0, 0]);
-});
+		await failed;
+		assert.deepEqual(requestCounts(), [2, 0, 0]);
+	},
+);
 
 // With 6 s, the same model's attempts all fit: 1 + 1 + 1 + 2 + 1, the last
 // being the failed attempt the step-down follows. So the budget is what
 // stopped the reply above.
-test("retries while the retry budget covers the wait", async () => {
-	first.respondWith(async () => {
-		await new Promise((resolve) => setTimeout(resolve, 1_000));
-		throw genkitError("UNAVAILABLE");
-	});
-	second.respondWith("Answered");
-
-	const response = reply({ retryBudgetMs: 6_000 });
-	await waitOut(1_000, 1_000, 1_000, 2_000, 1_000);
-
-	assert.equal((await response).text, "Answered");
-	assert.deepEqual(requestCounts(), [3, 1, 0]);
-});
-
-test("counts the whole reply's retries against one budget", async () => {
-	// The first call's step-down costs 1 s of the 1.5 s budget...
-	first.respondWith(async () => {
-		await new Promise((resolve) => setTimeout(resolve, 1_000));
-		throw genkitError("RESOURCE_EXHAUSTED");
-	});
-	// ...so the second call's 1 s backoff no longer fits.
-	second.respondWith((request) => {
-		if (request.messages.at(-1)?.role === "tool") {
+test(
+	"retries while the retry budget covers the wait",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(async () => {
+			await new Promise((resolve) => setTimeout(resolve, 1_000));
 			throw genkitError("UNAVAILABLE");
-		}
-		return { toolRequests: [{ name: "lookup", input: {} }] };
-	});
+		});
+		second.respondWith("Answered");
 
-	const failed = assert.rejects(
-		reply({ tools: true, retryBudgetMs: 1_500 }),
-		(err) => err instanceof GenkitError && err.status === "UNAVAILABLE",
-	);
-	// Time for the second call's backoff, had the budget not stopped it.
-	await waitOut(1_000, ...BACKOFF_WAITS_MS);
+		const response = reply({ retryBudgetMs: 6_000 });
+		await waitOut(1_000, 1_000, 1_000, 2_000, 1_000);
 
-	await failed;
-	assert.deepEqual(requestCounts(), [1, 2, 0]);
-});
+		assert.equal((await response).text, "Answered");
+		assert.deepEqual(requestCounts(), [3, 1, 0]);
+	},
+);
 
-test("sends a keepalive before and after each wait, and on each step-down", async () => {
-	first.respondWith(failingWith("UNAVAILABLE"));
-	second.respondWith(failingWith("RESOURCE_EXHAUSTED"));
-	third.respondWith("Answered");
+test(
+	"counts the whole reply's retries against one budget",
+	ladderTestOptions,
+	async () => {
+		// The first call's step-down costs 1 s of the 1.5 s budget...
+		first.respondWith(async () => {
+			await new Promise((resolve) => setTimeout(resolve, 1_000));
+			throw genkitError("RESOURCE_EXHAUSTED");
+		});
+		// ...so the second call's 1 s backoff no longer fits.
+		second.respondWith((request) => {
+			if (request.messages.at(-1)?.role === "tool") {
+				throw genkitError("UNAVAILABLE");
+			}
+			return { toolRequests: [{ name: "lookup", input: {} }] };
+		});
 
-	const response = reply();
-	await waitOut(...BACKOFF_WAITS_MS);
-	await response;
+		const failed = assert.rejects(
+			reply({ tools: true, retryBudgetMs: 1_500 }),
+			(err) => err instanceof GenkitError && err.status === "UNAVAILABLE",
+		);
+		// Time for the second call's backoff, had the budget not stopped it.
+		await waitOut(1_000, ...BACKOFF_WAITS_MS);
 
-	// 2 waits x 2, then the step-downs from the first and second models.
-	assert.equal(keepalives, 6);
-});
+		await failed;
+		assert.deepEqual(requestCounts(), [1, 2, 0]);
+	},
+);
 
-test("logs each retry and step-down with the model, attempt and cause", async () => {
-	first.respondWith(failingWith("UNAVAILABLE"));
-	second.respondWith(failingWith("RESOURCE_EXHAUSTED"));
-	third.respondWith("Answered");
+test(
+	"sends a keepalive before and after each wait, and on each step-down",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("UNAVAILABLE"));
+		second.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+		third.respondWith("Answered");
 
-	const response = reply();
-	await waitOut(...BACKOFF_WAITS_MS);
-	await response;
+		const response = reply();
+		await waitOut(...BACKOFF_WAITS_MS);
+		await response;
 
-	assert.deepEqual(
-		warn.mock.calls.map(({ arguments: [, meta] }) => {
-			const { model, attempt, status, nextModel } = meta as Record<
-				string,
-				unknown
-			>;
-			return { model, attempt, status, nextModel };
-		}),
-		[
-			{
-				model: "rung-1",
-				attempt: 1,
-				status: "UNAVAILABLE",
-				nextModel: "rung-1",
-			},
-			{
-				model: "rung-1",
-				attempt: 2,
-				status: "UNAVAILABLE",
-				nextModel: "rung-1",
-			},
-			{
-				model: "rung-1",
-				attempt: 3,
-				status: "UNAVAILABLE",
-				nextModel: "rung-2",
-			},
-			{
-				model: "rung-2",
-				attempt: 1,
-				status: "RESOURCE_EXHAUSTED",
-				nextModel: "rung-3",
-			},
-		],
-	);
-});
+		// 2 waits x 2, then the step-downs from the first and second models.
+		assert.equal(keepalives, 6);
+	},
+);
 
-test("adds up to 25% jitter to each wait", async () => {
+test(
+	"logs each retry and step-down with the model, attempt and cause",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("UNAVAILABLE"));
+		second.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+		third.respondWith("Answered");
+
+		const response = reply();
+		await waitOut(...BACKOFF_WAITS_MS);
+		await response;
+
+		assert.deepEqual(
+			warn.mock.calls.map(({ arguments: [, meta] }) => {
+				const { model, attempt, status, nextModel } = meta as Record<
+					string,
+					unknown
+				>;
+				return { model, attempt, status, nextModel };
+			}),
+			[
+				{
+					model: "rung-1",
+					attempt: 1,
+					status: "UNAVAILABLE",
+					nextModel: "rung-1",
+				},
+				{
+					model: "rung-1",
+					attempt: 2,
+					status: "UNAVAILABLE",
+					nextModel: "rung-1",
+				},
+				{
+					model: "rung-1",
+					attempt: 3,
+					status: "UNAVAILABLE",
+					nextModel: "rung-2",
+				},
+				{
+					model: "rung-2",
+					attempt: 1,
+					status: "RESOURCE_EXHAUSTED",
+					nextModel: "rung-3",
+				},
+			],
+		);
+	},
+);
+
+test("adds up to 25% jitter to each wait", ladderTestOptions, async () => {
 	first.respondWith(failingWith("UNAVAILABLE"));
 	second.respondWith("Answered");
 
@@ -479,3 +545,36 @@ test("adds up to 25% jitter to each wait", async () => {
 	assert.equal((await response).text, "Answered");
 	assert.deepEqual(requestCounts(), [3, 1, 0]);
 });
+
+// Production's models are refs (genkit.ts), which the ladder looks up by
+// name, unlike the test doubles above; strings take the same path.
+test("looks up models given by name", ladderTestOptions, async () => {
+	first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+	second.respondWith("Answered");
+
+	const response = await ai.generate({
+		model: "rung-1",
+		prompt: "Is 'I lost interest' a pun?",
+		use: [modelLadder(ai, ["rung-1", "rung-2"])],
+	});
+
+	assert.equal(response.text, "Answered");
+	assert.deepEqual(requestCounts(), [1, 1, 0]);
+});
+
+test(
+	"fails the reply on a model name that isn't registered",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+
+		await assert.rejects(
+			ai.generate({
+				model: "rung-1",
+				prompt: "Is 'I lost interest' a pun?",
+				use: [modelLadder(ai, ["rung-1", "no-such-model"])],
+			}),
+			(err) => err instanceof GenkitError && err.status === "NOT_FOUND",
+		);
+	},
+);

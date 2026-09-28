@@ -11,10 +11,12 @@ import type { ModelMiddlewareWithOptions } from "genkit/model";
  *
  * Provisional and unmeasured: 15 s is a guess meant to sit above a normal
  * Flash-Lite time to first chunk while ending a stall twenty times sooner
- * than Cloud Run would. It was halved from a first guess of 30 s to keep
- * the silence TASK-43's retries can add (attempts x this limit) well under
- * Cloud Run's 300 s; the cost is less room for a slow first chunk, which
- * would fail a healthy reply as a stall. TASK-32 measures it and records the
+ * than Cloud Run would. It was halved from a first guess of 30 s so that
+ * retries (TASK-43), each of which can stall for this long, leave room in a
+ * reply's total time under Cloud Run's 300 s: every model call's first
+ * attempt counts it in flows/model-ladder.ts's RETRY_BUDGET_MS arithmetic.
+ * (Retries don't add silence: the ladder sends keepalives.) The cost is less
+ * room for a slow first chunk, which fails that attempt as a stall. TASK-32 measures it and records the
  * value in docs/contracts.md, whose maximum silence between stream events
  * Frontend's own limit (TASK-28) is set against.
  *
