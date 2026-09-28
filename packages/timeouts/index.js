@@ -127,6 +127,12 @@ export const CLOUD_RUN_MARGIN_MS = 20_000;
  * How much time one reply may spend on retrying failed model calls
  * (TASK-43), so that the reply's worst case, BASELINE_REPLY_WORST_CASE_MS
  * plus this, stays CLOUD_RUN_MARGIN_MS below Cloud Run's timeout.
+ *
+ * What counts: each failed attempt that another attempt follows, by the
+ * time it took, and the backoff wait after it. A model call's last attempt
+ * doesn't, since BASELINE_REPLY_WORST_CASE_MS already counts it. So the
+ * ladder starts a retry or step-down only if what the reply has spent so
+ * far, plus that retry's wait, is within this budget.
  */
 export const RETRY_BUDGET_MS =
 	CLOUD_RUN_REQUEST_TIMEOUT_MS -
@@ -137,7 +143,8 @@ export const RETRY_BUDGET_MS =
  * The backoff TASK-43's model ladder (backend/src/flows/model-ladder.ts)
  * gives every model, per model call: up to BACKOFF_ATTEMPTS_PER_MODEL
  * attempts, waiting FIRST_BACKOFF_MS before the second and doubling for
- * each one after (1 s, then 2 s), each wait lengthened by up to
+ * each one after (with the values below, 1 s, then 2 s), each wait
+ * lengthened by up to
  * BACKOFF_JITTER_PERCENT of itself at random so retries don't fall in step.
  * After the last attempt, the ladder steps down to its next model.
  */
@@ -147,7 +154,8 @@ export const BACKOFF_JITTER_PERCENT = 25;
 
 /**
  * The longest backoff wait, before a model's last attempt, with the most
- * jitter. The ladder sends a keepalive when an attempt fails and when a wait
+ * jitter (an upper bound: the jitter is random). With a single attempt
+ * per model there'd be no wait at all, and this would overstate it. The ladder sends a keepalive when an attempt fails and when a wait
  * ends, so this must stay within MODEL_STALL_LIMIT_MS for MAX_SILENCE_MS to
  * hold while it retries.
  */

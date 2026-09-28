@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, mock, test } from "node:test";
+import { FIRST_BACKOFF_MS, LONGEST_BACKOFF_WAIT_MS } from "@pun-agent/timeouts";
 import { GenkitError, genkit, type StatusName, z } from "genkit";
 import { logger } from "genkit/logging";
 import { type MockRespondFn, mockModel } from "genkit/testing";
@@ -159,8 +160,9 @@ const waitOut = async (...waitsMs: number[]) => {
 	await settle();
 };
 
-// The backoff: 1 s before the 2nd attempt, 2 s before the 3rd.
-const BACKOFF_WAITS_MS = [1_000, 2_000];
+// The backoff with no jitter: 1 s before the 2nd attempt, 2 s before the
+// 3rd. The tests below spell some of these out in ms, to be readable.
+const BACKOFF_WAITS_MS = [FIRST_BACKOFF_MS, 2 * FIRST_BACKOFF_MS];
 
 test(
 	"retries a failing model with backoff, then steps down to the next",
@@ -540,7 +542,13 @@ test("adds up to 25% jitter to each wait", ladderTestOptions, async () => {
 	const response = reply({ random: () => 1 });
 	await waitOut(1_249);
 	assert.deepEqual(requestCounts(), [1, 0, 0]);
-	await waitOut(1, 2_500);
+	await waitOut(1);
+	assert.deepEqual(requestCounts(), [2, 0, 0]);
+	// The last wait is the longest, and what @pun-agent/timeouts derives as
+	// LONGEST_BACKOFF_WAIT_MS: this ties that value to what the ladder does.
+	await waitOut(LONGEST_BACKOFF_WAIT_MS - 1);
+	assert.deepEqual(requestCounts(), [2, 0, 0]);
+	await waitOut(1);
 
 	assert.equal((await response).text, "Answered");
 	assert.deepEqual(requestCounts(), [3, 1, 0]);
