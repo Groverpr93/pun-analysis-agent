@@ -4,7 +4,7 @@ title: Otto the otter persona
 status: In Progress
 assignee: []
 created_date: '2026-09-27 15:02'
-updated_date: '2026-09-28 14:01'
+updated_date: '2026-09-28 14:40'
 labels: []
 milestone: m-5
 dependencies: []
@@ -30,3 +30,9 @@ The app already looks like an otter mascot (TASK-22) but doesn't act like one: G
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+TASK-31.2 Done; TASK-31.1 merged (#67) and deployed, with AC #4 pending a live check blocked by Gemini 503s on 2026-09-28. Deployed app check: the thinking otter and rotating phrases render in production; Otto's reply could not be observed there because Gemini returned 503.
+<!-- SECTION:NOTES:END -->

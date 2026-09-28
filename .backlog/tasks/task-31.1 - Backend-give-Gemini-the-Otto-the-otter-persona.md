@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@claude'
 created_date: '2026-09-27 15:02'
-updated_date: '2026-09-28 14:12'
+updated_date: '2026-09-28 14:45'
 labels: []
 milestone: m-5
 dependencies:
@@ -28,19 +28,19 @@ TASK-12 limits Gemini to pun analysis, but nothing defines who is talking, so re
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The system instruction presents the assistant as Otto, an anthropomorphized otter with a friendly, playful voice, and Otto introduces himself by that name when asked who he is
-- [ ] #2 The persona is consistent with the TASK-22 mascot and copy (Purdue black/gold hoodie, glasses, the "That's punny!" catchphrase)
-- [ ] #3 The instruction tells Otto to use otter-specific flavor (e.g. floating on his back, cracking a pun open like a shellfish on a rock, stashing favorite puns like pet rocks) sparingly, so it never replaces or obscures the actual pun analysis
+- [x] #1 The system instruction presents the assistant as Otto, an anthropomorphized otter with a friendly, playful voice, and Otto introduces himself by that name when asked who he is
+- [x] #2 The persona is consistent with the TASK-22 mascot and copy (Purdue black/gold hoodie, glasses, the "That's punny!" catchphrase)
+- [x] #3 The instruction tells Otto to use otter-specific flavor (e.g. floating on his back, cracking a pun open like a shellfish on a rock, stashing favorite puns like pet rocks) sparingly, so it never replaces or obscures the actual pun analysis
 - [ ] #4 Off-topic requests are redirected back to puns in character, without overriding or loosening TASK-12's scope rules
-- [ ] #5 The persona lives only in Backend's system instruction: no /api/chat contract change and no extra Gemini call per session
-- [ ] #6 A Backend test against a Genkit test double asserts the persona text is part of the system instruction the model receives
+- [x] #5 The persona lives only in Backend's system instruction: no /api/chat contract change and no extra Gemini call per session
+- [x] #6 A Backend test against a Genkit test double asserts the persona text is part of the system instruction the model receives
 <!-- AC:END -->
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
-- [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
-- [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
+- [x] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
+- [x] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
+- [x] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
 
 ## Implementation Plan
@@ -59,6 +59,10 @@ TASK-12 limits Gemini to pun analysis, but nothing defines who is talking, so re
 Decision (user): Otto analyzes puns only, never writes them; the rule lives in PURPOSE (TASK-12's scope paragraph), resolving comment #1. Composition into PERSONA + PURPOSE chosen by user for testability. Mutation check: dropping PERSONA from the join fails only the new test; the existing deep-equal test still passes, since it compares against SYSTEM_INSTRUCTION itself.
 
 Decision revised (user, same session): Otto is a teacher, not a pun generator. He may write one example pun per reply when it helps explain (including a bare 'tell me a pun'), always analyzed with analyze_pun; batches are declined, and no wordplay in his own voice beyond the catchphrase. Code review subagent: applied who-are-you in scope, no own-voice wordplay, pet-rock image tied to the user's pun, doc comments no longer overpromise, catchphrase anchored to analysis, ANALYZE_PUN_RULE reflowed (verified text-identical to TASK-12's). Checks: backend 119/119, biome, tsc clean. Docs drift: none (docs reference the file path/ownership only). No architectural review needed (no contract/topology change). Manual E2E attempted 2026-09-28 against local backend: Gemini returned 503 high demand for gemini-flash-lite-latest on every request; backend surfaced its UNAVAILABLE error event correctly. Pending retry.
+
+Merged as team-play/pun-analysis-agent#67 (49a5cc7); Lint, Test and Deploy Backend passed on main. Live check 2026-09-28 (local backend, same instruction text as main, gemini-flash-lite-latest): 'Who are you?' -> Otto introduced himself by name in character (glasses, black and gold Purdue hoodie), 0 analyze_pun calls, ended by asking for a sentence (AC #1, #2). Observation: that reply used two otter touches (floating on his back, cracking jokes like a shellfish) where PERSONA says at most one; mild, watch in later checks. Every other prompt (pun, non-pun, 'tell me a pun about otters', 'give me 20 puns', 'what's a homophonic pun?', off-topic) failed on Gemini 503s or 'fetch failed' despite 3 retries with 15s backoff, so AC #4 (in-character off-topic redirect) and the example-pun rule are not yet verified live. Deployed app (pun-agent.web.app) showed the same: thinking otter, then 'The assistant is busy right now.' Separately observed: two requests hung ~300s with no backend log line until the client's body timeout, suggesting Backend has no upstream timeout on the Gemini stream (not in TASK-31 scope).
+
+The ~300 s Gemini stall observed in the live check is tracked as TASK-42.
 <!-- SECTION:NOTES:END -->
 
 ## Comments
