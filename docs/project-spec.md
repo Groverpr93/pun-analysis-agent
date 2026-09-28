@@ -120,7 +120,7 @@ This domain can work independently once the contract is agreed — no dependency
 ## Sync points
 
 The only hard dependencies across domains:
-1. **Day one:** agree the `/analyze` request/response schema (Inference ↔ Backend, Data/Eval)
+1. **Day one:** agree the `/analyze` request/response schema (Inference ↔ Backend, Data/Eval). Frontend depends on it too: it renders `analyze_pun` results, and resends saved ones in `/api/chat` history, which Backend checks against the current rules (a result that no longer matches is left out rather than failing the request; see [`contracts.md`](contracts.md)).
 2. **Before Frontend wires up its streaming display:** agree the `/api/chat` streaming shape (Backend ↔ Frontend)
 3. **Before Frontend builds tool-call rendering:** agree the shape of `tool-call` events within the `/api/chat` Genkit stream (Backend ↔ Frontend) — this is Phase 2 of the progressive-enhancement plan in [`engineering-practices.md`](engineering-practices.md); Phase 1's plain-text stream shape from sync point 2 doesn't need it. Closed: the shape is in [`contracts.md`](contracts.md)'s `/api/chat` section.
 

@@ -34,11 +34,24 @@ POST /analyze
 ```
 POST /api/chat
 X-Firebase-AppCheck: <Firebase App Check token>
-{ "messages": [{ "role": string, "content": string }] }
+{ "messages": [{ "role": string, "content": string | [<reply part>] }] }
 → streamed response (Genkit flow stream format)
+
+<reply part> is one of:
+{ "type": "text", "text": string }
+{ "type": "tool-call", "name": "analyze_pun", "ref": string, "input": { "text": string }, "output": <the /analyze response shape above> }
 ```
 
-**Known limitation (Phase 2):** `content` is text only, so earlier turns' `analyze_pun` calls and results aren't resent, and Gemini sees only the text of earlier replies. TASK-35 extends the request to carry them.
+`content` is a string for any message: its text. An `assistant` message can instead send a list of parts, which is how an earlier reply's `analyze_pun` calls and their results reach Gemini on later turns, so a follow-up like "why is that a pun?" is answered from what Inference found and not only from the text of the reply. A client that sends only strings keeps working, with Gemini seeing only the text of earlier replies.
+
+- **Order:** parts are listed in the order they happened in the reply: text, calls, and the text after them. Backend rebuilds Gemini's turns from it: text and the calls after it form one model turn, followed by those calls' results. Calls with no text between them are sent as one turn, as if Gemini had made them in parallel, since the parts don't record which turn a call came from.
+- **Only answered calls:** a `tool-call` part must carry its `output`. A call that never got its result (the reply failed or was stopped mid-call) is left out, because Gemini only accepts a call followed by its result. A reply left with no parts (it failed before any text, or held only such a call) is sent as `[]` and adds nothing to Gemini's history.
+- **No thought signatures:** Gemini attaches a signature to each of its calls (part `metadata`, see "Unknown fields" below), and the parts don't carry it. That works because Gemini only checks signatures on the calls of the current turn, and resent calls always come before the newest user message (checked against `gemini-flash-lite-latest` in TASK-35). Re-check it when `GEMINI_MODEL`'s default changes.
+- **Only in replies:** parts are only valid on an `assistant` message, and `name` can only be `analyze_pun`.
+- **Outdated results:** Backend checks each `output` against the `/analyze` rules above. A call whose `output` breaks them is left out of Gemini's history together with its result, and Backend logs a WARNING, but the request goes ahead. Threads saved in the browser aren't versioned, so rejecting the request would make every later turn of a thread fail once a result saved in it no longer matched a changed `/analyze` rule.
+- **Trust:** the client supplies each `output`, and Backend can't check that Inference produced it, so a client can send a made-up result that follows the rules. That only changes that client's own conversation, and gives it nothing it couldn't already get by typing the same claim into a message; Backend keeps no conversation state. If these results ever reach something shared (e.g. eval data), Backend should sign each result it streams and check the signature when it comes back.
+
+A request that breaks these rules in any other way (parts on a message that isn't `assistant`, another tool's `name`, a `tool-call` without `output`) is rejected before streaming starts, like any other malformed body (see "Failed replies" below).
 
 Every request must carry a Firebase App Check token for the `pun-agent` project in the `X-Firebase-AppCheck` header. It attests that the request comes from our Firebase-hosted app, so the public Cloud Run URL can't be used to spend the team's Gemini quota directly. Frontend gets tokens from the Firebase JS SDK (reCAPTCHA Enterprise in production, a registered debug token under `pnpm dev`; see [`local-setup.md`](local-setup.md)). Backend checks the header before the request reaches the flow (only CORS runs earlier) and answers a missing or invalid token with:
 

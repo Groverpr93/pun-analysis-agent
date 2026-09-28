@@ -5,21 +5,56 @@ import type {
 	ToolArgument,
 } from "genkit";
 import { z } from "genkit";
-import { GenerateResponseChunkSchema } from "genkit/model";
+import { logger } from "genkit/logging";
+import { GenerateResponseChunkSchema, type MessageData } from "genkit/model";
+import {
+	ANALYZE_PUN_TOOL_NAME,
+	analyzePunInputSchema,
+	analyzeResultSchema,
+} from "../tools/analyze-pun.ts";
 import { numberToolRequests } from "./tool-request-refs.ts";
+
+/**
+ * An earlier analyze_pun call and its result, as Frontend resends it
+ * (docs/contracts.md). `output` is required: a call that never got its
+ * result isn't sent, since Gemini expects every call in its history to be
+ * followed by its result. What `output` holds is checked later, per call
+ * (see toGenkitReplyMessages), so one bad result doesn't fail the request.
+ */
+const analyzePunCallPartSchema = z.object({
+	type: z.literal("tool-call"),
+	name: z.literal(ANALYZE_PUN_TOOL_NAME),
+	ref: z.string(),
+	input: analyzePunInputSchema,
+	output: z.custom<unknown>((output) => output !== undefined, {
+		message: "A tool call must carry its output",
+	}),
+});
+
+const replyPartSchema = z.discriminatedUnion("type", [
+	z.object({ type: z.literal("text"), text: z.string() }),
+	analyzePunCallPartSchema,
+]);
+
+type ReplyPart = z.infer<typeof replyPartSchema>;
 
 /**
  * Matches docs/contracts.md's /api/chat request shape. `role` is
  * intentionally not a strict enum: assistant-ui's ThreadMessage roles
  * ("user" | "assistant" | "system") are what Frontend actually sends, but
  * this schema stays exactly as permissive as the contract it implements.
+ * Only an assistant message can carry parts, since only a reply contains
+ * analyze_pun calls; plain-string content stays valid for any role.
  */
 export const chatInputSchema = z.object({
 	messages: z.array(
-		z.object({
-			role: z.string(),
-			content: z.string(),
-		}),
+		z.union([
+			z.object({ role: z.string(), content: z.string() }),
+			z.object({
+				role: z.literal("assistant"),
+				content: z.array(replyPartSchema),
+			}),
+		]),
 	),
 });
 
@@ -36,11 +71,72 @@ const GENKIT_ROLE_BY_INPUT_ROLE: Record<string, GenkitRole> = {
 const toGenkitRole = (role: string): GenkitRole =>
 	GENKIT_ROLE_BY_INPUT_ROLE[role] ?? "user";
 
-const toGenkitMessages = (messages: ChatInput["messages"]) =>
-	messages.map((message) => ({
-		role: toGenkitRole(message.role),
-		content: [{ text: message.content }],
-	}));
+/**
+ * An earlier reply's parts as the model turns Genkit expects: each model
+ * message holds text and the calls it made, and is followed by a tool
+ * message with those calls' results; text after a result starts the next
+ * model message. Calls with no text between them go in one model message,
+ * as if made in parallel, since the parts don't record which turn they
+ * came from.
+ *
+ * A call whose output isn't an /analyze result is left out, with its
+ * result. Threads saved in the browser aren't versioned, so a result saved
+ * before an /analyze rule changed would otherwise fail every later request
+ * in that thread. The client supplies the output, so checking it more
+ * strictly wouldn't make it trustworthy anyway (docs/contracts.md).
+ */
+function toGenkitReplyMessages(parts: ReplyPart[]): MessageData[] {
+	const messages: MessageData[] = [];
+	let modelTurn: MessageData["content"] = [];
+	let toolTurn: MessageData["content"] = [];
+	const endTurn = () => {
+		if (modelTurn.length > 0)
+			messages.push({ role: "model", content: modelTurn });
+		if (toolTurn.length > 0) messages.push({ role: "tool", content: toolTurn });
+		modelTurn = [];
+		toolTurn = [];
+	};
+
+	for (const part of parts) {
+		if (part.type === "text") {
+			if (toolTurn.length > 0) endTurn();
+			modelTurn.push({ text: part.text });
+		} else {
+			const { name, ref, input } = part;
+			const output = analyzeResultSchema.safeParse(part.output);
+			if (!output.success) {
+				logger.warn(
+					"chat: left out an earlier analyze_pun call whose output isn't an /analyze result",
+					// Where it broke, not what was sent: the client wrote the output, so
+					// its values could be any size, repeated on every later turn.
+					{
+						ref,
+						issues: output.error.issues
+							.slice(0, 5)
+							.map(({ path, code }) => ({ path, code })),
+					},
+				);
+				continue;
+			}
+			modelTurn.push({ toolRequest: { name, ref, input } });
+			toolTurn.push({ toolResponse: { name, ref, output: output.data } });
+		}
+	}
+	endTurn();
+	return messages;
+}
+
+const toGenkitMessages = (messages: ChatInput["messages"]): MessageData[] =>
+	messages.flatMap((message) =>
+		typeof message.content === "string"
+			? [
+					{
+						role: toGenkitRole(message.role),
+						content: [{ text: message.content }],
+					},
+				]
+			: toGenkitReplyMessages(message.content),
+	);
 
 /**
  * What the flow streams, per docs/contracts.md's /api/chat stream: the next

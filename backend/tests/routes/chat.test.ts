@@ -4,6 +4,7 @@ import { GenkitError, genkit, type StatusName } from "genkit";
 import { logger } from "genkit/logging";
 import { Hono } from "hono";
 import { createChatHandler } from "../../src/routes/chat.ts";
+import { PUN_ANALYZE_RESULT } from "../fixtures/analyze-results.ts";
 import { buildMockChatFlow } from "../helpers/build-mock-chat-flow.ts";
 
 // Registered once per genkit/testing's mockModel/reset() idiom — see
@@ -64,6 +65,105 @@ test("POST /api/chat rejects a body that doesn't match {messages:[{role,content}
 
 	assert.equal(res.status, 400);
 });
+
+const earlierCall = {
+	type: "tool-call",
+	name: "analyze_pun",
+	ref: "call_1",
+	input: { text: "I lost interest." },
+	output: PUN_ANALYZE_RESULT,
+};
+const { output: _noOutput, ...unansweredCall } = earlierCall;
+
+test("POST /api/chat accepts an earlier reply's analyze_pun call and result in the history", async () => {
+	model.respondWith("ok");
+
+	const res = await app.request("/api/chat", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			messages: [
+				{ role: "user", content: "Is 'I lost interest' a pun?" },
+				{
+					role: "assistant",
+					content: [earlierCall, { type: "text", text: "It's a pun." }],
+				},
+				{ role: "user", content: "Why?" },
+			],
+		}),
+	});
+
+	assert.equal(res.status, 200);
+	await res.text();
+	assert.equal(model.lastRequest?.messages.length, 5);
+});
+
+// The route checks the whole /analyze contract, rules between fields
+// included, so this is where a rule-breaking result could still be
+// rejected; it must be left out instead (see tests/flows/chat.test.ts).
+test("POST /api/chat leaves out an earlier result that breaks /analyze's rules, instead of rejecting the request", async () => {
+	mock.method(logger, "warn", () => {});
+	model.respondWith("ok");
+
+	const res = await app.request("/api/chat", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			messages: [
+				{
+					role: "assistant",
+					content: [
+						{
+							...earlierCall,
+							output: { ...PUN_ANALYZE_RESULT, confidence: null },
+						},
+					],
+				},
+				{ role: "user", content: "Why?" },
+			],
+		}),
+	});
+
+	assert.equal(res.status, 200);
+	await res.text();
+	assert.deepEqual(
+		model.lastRequest?.messages.map((message) => message.role),
+		["user"],
+	);
+});
+
+for (const { name, message } of [
+	{
+		name: "a tool call in a user message",
+		message: { role: "user", content: [earlierCall] },
+	},
+	{
+		name: "a tool call without its result",
+		message: { role: "assistant", content: [unansweredCall] },
+	},
+	{
+		name: "a call to a tool other than analyze_pun",
+		message: {
+			role: "assistant",
+			content: [{ ...earlierCall, name: "search_web" }],
+		},
+	},
+]) {
+	test(`POST /api/chat rejects ${name} in the history`, async () => {
+		model.respondWith("ok");
+
+		const res = await app.request("/api/chat", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({
+				messages: [message, { role: "user", content: "Why?" }],
+			}),
+		});
+
+		assert.equal(res.status, 400);
+		assert.equal(model.lastRequest, undefined);
+	});
+}
 
 test("POST /api/chat rejects malformed JSON", async () => {
 	model.respondWith("ok");

@@ -130,6 +130,13 @@ const undetermined = ({
 	return UNDETERMINED_ANALYZE_RESULT;
 };
 
+export const ANALYZE_PUN_TOOL_NAME = "analyze_pun";
+
+/** What Gemini passes analyze_pun: the text to check. */
+export const analyzePunInputSchema = z.object({
+	text: z.string().describe("The text to check, exactly as written."),
+});
+
 export interface AnalyzePunToolOptions {
 	/**
 	 * Makes the HTTP call to Inference. Injected so tests (and, until
@@ -163,15 +170,13 @@ export function createAnalyzePunTool(
 
 	return ai.defineTool(
 		{
-			name: "analyze_pun",
+			name: ANALYZE_PUN_TOOL_NAME,
 			description:
 				"Checks whether a piece of text is a pun, using a dedicated pun " +
 				"classifier and word-sense lookup. Call it whenever the user asks " +
 				"whether something is a pun or asks you to explain one. If is_pun " +
 				"is null, the classifier couldn't judge the text: decide yourself.",
-			inputSchema: z.object({
-				text: z.string().describe("The text to check, exactly as written."),
-			}),
+			inputSchema: analyzePunInputSchema,
 			outputSchema: analyzeResultSchema,
 		},
 		async ({ text }) => {

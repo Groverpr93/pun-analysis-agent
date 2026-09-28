@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
-import { beforeEach, test } from "node:test";
+import { afterEach, beforeEach, mock, test } from "node:test";
 import { genkit } from "genkit";
+import { logger } from "genkit/logging";
 import { createChatFlow } from "../../src/flows/chat.ts";
 import {
 	type AnalyzeResult,
@@ -22,6 +23,7 @@ const testAi = genkit({});
 const { model, chatFlow } = buildMockChatFlow(testAi);
 
 beforeEach(() => model.reset());
+afterEach(() => mock.restoreAll());
 
 test("chatFlow streams the model's chunks and resolves to the full text", async () => {
 	model.respondWith((_request, { sendChunk }) => {
@@ -57,6 +59,188 @@ test("chatFlow maps assistant-ui's 'assistant' role to Genkit's 'model' role", a
 	assert.deepEqual(
 		model.lastRequest?.messages.map((m) => m.role),
 		["user", "model", "user"],
+	);
+});
+
+// An earlier reply as Frontend resends it (docs/contracts.md): its text and
+// analyze_pun calls in the order they happened, each call with its result.
+const earlierCall = {
+	type: "tool-call" as const,
+	name: "analyze_pun" as const,
+	ref: "call_1",
+	input: { text: "I lost interest." },
+	output: PUN_ANALYZE_RESULT,
+};
+
+test("chatFlow gives the model an earlier reply's analyze_pun calls and results as tool history", async () => {
+	model.respondWith("ok");
+
+	await chatFlow({
+		messages: [
+			{ role: "user", content: "Is 'I lost interest' a pun?" },
+			{
+				role: "assistant",
+				content: [
+					{ type: "text", text: "Let me check. " },
+					earlierCall,
+					{ type: "text", text: "Yes, it's a pun." },
+				],
+			},
+			{ role: "user", content: "Why?" },
+		],
+	});
+
+	const { name, ref, input, output } = earlierCall;
+	assert.deepEqual(model.lastRequest?.messages, [
+		{ role: "user", content: [{ text: "Is 'I lost interest' a pun?" }] },
+		// Text before the call belongs to the turn that made it.
+		{
+			role: "model",
+			content: [
+				{ text: "Let me check. " },
+				{ toolRequest: { name, ref, input } },
+			],
+		},
+		{ role: "tool", content: [{ toolResponse: { name, ref, output } }] },
+		{ role: "model", content: [{ text: "Yes, it's a pun." }] },
+		{ role: "user", content: [{ text: "Why?" }] },
+	]);
+});
+
+test("chatFlow sends back-to-back calls as one model turn and text between calls as separate turns", async () => {
+	model.respondWith("ok");
+	const second = { ...earlierCall, ref: "call_2", input: { text: "second" } };
+	const third = { ...earlierCall, ref: "call_3", input: { text: "third" } };
+
+	await chatFlow({
+		messages: [
+			{ role: "user", content: "Check these." },
+			{
+				role: "assistant",
+				content: [
+					earlierCall,
+					second,
+					{ type: "text", text: "One more. " },
+					third,
+				],
+			},
+			{ role: "user", content: "Thanks." },
+		],
+	});
+
+	const turns = model.lastRequest?.messages.map((message) => [
+		message.role,
+		message.content.map(
+			(part) =>
+				part.text ??
+				part.toolRequest?.ref ??
+				`result ${part.toolResponse?.ref}`,
+		),
+	]);
+	assert.deepEqual(turns, [
+		["user", ["Check these."]],
+		["model", ["call_1", "call_2"]],
+		["tool", ["result call_1", "result call_2"]],
+		["model", ["One more. ", "call_3"]],
+		["tool", ["result call_3"]],
+		["user", ["Thanks."]],
+	]);
+});
+
+// Threads saved in the browser aren't versioned, so a result saved before
+// an /analyze rule changed must not fail every later turn of that thread.
+for (const { name, output } of [
+	{
+		name: "isn't shaped like an /analyze result",
+		output: { ...PUN_ANALYZE_RESULT, pun_type: "client-written text" },
+	},
+	{
+		name: "breaks /analyze's rules",
+		output: { ...PUN_ANALYZE_RESULT, confidence: null },
+	},
+	{ name: "is null", output: null },
+]) {
+	test(`chatFlow leaves out an earlier call whose output ${name}, keeping the rest of the reply`, async () => {
+		const warn = mock.method(logger, "warn", () => {});
+		model.respondWith("ok");
+		const badCall = { ...earlierCall, ref: "call_bad", output };
+
+		await chatFlow({
+			messages: [
+				{ role: "user", content: "Check these." },
+				{
+					role: "assistant",
+					content: [badCall, earlierCall, { type: "text", text: "Done." }],
+				},
+				{ role: "user", content: "Why?" },
+			],
+		});
+
+		const { name: tool, ref, input } = earlierCall;
+		assert.deepEqual(model.lastRequest?.messages.slice(1, 4), [
+			{ role: "model", content: [{ toolRequest: { name: tool, ref, input } }] },
+			{
+				role: "tool",
+				content: [
+					{ toolResponse: { name: tool, ref, output: PUN_ANALYZE_RESULT } },
+				],
+			},
+			{ role: "model", content: [{ text: "Done." }] },
+		]);
+		assert.deepEqual(
+			warn.mock.calls.map((call) => (call.arguments[1] as { ref: string }).ref),
+			["call_bad"],
+		);
+		// Only where the output broke, never the client's values.
+		assert.doesNotMatch(
+			JSON.stringify(warn.mock.calls[0]?.arguments[1]),
+			/client-written text/,
+		);
+	});
+}
+
+// Text parts end up next to each other when Frontend leaves out a part
+// between them (e.g. a call that never got its result).
+test("chatFlow keeps text parts that follow each other in one model turn", async () => {
+	model.respondWith("ok");
+
+	await chatFlow({
+		messages: [
+			{ role: "user", content: "Is it a pun?" },
+			{
+				role: "assistant",
+				content: [
+					{ type: "text", text: "Let me check. " },
+					{ type: "text", text: "Sorry, that failed." },
+				],
+			},
+			{ role: "user", content: "Try again." },
+		],
+	});
+
+	assert.deepEqual(model.lastRequest?.messages[1], {
+		role: "model",
+		content: [{ text: "Let me check. " }, { text: "Sorry, that failed." }],
+	});
+});
+
+// A reply that failed before any text, or held only a call that never got
+// its result, reaches Backend as no parts; Gemini accepts two user turns in
+// a row (checked against gemini-flash-lite-latest in TASK-35).
+test("chatFlow leaves a reply with no parts out of the history", async () => {
+	model.respondWith("ok");
+
+	await chatFlow({
+		messages: [
+			{ role: "user", content: "Is it a pun?" },
+			{ role: "assistant", content: [] },
+			{ role: "user", content: "Try again." },
+		],
+	});
+
+	assert.deepEqual(
+		model.lastRequest?.messages.map((message) => message.role),
+		["user", "user"],
 	);
 });
 
