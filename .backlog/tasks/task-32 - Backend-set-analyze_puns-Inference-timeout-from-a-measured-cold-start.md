@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-27 15:25'
-updated_date: '2026-09-28 19:30'
+updated_date: '2026-09-29 09:57'
 labels: []
 milestone: m-4
 dependencies:
@@ -30,6 +30,7 @@ TASK-9 added INFERENCE_TIMEOUT_MS (backend/src/tools/analyze-pun.ts) with a prov
 - [ ] #2 INFERENCE_TIMEOUT_MS is set from that measurement with its margin explained next to the constant
 - [ ] #3 docs/contracts.md records the measured value and drops the 'provisional and unmeasured' wording, and updates the maximum silence between /api/chat events (MODEL_STALL_LIMIT_MS + INFERENCE_TIMEOUT_MS) that Frontend's limit (TASK-28) is set against
 - [ ] #4 MODEL_STALL_LIMIT_MS (TASK-42, backend/src/flows/stall-guard.ts) is set from measured Gemini time to first chunk and longest gap between chunks, over TASK-38's prompt set, for every model production can run: the configured GEMINI_MODEL and, once TASK-43 lands, each model on its ladder; its margin is explained next to the constant and in docs/contracts.md
+- [ ] #5 The live runs include prompts with two or three texts and with a text plus a request for an example, and record how many rounds of analyze_pun calls each reply used; the results confirm MAX_TOOL_ROUNDS (3, @pun-agent/timeouts) covers every legitimate reply with no ABORTED, or the cap and Cloud Run's timeout are revisited
 <!-- AC:END -->
 
 ## Definition of Done
@@ -51,4 +52,6 @@ From TASK-14's architectural review (2026-09-28): AC #1 measures time to the fir
 2026-09-28 (TASK-42 architectural review): Frontend no longer relies on the per-reply Inference total (5 rounds x INFERENCE_TIMEOUT_MS) as its worst-case wait; it relies on the maximum silence between events in docs/contracts.md. AC #3 was reworded to match, and AC #4 widened from 'TASK-43's ladder' to every model production can run, since GEMINI_MODEL is configurable and -latest aliases move.
 
 2026-09-28 (TASK-44): MODEL_STALL_LIMIT_MS (30 s), INFERENCE_TIMEOUT_MS (20 s) and MAX_TOOL_ROUNDS (3, was Genkit's implicit 5) now live in packages/timeouts/index.js (@pun-agent/timeouts), not stall-guard.ts or analyze-pun.ts, and its tests check they still fit together. Headroom is small: with 3 rounds and Cloud Run's timeout at 400 s, the retry budget still fits one retry only while the stall limit stays at or below 35 s. A measured value above that must raise CLOUD_RUN_REQUEST_TIMEOUT_MS in the same change (safe in one deploy); a longer maximum silence must also raise FRONTEND_SILENCE_LIMIT_MS first (docs/engineering-practices.md, 'Shared timeouts'). Where the ACs above name stall-guard.ts, analyze-pun.ts or '5 rounds', read the module.
+
+2026-09-29 (TASK-44 follow-up): AC #5 added. TASK-44 capped replies at 3 tool rounds, assuming Gemini sends several texts' analyze_pun calls in one round (or at worst analyzes two in sequence before an example); TASK-38's prompts only used single texts, so that assumption hasn't been observed. The same live runs this task already needs can check it. TASK-49 depends on this task's time-to-first-chunk and gap measurements (AC #4).
 <!-- SECTION:NOTES:END -->
