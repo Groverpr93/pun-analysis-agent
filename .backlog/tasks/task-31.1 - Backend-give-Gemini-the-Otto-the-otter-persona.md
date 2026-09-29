@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@claude'
 created_date: '2026-09-27 15:02'
-updated_date: '2026-09-28 14:45'
+updated_date: '2026-09-29 23:06'
 labels: []
 milestone: m-5
 dependencies:
@@ -63,6 +63,8 @@ Decision revised (user, same session): Otto is a teacher, not a pun generator. H
 Merged as team-play/pun-analysis-agent#67 (49a5cc7); Lint, Test and Deploy Backend passed on main. Live check 2026-09-28 (local backend, same instruction text as main, gemini-flash-lite-latest): 'Who are you?' -> Otto introduced himself by name in character (glasses, black and gold Purdue hoodie), 0 analyze_pun calls, ended by asking for a sentence (AC #1, #2). Observation: that reply used two otter touches (floating on his back, cracking jokes like a shellfish) where PERSONA says at most one; mild, watch in later checks. Every other prompt (pun, non-pun, 'tell me a pun about otters', 'give me 20 puns', 'what's a homophonic pun?', off-topic) failed on Gemini 503s or 'fetch failed' despite 3 retries with 15s backoff, so AC #4 (in-character off-topic redirect) and the example-pun rule are not yet verified live. Deployed app (pun-agent.web.app) showed the same: thinking otter, then 'The assistant is busy right now.' Separately observed: two requests hung ~300s with no backend log line until the client's body timeout, suggesting Backend has no upstream timeout on the Gemini stream (not in TASK-31 scope).
 
 The ~300 s Gemini stall observed in the live check is tracked as TASK-42.
+
+2026-09-29 live check on the original persona (local Backend, gemini-flash-lite-latest, pre-ladder): all 7 prompts answered. Tool calls and scope correct (1 analyze_pun call per text, one analyzed example for 'tell me a pun' and 'what's homophonic', 0 calls for 'give me 20 puns' and the off-topic ask, both redirected in character). But Otto introduced himself in almost every reply and exceeded one otter touch (two in the banker reply, an asterisk stage direction in the otters reply). Tightened PERSONA: introduce only when asked, no greeting or self-description otherwise, at most one touch, never as an asterisk action. Re-run on current main (model ladder, no step-downs logged): intros and asterisks fixed, tool calls and scope unchanged, but zero otter touches in 7 replies and the redirects lost their character ('Analyzing and explaining puns is what I help with!'), so AC #4 stays unchecked. Likely cause: 'Many replies need none'. Next: drop that phrase and ask redirects to keep the playful voice, then re-run. Separately: 'interest' was called homophonic in both runs (it's homographic); analyze_pun still returns undetermined until TASK-11, so categorization is Gemini's alone.
 <!-- SECTION:NOTES:END -->
 
 ## Comments
