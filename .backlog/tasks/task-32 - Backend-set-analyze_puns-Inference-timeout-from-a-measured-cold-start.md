@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-27 15:25'
-updated_date: '2026-09-29 09:05'
+updated_date: '2026-09-29 09:37'
 labels: []
 milestone: m-4
 dependencies:
@@ -53,4 +53,6 @@ From TASK-14's architectural review (2026-09-28): AC #1 measures time to the fir
 2026-09-28 (TASK-44): MODEL_STALL_LIMIT_MS (30 s), INFERENCE_TIMEOUT_MS (20 s) and MAX_TOOL_ROUNDS (3, was Genkit's implicit 5) now live in packages/timeouts/index.js (@pun-agent/timeouts), not stall-guard.ts or analyze-pun.ts, and its tests check they still fit together. Headroom is small: with 3 rounds and Cloud Run's timeout at 400 s, the retry budget still fits one retry only while the stall limit stays at or below 35 s. A measured value above that must raise CLOUD_RUN_REQUEST_TIMEOUT_MS in the same change (safe in one deploy); a longer maximum silence must also raise FRONTEND_SILENCE_LIMIT_MS first (docs/engineering-practices.md, 'Shared timeouts'). Where the ACs above name stall-guard.ts, analyze-pun.ts or '5 rounds', read the module.
 
 From TASK-45 (2026-09-29): the ladder is now gemini-3.5-flash-lite -> gemini-3.1-flash-lite -> gemini-3.8-flash. Flash went past MODEL_STALL_LIMIT_MS (30 s) before its first chunk on 3 attempts in a row; whether that was a stall or long thinking is unknown. If Flash's normal time to first chunk is near 30 s, the bottom rung rarely answers, and raising the limit shrinks RETRY_BUDGET_MS (see the TASK-44 note above).
+
+From TASK-47 (2026-09-29): gemini-3.1-flash-lite now runs at thinkingLevel MEDIUM (GEMINI_MODEL_CONFIG in backend/src/config.ts), which adds about 1.3 s before its first chunk on follow-ups (median 2.8 s -> 4.0 s, slowest 7.3 s). Measure each model with the settings production gives it (through Backend, or with its GEMINI_MODEL_CONFIG), and include first turns: a first turn makes a tool-calling model call and a call after the tool result, each thinking at MEDIUM. Only follow-ups were timed in TASK-47.
 <!-- SECTION:NOTES:END -->

@@ -26,7 +26,7 @@ To check just one hand-off, name both models, e.g. the same model twice to compa
 node docs/experiments/task-45/check.mjs --from gemini-3.1-flash-lite --to gemini-3.1-flash-lite
 ```
 
-Each run is saved to `runs/<start time>/`: the raw streams under `first-turn/` and `follow-up/`, and `results.json`.
+Each run is saved to `runs/<start time>/`: the raw streams under `first-turn/` and `follow-up/`, and `results.json`. The Backends run each model with the settings production gives it (`GEMINI_MODEL_CONFIG`), so since TASK-47 a rerun has `gemini-3.1-flash-lite` thinking at MEDIUM, unlike the runs below.
 
 ## Runs
 
@@ -68,7 +68,7 @@ Ladder: `gemini-3.5-flash-lite` → `gemini-3.1-flash-lite` → `gemini-3.8-flas
 
 Across the runs above, `gemini-3.1-flash-lite` answered every follow-up, but in 5 of 8 it described a result the tool never returned: "it confirmed … homophonic", with the words and senses from the earlier reply's text. The fixture's actual result is undetermined, with every field empty. That happened with both kinds of ref. `gemini-flash-lite-latest` (2 of 2) and `gemini-3.5-flash-lite` (5 of 5) reported the empty result every time.
 
-To tell whether the hand-off caused it, three runs sent `gemini-3.1-flash-lite` a follow-up to its own reply. Of 5 answered (one got 503s), none reported the empty result: 4 described a verdict the tool never gave, and 1 declined to share the tool's output. So the hand-off doesn't cause it. `gemini-3.1-flash-lite` tends to repeat its earlier reply's text rather than read the resent result, whichever model made the history.
+To tell whether the hand-off caused it, three runs sent `gemini-3.1-flash-lite` a follow-up to its own reply. Of 5 answered (one got 503s), none reported the empty result: 4 described a verdict the tool never gave, and 1 declined to share the tool's output. So the hand-off doesn't cause it. `gemini-3.1-flash-lite` tends to repeat its earlier reply's text rather than read the resent result, whichever model made the history. TASK-47 ([`../task-47`](../task-47/README.md)) found that a MEDIUM thinking level fixes most of it.
 
 ## Result
 

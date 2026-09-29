@@ -1,13 +1,21 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, mock, test } from "node:test";
 import { FIRST_BACKOFF_MS, LONGEST_BACKOFF_WAIT_MS } from "@pun-agent/timeouts";
-import { GenkitError, genkit, type StatusName, z } from "genkit";
+import {
+	GenkitError,
+	genkit,
+	type ModelArgument,
+	modelRef,
+	type StatusName,
+	z,
+} from "genkit";
 import { logger } from "genkit/logging";
 import { type MockRespondFn, mockModel } from "genkit/testing";
 import {
 	actionForModelFailure,
 	type ModelLadderOptions,
 	modelLadder,
+	withoutModelConfig,
 } from "../../src/flows/model-ladder.ts";
 
 const genkitError = (status: StatusName, detail?: unknown) =>
@@ -586,3 +594,97 @@ test(
 		);
 	},
 );
+
+/** A request's config, without the fields Genkit leaves undefined (`version`). */
+const setFields = (config: unknown) =>
+	Object.fromEntries(
+		Object.entries(config ?? {}).filter(([, value]) => value !== undefined),
+	);
+
+// Production's refs carry settings for one model only, such as a thinking
+// level (config.ts's GEMINI_MODEL_CONFIG). topP is set only by the first
+// model's ref, so it reaching the second would be a leak.
+const configuredModels = [
+	modelRef({ name: "rung-1", config: { topP: 0.3, temperature: 0.1 } }),
+	modelRef({ name: "rung-2", config: { topK: 5 } }),
+];
+
+/** A reply through the ladder over configuredModels, started as chat.ts does. */
+const configuredReply = (tools = false) =>
+	ai.generate({
+		model: withoutModelConfig(configuredModels[0] as ModelArgument),
+		prompt: "Is 'I lost interest' a pun?",
+		config: { temperature: 0.5, maxOutputTokens: 100 },
+		tools: tools ? [lookup] : [],
+		use: [modelLadder(ai, configuredModels)],
+	});
+
+test(
+	"gives each model's calls its own config, over the generate call's",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+		second.respondWith("Answered");
+
+		await configuredReply();
+
+		assert.deepEqual(setFields(first.requests[0]?.config), {
+			topP: 0.3,
+			temperature: 0.1,
+			maxOutputTokens: 100,
+		});
+		assert.deepEqual(setFields(second.requests[0]?.config), {
+			temperature: 0.5,
+			maxOutputTokens: 100,
+			topK: 5,
+		});
+	},
+);
+
+test(
+	"keeps a model's own config on the reply's later calls to it",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+		second.respondWith(toolThenAnswer);
+
+		await configuredReply(true);
+
+		assert.equal(second.requestCount, 2);
+		for (const request of second.requests) {
+			assert.deepEqual(setFields(request.config), {
+				temperature: 0.5,
+				maxOutputTokens: 100,
+				topK: 5,
+			});
+		}
+	},
+);
+
+// Genkit puts a ref's version into the request too, and the Gemini plugin
+// calls that version's model, so it would send every rung to the first's.
+test(
+	"doesn't pass the first model's version to the others",
+	ladderTestOptions,
+	async () => {
+		first.respondWith(failingWith("RESOURCE_EXHAUSTED"));
+		second.respondWith("Answered");
+		const models = [
+			modelRef({ name: "rung-1", version: "rung-1-v1" }),
+			"rung-2",
+		];
+
+		await ai.generate({
+			model: withoutModelConfig(models[0] as ModelArgument),
+			prompt: "Is 'I lost interest' a pun?",
+			use: [modelLadder(ai, models)],
+		});
+
+		assert.equal(second.requests[0]?.config?.version, undefined);
+	},
+);
+
+test("keeps a model given without a ref as it is", () => {
+	assert.equal(withoutModelConfig("rung-1"), "rung-1");
+	assert.equal(withoutModelConfig(first), first);
+});

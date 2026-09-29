@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import { afterEach, beforeEach, mock, test } from "node:test";
 import { MAX_TOOL_ROUNDS } from "@pun-agent/timeouts";
-import { GenkitError, genkit } from "genkit";
+import { GenkitError, genkit, modelRef } from "genkit";
 import { logger } from "genkit/logging";
+import { type MockModel, mockModel } from "genkit/testing";
 import { createChatFlow } from "../../src/flows/chat.ts";
 import {
 	PERSONA,
@@ -685,4 +686,35 @@ test("chatFlow allows MAX_TOOL_ROUNDS rounds of tool calls by default", async ()
 		modelCalls: MAX_TOOL_ROUNDS + 1,
 		inferenceCalls: MAX_TOOL_ROUNDS,
 	});
+});
+
+// createChatFlow gives Genkit its first model without that model's config;
+// otherwise modelLadder would send it to every model (model-ladder.ts).
+test("chatFlow gives each model only its own config", async () => {
+	const ai = genkit({});
+	const [top, next] = ["configured-top", "configured-next"].map((name) =>
+		mockModel(ai, { name, info: { supports: { tools: true } } }),
+	) as [MockModel, MockModel];
+	top.respondWith(() => {
+		throw new GenkitError({ status: "RESOURCE_EXHAUSTED", message: "Quota" });
+	});
+	next.respondWith("Answered");
+	const analyzePun = createAnalyzePunTool(ai, {
+		fetch: answeringWith(PUN_ANALYZE_RESULT),
+		inferenceUrl: "http://inference.test",
+	});
+	const flow = createChatFlow(
+		ai,
+		[
+			modelRef({ name: "configured-top", config: { temperature: 0.1 } }),
+			modelRef({ name: "configured-next", config: { topK: 5 } }),
+		],
+		[analyzePun],
+	);
+
+	await flow({ messages: [{ role: "user", content: "Is this a pun?" }] });
+
+	assert.equal(top.lastRequest?.config?.temperature, 0.1);
+	assert.equal(next.lastRequest?.config?.temperature, undefined);
+	assert.equal(next.lastRequest?.config?.topK, 5);
 });

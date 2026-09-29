@@ -16,8 +16,8 @@ import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { GEMINI_MODEL_LADDER } from "../../../backend/src/config.ts";
-import { applyMessage } from "../../../frontend/src/lib/chat/reply-parts.ts";
 import { readStream } from "../read-stream.mjs";
+import { toReplyParts } from "../resent-parts.mjs";
 
 // Each model on the ladder gets its own Backend, on its own port.
 const BACKEND_PORTS = Object.fromEntries(
@@ -121,38 +121,6 @@ const startBackend = async (model) => {
 	child.kill();
 	throw new Error(`${model}: Backend didn't answer /health in time`);
 };
-
-/**
- * A reply's parts as Frontend resends them (docs/contracts.md): built from
- * the stream by Frontend's own applyMessage, then mapped the way
- * frontend/src/lib/chat/request-messages.ts maps them (which Node can't
- * import directly). That keeps text and answered analyze_pun calls, in
- * order. The parts have no field for thought signatures, so the stream's
- * `metadata.thoughtSignature` is left behind, as it is by Frontend.
- */
-const toReplyParts = (events) =>
-	events
-		.filter((event) => "message" in event)
-		.reduce((parts, event) => applyMessage(parts, event.message), [])
-		.flatMap((part) => {
-			if (part.type === "text") return [{ type: "text", text: part.text }];
-			if (
-				part.type === "tool-call" &&
-				part.toolName === "analyze_pun" &&
-				part.result !== undefined
-			) {
-				return [
-					{
-						type: "tool-call",
-						name: part.toolName,
-						ref: part.toolCallId,
-						input: part.args,
-						output: part.result,
-					},
-				];
-			}
-			return [];
-		});
 
 let requestsSent = 0;
 /** Sends one /api/chat request to `model`'s Backend and reads its stream. */

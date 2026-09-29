@@ -1,3 +1,5 @@
+import type { GeminiConfig } from "@genkit-ai/google-genai";
+
 const DEFAULT_ALLOWED_ORIGINS = [
 	// Frontend local dev server (docs/local-setup.md).
 	"http://localhost:5173",
@@ -52,6 +54,18 @@ export const GEMINI_MODEL_LADDER = [
 	"gemini-3.1-flash-lite",
 	"gemini-3.8-flash",
 ];
+
+// Per-model Gemini settings; modelLadder applies each only to its own
+// model's calls. gemini-3.1-flash-lite thinks at MEDIUM: at its default,
+// which makes no thought tokens (like MINIMAL), it reported a resent
+// analyze_pun result in 0 of 9 follow-ups, often describing a result the
+// tool never returned, against 7 of 10 at MEDIUM, for about 1.3 s more
+// before its first chunk (TASK-47, docs/experiments/task-47).
+// gemini-3.5-flash-lite stays at its default: 9 of 10 there against 10 of
+// 10 at MEDIUM isn't worth about 2 s more on most replies.
+export const GEMINI_MODEL_CONFIG: Record<string, GeminiConfig> = {
+	"gemini-3.1-flash-lite": { thinkingConfig: { thinkingLevel: "MEDIUM" } },
+};
 
 const parsedAllowedOrigins = process.env.CORS_ORIGIN?.split(",")
 	.map((origin) => origin.trim())

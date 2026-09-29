@@ -18,3 +18,10 @@ test("the chat models are the ladder when GEMINI_MODEL is unset", () => {
 		],
 	);
 });
+
+test("only gemini-3.1-flash-lite gets a thinking level", () => {
+	assert.deepEqual(
+		chatModels.map((model) => model.config),
+		[{}, { thinkingConfig: { thinkingLevel: "MEDIUM" } }, {}],
+	);
+});

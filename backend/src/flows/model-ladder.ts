@@ -9,7 +9,9 @@ import {
 	type Genkit,
 	GenkitError,
 	type ModelArgument,
+	type ModelReference,
 	type StatusName,
+	type z,
 } from "genkit";
 import { logger } from "genkit/logging";
 import type {
@@ -71,12 +73,31 @@ export type ModelLadderOptions = {
 	random?: () => number;
 };
 
+/** A model ref (a name with settings), as opposed to a bare name or a registered model. */
+const isRef = (model: ModelArgument): model is ModelReference<z.ZodTypeAny> =>
+	typeof model !== "string" && !("__action" in model);
+
+/** The config a model ref carries (e.g. a thinking level), if any. */
+const configOf = (model: ModelArgument) =>
+	isRef(model) ? model.config : undefined;
+
+/**
+ * `model` without its ref's config or version, for the generate call a
+ * ladder is used with. Genkit puts both into the request it builds, and the
+ * ladder sends that request to every rung, so the first rung's would reach
+ * them all (a version would even make every rung call the first's model).
+ * The ladder adds each rung's own config instead; it applies no version, so
+ * the ladder's refs shouldn't set one.
+ */
+export const withoutModelConfig = (model: ModelArgument): ModelArgument =>
+	isRef(model) ? { ...model, config: undefined, version: undefined } : model;
+
 const modelName = (model: ModelArgument) =>
 	typeof model === "string"
 		? model
-		: "__action" in model
-			? model.__action.name
-			: model.name;
+		: isRef(model)
+			? model.name
+			: model.__action.name;
 
 /** Waits `ms`, or rejects with the signal's reason as soon as it aborts. */
 const wait = (ms: number, signal: AbortSignal | undefined) =>
@@ -126,12 +147,13 @@ const wait = (ms: number, signal: AbortSignal | undefined) =>
  *
  * The model the reply was started with is never called: `next` would reach
  * only that one, so the ladder calls each model itself. The first model on
- * the ladder should be that one, since Genkit builds the request from it,
- * including its ref's `config` and `version`, which then go to every model
- * on the ladder. So the ladder's models should be bare refs, as
- * genkit.ts's are, with any config set on the generate call instead. For
- * the same reason Genkit's traces name that first model even when another
- * one answered; the ladder's own log entries name the one that ran.
+ * the ladder should be that one, passed through withoutModelConfig: Genkit
+ * builds the request from it, including its ref's `config`, which would
+ * otherwise go to every model on the ladder. Each model's calls get the
+ * generate call's config with that model's own ref config over it, so a
+ * setting one model needs (e.g. a thinking level, config.ts) reaches only
+ * that model. Genkit's traces name that first model even when another one
+ * answered; the ladder's own log entries name the one that ran.
  */
 export function modelLadder(
 	ai: Genkit,
@@ -163,7 +185,11 @@ export function modelLadder(
 				message: `No model named ${modelName(model)}`,
 			});
 		}
-		return modelAction(request, options);
+		// The generate call's config, with this rung's own over it.
+		return modelAction(
+			{ ...request, config: { ...request.config, ...configOf(model) } },
+			options,
+		);
 	};
 
 	// `_next` is never called, but must be declared: Genkit passes the call's

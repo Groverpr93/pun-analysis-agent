@@ -13,7 +13,11 @@ import {
 	analyzePunInputSchema,
 	analyzeResultSchema,
 } from "../tools/analyze-pun.ts";
-import { type ModelLadderOptions, modelLadder } from "./model-ladder.ts";
+import {
+	type ModelLadderOptions,
+	modelLadder,
+	withoutModelConfig,
+} from "./model-ladder.ts";
 import { SYSTEM_INSTRUCTION } from "./system-instruction.ts";
 import { numberToolRequests } from "./tool-request-refs.ts";
 
@@ -192,8 +196,9 @@ export function createChatFlow(
 		async (input, { sendChunk, abortSignal }) => {
 			const { stream, response } = ai.generateStream({
 				// Genkit builds each model request from this one; modelLadder
-				// then decides which model it actually goes to.
-				model: models[0],
+				// then decides which model it actually goes to, and adds that
+				// model's own config.
+				model: withoutModelConfig(models[0]),
 				system: SYSTEM_INSTRUCTION,
 				messages: toGenkitMessages(input.messages),
 				tools,
