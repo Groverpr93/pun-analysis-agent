@@ -3,11 +3,11 @@ id: TASK-43
 title: >-
   Backend: step down a ladder of Flash-Lite models, with backoff, when Gemini
   fails
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 15:05'
-updated_date: '2026-09-28 19:55'
+updated_date: '2026-09-29 09:47'
 labels: []
 dependencies:
   - TASK-42
@@ -78,3 +78,9 @@ Not done: no live check against Gemini. gemini-3.1-flash-lite and gemini-2.5-fla
 
 2026-09-28: The cross-model check (reachability of the lower models with this key, and follow-ups whose unsigned history was made by another model) is TASK-45. Timing measurements for the ladder's models stay in TASK-32 AC #4.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+/api/chat now retries a Gemini call that fails before its first chunk, through a per-reply model middleware (backend/src/flows/model-ladder.ts). UNAVAILABLE, DEADLINE_EXCEEDED (including stalls) and INTERNAL back off per model (3 attempts, 1 s then 2 s, up to 25% jitter) and then step down the ladder; a 429 steps down at once; anything else fails. A call that has streamed is never retried, the model that answers first gets the rest of the reply, and a user stop ends it. A per-reply RETRY_BUDGET_MS keeps the worst case under Cloud Run's timeout. Empty-message keepalives before and after each wait keep MAX_SILENCE_MS unchanged; routes/chat.ts now runs the flow with onChunk, since flow.stream() drops falsy chunks. GEMINI_MODEL, when set, replaces the ladder with one model. The backoff lives in @pun-agent/timeouts with TASK-44's values, with relationship tests for the longest wait and one retry. Verified with backend 166, timeouts 7 and frontend 141 tests, mutation checks on every ladder behaviour, a wire-format test against @genkit-ai/express, and code, architectural and merge reviews (PR #73). The ladder's models were later changed by TASK-45 (#77) and given per-model config by TASK-47 (#78).
+<!-- SECTION:FINAL_SUMMARY:END -->
