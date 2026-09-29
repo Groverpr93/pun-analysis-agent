@@ -7,7 +7,7 @@ status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 15:05'
-updated_date: '2026-09-29 09:47'
+updated_date: '2026-09-29 10:32'
 labels: []
 dependencies:
   - TASK-42
@@ -77,6 +77,8 @@ Validation: backend 166/166 (tsc clean), packages/timeouts 7/7, frontend 141/141
 Not done: no live check against Gemini. gemini-3.1-flash-lite and gemini-2.5-flash-lite haven't been called with this project's key, and TASK-35's thought-signature check hasn't been re-run against them (contracts.md says so). Suggested follow-ups, not created: that live/signature check; TASK-37 AC #6 still names the removed DEFAULT_GEMINI_MODEL, and pinning Flash via GEMINI_MODEL now also gives up the ladder.
 
 2026-09-28: The cross-model check (reachability of the lower models with this key, and follow-ups whose unsigned history was made by another model) is TASK-45. Timing measurements for the ladder's models stay in TASK-32 AC #4.
+
+2026-09-29 (TASK-32): the Flash-Lite rungs' silences are measured (docs/experiments/task-32; longest 14.8 s, 30 s limit kept); Flash's moved to TASK-50. Ladder behaviour seen in that run: gemini-3.1-flash-lite answered 503 to 26 of 73 attempts, each within 0.16-1.3 s, so they cost little of the retry budget. Pegged calls after a tool result failed twice before succeeding 3 times (a third failure would have failed the reply with no step-down), and one first call failed all 3 attempts.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary

@@ -27,23 +27,29 @@ export const INFERENCE_TIMEOUT_MS = 20_000;
 /**
  * How long one model call may go without sending anything, whether before
  * its first chunk, between two chunks, or after its last chunk until the
- * call ends, before it's treated as stalled. The longest legitimate silence
- * is before the first chunk, since that covers the model's thinking.
- * Without this limit, a Gemini call that went quiet was bounded only by the
- * user giving up, or by Cloud Run's request timeout (TASK-42). analyze_pun's
- * wait on Inference never counts against it: tools run between model calls,
- * so INFERENCE_TIMEOUT_MS bounds that wait instead.
+ * call ends, before it's treated as stalled. Any of the three can be the
+ * longest: the model thinks silently before its first chunk, but can also
+ * pause mid-reply. Without this limit, a Gemini call that went quiet was
+ * bounded only by the user giving up, or by Cloud Run's request timeout
+ * (TASK-42). analyze_pun's wait on Inference never counts against it: tools
+ * run between model calls, so INFERENCE_TIMEOUT_MS bounds that wait
+ * instead.
  *
- * Provisional and unmeasured: 30 s is a conservative guess, well above a
- * normal Flash-Lite time to first chunk, since a limit that's too short
- * fails healthy replies whose first chunk is slow. It was briefly halved to
- * 15 s to leave room for TASK-43's retries within Cloud Run's timeout, then
- * restored once capping MAX_TOOL_ROUNDS and raising
- * CLOUD_RUN_REQUEST_TIMEOUT_MS made that room (TASK-44). The
- * cost is a smaller RETRY_BUDGET_MS and a longer MAX_SILENCE_MS for
- * Frontend to wait out. It's unchecked for gemini-3.8-flash, the model
- * ladder's last rung, which TASK-45 saw go past it before its first chunk.
- * TASK-32 measures it.
+ * Measured for the ladder's Flash-Lite rungs only (TASK-32,
+ * docs/experiments/task-32): over 50 replies to TASK-38's prompts, the
+ * longest silence in 92 attempts that answered was 14.8 s, a pause between
+ * two chunks of a gemini-3.1-flash-lite reply that then finished normally.
+ * gemini-3.1-flash-lite's slowest first chunk was 7.0 s (it thinks at
+ * MEDIUM), and gemini-3.5-flash-lite never went quiet for more than 1.3 s.
+ * 30 s is about twice that longest silence. A limit that's too short fails
+ * healthy replies, and one pause in 47 gemini-3.1-flash-lite attempts says
+ * it happens, not how often or how long it gets, so the margin stays
+ * generous; 15 s would have left that reply 0.2 s to spare.
+ *
+ * Don't lower it until gemini-3.8-flash, the ladder's last rung, is
+ * measured too (TASK-50): TASK-45 saw it go past 30 s before its first chunk, and
+ * one limit covers every rung. Raising it shrinks RETRY_BUDGET_MS and
+ * lengthens MAX_SILENCE_MS for Frontend to wait out (TASK-44).
  */
 export const MODEL_STALL_LIMIT_MS = 30_000;
 

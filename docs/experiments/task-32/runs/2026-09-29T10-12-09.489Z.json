@@ -1,0 +1,3563 @@
+{
+	"ranAt": "2026-09-29T10:12:09.489Z",
+	"models": ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite"],
+	"stallLimitMs": 120000,
+	"modelConfig": {
+		"gemini-3.5-flash-lite": null,
+		"gemini-3.1-flash-lite": {
+			"thinkingConfig": {
+				"thinkingLevel": "MEDIUM"
+			}
+		}
+	},
+	"replies": [
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 1,
+			"prompt": "p1-homographic",
+			"failure": null,
+			"reply": "Hey there! I'm Otto, the otter in the glasses and the black and gold Purdue hoodie. Let's crack this joke open like a shellfish on a rock! \n\nYes, that is definitely a pun! That's punny! \n\nHere is how it works:\n* **The kind of pun:** It's a **homographic** pun (or a double meaning based on a single word that is spelled and pronounced the same way).\n* **The word carrying it:** The word is **\"dressing.\"**\n* **The two meanings:** \n  1. The liquid condiment put on top of a salad (like ranch or vinaigrette).\n  2. The action of putting clothes on (getting dressed). \n\nThe joke plays on the idea that the tomato was embarrassed because it caught the salad in the middle of getting dressed! \n\nLet me know if you have another sentence you'd like me to look at!",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 1122,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 1123,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1150,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 603,
+							"kinds": "text"
+						},
+						{
+							"ms": 642,
+							"kinds": "text"
+						},
+						{
+							"ms": 703,
+							"kinds": "text"
+						},
+						{
+							"ms": 758,
+							"kinds": "text"
+						},
+						{
+							"ms": 858,
+							"kinds": "text"
+						},
+						{
+							"ms": 945,
+							"kinds": "text"
+						},
+						{
+							"ms": 1024,
+							"kinds": "text"
+						},
+						{
+							"ms": 1108,
+							"kinds": "text"
+						},
+						{
+							"ms": 1197,
+							"kinds": "text"
+						},
+						{
+							"ms": 1232,
+							"kinds": "text"
+						},
+						{
+							"ms": 1237,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1239,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 1,
+			"prompt": "p2-homophonic",
+			"failure": null,
+			"reply": "Hello there! I'm Otto, your friendly neighborhood otter—complete with my glasses and my favorite black and gold Purdue hoodie. Let me float on my back for just a second while I crack this joke open like a tasty little shellfish on a rock.\n\nYes, that is definitely a pun! That's punny! \n\nHere is how it works:\n* **Type:** This is a **homophonic** pun (sometimes called a heterographic pun in writing), because the humor relies on two words that sound identical (\"hole\" and \"whole\") even though they are spelled differently.\n* **Words involved:** \"hole\" / \"whole\"\n* **The two meanings:** \n  1. The literal circular openings in the middle of doughnuts.\n  2. The phrase \"whole business,\" meaning the entire occupation or enterprise of baking them.\n\nDo you have another sentence you'd like me to take a look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 1314,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 1314,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1315,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 468,
+							"kinds": "text"
+						},
+						{
+							"ms": 517,
+							"kinds": "text"
+						},
+						{
+							"ms": 614,
+							"kinds": "text"
+						},
+						{
+							"ms": 698,
+							"kinds": "text"
+						},
+						{
+							"ms": 793,
+							"kinds": "text"
+						},
+						{
+							"ms": 915,
+							"kinds": "text"
+						},
+						{
+							"ms": 982,
+							"kinds": "text"
+						},
+						{
+							"ms": 1083,
+							"kinds": "text"
+						},
+						{
+							"ms": 1227,
+							"kinds": "text"
+						},
+						{
+							"ms": 1232,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1235,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 1,
+			"prompt": "p3-non-pun",
+			"failure": null,
+			"reply": "*Adjusts my glasses, floats on my back for a quick second to ponder, and tucks a piece of dough in my whiskers.*\n\nLet's crack that sentence open like a tasty clam on my tummy and see what's inside! I'll run it through my pun analyzer right now.\n\nThat sentence isn't actually a pun! There are no words with double meanings or playful sound-alikes going on here—just a very nice, honest statement about the delicious reality of waiting for freshly baked bread to cool down. \n\nIf you want to try another sentence or a joke you've heard, toss it my way and I'll gladly take a look!",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 1145,
+							"kinds": "text"
+						},
+						{
+							"ms": 1214,
+							"kinds": "text"
+						},
+						{
+							"ms": 1356,
+							"kinds": "text"
+						},
+						{
+							"ms": 1439,
+							"kinds": "text"
+						},
+						{
+							"ms": 1493,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 1498,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1499,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 774,
+							"kinds": "text"
+						},
+						{
+							"ms": 817,
+							"kinds": "text"
+						},
+						{
+							"ms": 928,
+							"kinds": "text"
+						},
+						{
+							"ms": 1073,
+							"kinds": "text"
+						},
+						{
+							"ms": 1104,
+							"kinds": "text"
+						},
+						{
+							"ms": 1110,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1112,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 1,
+			"prompt": "p4-no-dictionary",
+			"failure": null,
+			"reply": "Hey there! I'm Otto—you can usually find me floating on my back to think things through, rocking my black and gold Purdue hoodie, and adjusting my glasses. \n\nI just cracked your joke open like a delicious shellfish on a rock, and *that's punny!* \n\nHere is how it works:\n\n* **Is it a pun?** Yes, absolutely!\n* **Type:** This is a **homophonic pun** (sometimes called a heterographic homophone pun). \n* **Words involved:** The phrase sounds like **\"seafood\"** (the marine life we eat) but is spelled and interpreted as **\"see food\"** (the action of looking at food).\n* **The two meanings:** \n  1. The dietary term \"seafood diet\" (implying a diet consisting of fish and shellfish).\n  2. The literal visual statement \"see food and I eat it\" (meaning whenever food is seen, it gets eaten).\n\nThe humor comes from how identically those two distinct phrases sound when spoken aloud, pulling a fast one on your ears! Do you have any other sentences you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 763,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 763,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 764,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 832,
+							"kinds": "text"
+						},
+						{
+							"ms": 844,
+							"kinds": "text"
+						},
+						{
+							"ms": 977,
+							"kinds": "text"
+						},
+						{
+							"ms": 1071,
+							"kinds": "text"
+						},
+						{
+							"ms": 1138,
+							"kinds": "text"
+						},
+						{
+							"ms": 1226,
+							"kinds": "text"
+						},
+						{
+							"ms": 1359,
+							"kinds": "text"
+						},
+						{
+							"ms": 1429,
+							"kinds": "text"
+						},
+						{
+							"ms": 1575,
+							"kinds": "text"
+						},
+						{
+							"ms": 1706,
+							"kinds": "text"
+						},
+						{
+							"ms": 1759,
+							"kinds": "text"
+						},
+						{
+							"ms": 1764,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1765,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 1,
+			"prompt": "p5-follow-up",
+			"failure": null,
+			"reply": "That's a great follow-up question! Let me float on my back for a quick second to ponder it.\n\nIf you change the sentence to \"I'm on a seafood diet because I only eat fish,\" **no, it is no longer a pun!** \n\nHere is why: a pun relies on wordplay, double meanings, or sound-alikes (like \"seafood\" versus \"see food\"). By adding \"because I only eat fish,\" you are using the phrase \"seafood diet\" in its literal, straightforward sense—meaning a diet made up of sea creatures. Because there is only one meaning left and no clever sound-alike trick, the playful double meaning disappears, and it becomes just a normal, factual statement. \n\nDo you have another clever sentence or joke you'd like me to analyze?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 571,
+							"kinds": "text"
+						},
+						{
+							"ms": 667,
+							"kinds": "text"
+						},
+						{
+							"ms": 689,
+							"kinds": "text"
+						},
+						{
+							"ms": 787,
+							"kinds": "text"
+						},
+						{
+							"ms": 903,
+							"kinds": "text"
+						},
+						{
+							"ms": 975,
+							"kinds": "text"
+						},
+						{
+							"ms": 1122,
+							"kinds": "text"
+						},
+						{
+							"ms": 1288,
+							"kinds": "text"
+						},
+						{
+							"ms": 1298,
+							"kinds": "text"
+						},
+						{
+							"ms": 1305,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1306,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 1,
+			"prompt": "p1-homographic",
+			"failure": null,
+			"reply": "Hello! I'm Otto. It's great to meet you! *I float on my back for a moment to think about your question.*\n\nThat is indeed a pun! \"That's punny!\"\n\nThe play on words here hinges on the word \"dressing.\" It works because it has two different meanings in this context:\n\n1.  **Salad dressing:** The liquid mixture, like vinaigrette, that you pour over a salad.\n2.  **Dressing (an act):** The act of putting on clothes. \n\nThe humor comes from the implication that the tomato was blushing because it caught the salad in the middle of getting dressed—as if the salad were a person! Since the word is spelled the same way but carries two distinct meanings, this is a homographic pun. Do you have any other sentences you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 3266,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 3268,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3269,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [],
+					"endMs": 568,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [],
+					"endMs": 277,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2022,
+							"kinds": "text"
+						},
+						{
+							"ms": 2159,
+							"kinds": "text"
+						},
+						{
+							"ms": 2260,
+							"kinds": "text"
+						},
+						{
+							"ms": 2354,
+							"kinds": "text"
+						},
+						{
+							"ms": 2471,
+							"kinds": "text"
+						},
+						{
+							"ms": 2543,
+							"kinds": "text"
+						},
+						{
+							"ms": 2630,
+							"kinds": "text"
+						},
+						{
+							"ms": 2648,
+							"kinds": "text"
+						},
+						{
+							"ms": 2653,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2654,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 1,
+			"prompt": "p2-homophonic",
+			"failure": null,
+			"reply": "Hi there! I'm Otto. It's great to meet you! *I adjust my glasses and float on my back in the water for a moment to think about your question.*\n\nThat's punny! You've found a classic example of a **homophonic pun**. \n\nA homophonic pun happens when two words sound the same but have different meanings and spellings. In your sentence, the word **\"hole\"** is doing the heavy lifting. It plays on two meanings:\n\n1.  **\"Hole\"**: Referring to the actual empty space in the middle of a doughnut.\n2.  **\"Whole\"**: Referring to the entirety of the baker's business or enterprise.\n\nBy swapping \"whole\" for \"hole,\" the sentence creates a clever double meaning that links the baker's specific product to his frustration with his career. \n\nDoes that help clarify how the wordplay works, or would you like to explore another one?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 308,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 163,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 2345,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 2345,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2346,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 5134,
+							"kinds": "text"
+						},
+						{
+							"ms": 5203,
+							"kinds": "text"
+						},
+						{
+							"ms": 5281,
+							"kinds": "text"
+						},
+						{
+							"ms": 5332,
+							"kinds": "text"
+						},
+						{
+							"ms": 5435,
+							"kinds": "text"
+						},
+						{
+							"ms": 5480,
+							"kinds": "text"
+						},
+						{
+							"ms": 5569,
+							"kinds": "text"
+						},
+						{
+							"ms": 5656,
+							"kinds": "text"
+						},
+						{
+							"ms": 5693,
+							"kinds": "text"
+						},
+						{
+							"ms": 5700,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 5701,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 1,
+			"prompt": "p3-non-pun",
+			"failure": null,
+			"reply": "Hello there! I'm Otto. \n\nI've taken a look at your sentence, and it doesn't appear to be a pun. A pun requires wordplay—usually by using words that sound similar (homophonic) or words that have multiple meanings (homographic) to create a humorous effect. Your sentence describes a clear, literal process of baking bread.\n\nDo you have another sentence you'd like me to look at? I'm always happy to help you spot the wordplay!",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 1386,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 1386,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1387,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2865,
+							"kinds": "text"
+						},
+						{
+							"ms": 2927,
+							"kinds": "text"
+						},
+						{
+							"ms": 2994,
+							"kinds": "text"
+						},
+						{
+							"ms": 3048,
+							"kinds": "text"
+						},
+						{
+							"ms": 3123,
+							"kinds": "text"
+						},
+						{
+							"ms": 3131,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3132,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 1,
+			"prompt": "p4-no-dictionary",
+			"failure": null,
+			"reply": "Hi there! I'm Otto. Let me float on my back for a moment while I think about this one.\n\nYes, that is definitely a pun! That's punny!\n\nThis is a **homophonic pun**. It relies on the phrase \"seafood\" sounding exactly like the words \"see food.\"\n\n*   The first meaning is the common dietary term \"seafood,\" which refers to edible sea life like fish, shrimp, or crab. \n*   The second meaning is the literal action of \"seeing food\" (visual perception) followed by the act of eating it.\n\nThe humor comes from the listener expecting the first meaning (a diet based on sea creatures) and then being surprised by the second, more literal interpretation. Do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 2733,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 2733,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2733,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2719,
+							"kinds": "text"
+						},
+						{
+							"ms": 2792,
+							"kinds": "text"
+						},
+						{
+							"ms": 2852,
+							"kinds": "text"
+						},
+						{
+							"ms": 2957,
+							"kinds": "text"
+						},
+						{
+							"ms": 3021,
+							"kinds": "text"
+						},
+						{
+							"ms": 3126,
+							"kinds": "text"
+						},
+						{
+							"ms": 3201,
+							"kinds": "text"
+						},
+						{
+							"ms": 3209,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3210,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 1,
+			"prompt": "p5-follow-up",
+			"failure": null,
+			"reply": "That's a great question! I'll crack that open like a shellfish on a rock to take a look.\n\nIn that specific version, no, it would not be a pun. \n\nBy adding \"because I only eat fish,\" you are clarifying that you are using the word \"seafood\" in its standard, literal sense. The play on words vanishes because the ambiguity—the two different ways to interpret the phrase—is removed. Puns thrive on the listener being led down one path and then realizing the word can also mean something else entirely. Since your new sentence only points to one path, it's just a regular, factual statement.\n\nDo you have another sentence you'd like me to analyze?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 4285,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 4286,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 4286,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 1687,
+							"kinds": "text"
+						},
+						{
+							"ms": 1722,
+							"kinds": "text"
+						},
+						{
+							"ms": 1787,
+							"kinds": "text"
+						},
+						{
+							"ms": 1881,
+							"kinds": "text"
+						},
+						{
+							"ms": 2011,
+							"kinds": "text"
+						},
+						{
+							"ms": 2123,
+							"kinds": "text"
+						},
+						{
+							"ms": 2226,
+							"kinds": "text"
+						},
+						{
+							"ms": 2243,
+							"kinds": "text"
+						},
+						{
+							"ms": 2248,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2249,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 2,
+			"prompt": "p1-homographic",
+			"failure": null,
+			"reply": "Hello there! I'm Otto, the resident otter here to help you dive into the wonderful world of wordplay. I'm wearing my favorite glasses and black and gold Purdue hoodie today, just floating on my back to think about your joke!\n\nLet's crack that joke open like a shellfish on a rock. Yes, that is definitely a pun! That's punny! \n\nHere is how it works:\n* **The kind of pun:** It's a **homographic** pun (or a play on a word with multiple meanings).\n* **The word involved:** \"Dressing.\"\n* **The two meanings:** \n  1. The liquid condiment you pour on a salad (like ranch or vinaigrette).\n  2. Putting your clothes on (\"the salad *dressing*\"). \n\nThe joke relies on the double meaning of \"dressing\" to make it look like the salad is putting on clothes while the tomato is watching! Do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 933,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 933,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 934,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 601,
+							"kinds": "text"
+						},
+						{
+							"ms": 666,
+							"kinds": "text"
+						},
+						{
+							"ms": 796,
+							"kinds": "text"
+						},
+						{
+							"ms": 873,
+							"kinds": "text"
+						},
+						{
+							"ms": 983,
+							"kinds": "text"
+						},
+						{
+							"ms": 1092,
+							"kinds": "text"
+						},
+						{
+							"ms": 1160,
+							"kinds": "text"
+						},
+						{
+							"ms": 1268,
+							"kinds": "text"
+						},
+						{
+							"ms": 1394,
+							"kinds": "text"
+						},
+						{
+							"ms": 1415,
+							"kinds": "text"
+						},
+						{
+							"ms": 1419,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1421,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 2,
+			"prompt": "p2-homophonic",
+			"failure": null,
+			"reply": "Hi there! I'm Otto—you'll often catch me floating on my back to think things through, rocking my favorite black and gold Purdue hoodie and these smart glasses. \n\nLet's crack that sentence open like a tasty shellfish on a rock! \n\nYes, that is definitely a pun. That's punny! \n\nIt's a **homophonic pun**, which means it plays on two words that sound the same (or very similar) but have different spellings and meanings. \n\nHere is how it works:\n* **The words involved:** **\"hole\"** and **\"whole\"**.\n* **Meaning one:** A literal **hole**, like the empty space in the middle of a doughnut.\n* **Meaning two:** The word **\"whole\"**, meaning entire or complete—as in the \"whole business\" of running a bakery.\n\nThe joke relies on substituting the word \"hole\" for \"whole\" in the common phrase \"the whole business,\" creating a funny double meaning about both the physical shape of the doughnuts and the baker's enterprise as a whole. \n\nDo you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 1048,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 1048,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1049,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 642,
+							"kinds": "text"
+						},
+						{
+							"ms": 711,
+							"kinds": "text"
+						},
+						{
+							"ms": 835,
+							"kinds": "text"
+						},
+						{
+							"ms": 905,
+							"kinds": "text"
+						},
+						{
+							"ms": 1010,
+							"kinds": "text"
+						},
+						{
+							"ms": 1120,
+							"kinds": "text"
+						},
+						{
+							"ms": 1192,
+							"kinds": "text"
+						},
+						{
+							"ms": 1286,
+							"kinds": "text"
+						},
+						{
+							"ms": 1379,
+							"kinds": "text"
+						},
+						{
+							"ms": 1457,
+							"kinds": "text"
+						},
+						{
+							"ms": 1543,
+							"kinds": "text"
+						},
+						{
+							"ms": 1551,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1552,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 2,
+			"prompt": "p3-non-pun",
+			"failure": null,
+			"reply": "*I float on my back for a second, paws resting on my black and gold Purdue hoodie while I adjust my glasses.* Let's crack this open like a shellfish on a rock and find out!\n\nThat sentence actually isn't a pun! It's a completely straightforward statement about baking bread and the patience it takes to wait for sourdough to cool down properly. There are no double meanings or play-on-words hiding in the flour here. \n\nIf you've got another sentence with a clever twist you'd like me to look at, send it my way!",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 643,
+							"kinds": "text"
+						},
+						{
+							"ms": 709,
+							"kinds": "text"
+						},
+						{
+							"ms": 816,
+							"kinds": "text"
+						},
+						{
+							"ms": 875,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 882,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 883,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 645,
+							"kinds": "text"
+						},
+						{
+							"ms": 700,
+							"kinds": "text"
+						},
+						{
+							"ms": 782,
+							"kinds": "text"
+						},
+						{
+							"ms": 887,
+							"kinds": "text"
+						},
+						{
+							"ms": 902,
+							"kinds": "text"
+						},
+						{
+							"ms": 907,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 908,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 2,
+			"prompt": "p4-no-dictionary",
+			"failure": null,
+			"reply": "Hi there! I'm Otto, the resident otter here to help you dive into the wonderful world of wordplay—just call me Otto! I'm floating here on my back, happily cracking your joke open on a rock like a tasty clam.\n\nThat's punny! \n\nYes, this is definitely a pun. It's a **homophonic pun** (sometimes called a heterographic pun), which means it plays on words that sound identical (or nearly identical) when spoken aloud, even though they are spelled differently. \n\nHere is how it works:\n* **The words involved:** The phrase **\"seafood\"** sounds just like **\"see food\"**.\n* **The two meanings:** \n  1. **Seafood:** A type of diet that consists of fish and shellfish.\n  2. **See food:** The literal action of looking at food and immediately eating it.\n\nThe humor comes from setting up the expectation that you are following a healthy nutritional plan, only to reveal a rather impulsive eating habit! Would you like to analyze another sentence together?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 654,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 654,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 655,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 638,
+							"kinds": "text"
+						},
+						{
+							"ms": 709,
+							"kinds": "text"
+						},
+						{
+							"ms": 826,
+							"kinds": "text"
+						},
+						{
+							"ms": 888,
+							"kinds": "text"
+						},
+						{
+							"ms": 977,
+							"kinds": "text"
+						},
+						{
+							"ms": 1089,
+							"kinds": "text"
+						},
+						{
+							"ms": 1154,
+							"kinds": "text"
+						},
+						{
+							"ms": 1242,
+							"kinds": "text"
+						},
+						{
+							"ms": 1352,
+							"kinds": "text"
+						},
+						{
+							"ms": 1482,
+							"kinds": "text"
+						},
+						{
+							"ms": 1524,
+							"kinds": "text"
+						},
+						{
+							"ms": 1531,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1533,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 2,
+			"prompt": "p5-follow-up",
+			"failure": null,
+			"reply": "If you phrase it that way, it actually loses the pun! Let me pop my paws up and stash that thought away in my imaginary pocket. \n\nIf you say you're on a seafood diet \"because you only eat fish,\" you're using the word **seafood** literally. There's no double meaning or wordplay anymore—you're just stating a literal fact about your eating habits! \n\nFor it to be a pun, it needs that cheeky twist where \"seafood\" sounds like \"see food\" and plays on two different ideas at once. Do you have another sentence you'd like me to take a look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 968,
+							"kinds": "text"
+						},
+						{
+							"ms": 1043,
+							"kinds": "text"
+						},
+						{
+							"ms": 1165,
+							"kinds": "text"
+						},
+						{
+							"ms": 1225,
+							"kinds": "text"
+						},
+						{
+							"ms": 1345,
+							"kinds": "text"
+						},
+						{
+							"ms": 1443,
+							"kinds": "text"
+						},
+						{
+							"ms": 1486,
+							"kinds": "text"
+						},
+						{
+							"ms": 1491,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1492,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 2,
+			"prompt": "p1-homographic",
+			"failure": null,
+			"reply": "Hi there! I'm Otto. That's punny! \n\nI'll just float here on my back for a second while I break this one down for you. This joke relies on the phrase \"salad dressing.\" It is a homographic pun because the phrase is spelled the same way but carries two different meanings:\n\n1.  **The act of getting dressed:** In the joke, the tomato blushes because it sees the salad putting on clothes (dressing itself).\n2.  **The condiment:** Salad dressing is a common sauce used on salads.\n\nThe humor comes from the tomato thinking the salad was performing the human action of dressing, rather than just having a sauce applied to it. Do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 844,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 4005,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 4005,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 4006,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 1336,
+							"kinds": "text"
+						},
+						{
+							"ms": 1336,
+							"kinds": "text"
+						},
+						{
+							"ms": 1362,
+							"kinds": "text"
+						},
+						{
+							"ms": 1475,
+							"kinds": "text"
+						},
+						{
+							"ms": 1577,
+							"kinds": "text"
+						},
+						{
+							"ms": 1769,
+							"kinds": "text"
+						},
+						{
+							"ms": 1811,
+							"kinds": "text"
+						},
+						{
+							"ms": 1836,
+							"kinds": "text"
+						},
+						{
+							"ms": 1839,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1839,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 2,
+			"prompt": "p2-homophonic",
+			"failure": null,
+			"reply": "Yes, that is a pun! That's punny!\n\nThis is a **homophonic pun**, which means it relies on two words that sound the same but have different meanings. In this case, the word is \"hole.\"\n\nIt plays on two different concepts:\n1. **Hole:** The literal empty space in the center of a doughnut.\n2. **Whole:** Meaning \"entire\" or \"all of,\" as in \"the whole business\" or the entire industry the baker was working in.\n\nBy using \"hole,\" the sentence creates a clever double meaning where the baker is both tired of the physical holes in his pastries and tired of the business as a whole. I’ll crack that one open like a shellfish on a rock! \n\nDo you have any other sentences you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 495,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 5560,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 5560,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 5560,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2343,
+							"kinds": "text"
+						},
+						{
+							"ms": 2345,
+							"kinds": "text"
+						},
+						{
+							"ms": 2420,
+							"kinds": "text"
+						},
+						{
+							"ms": 2489,
+							"kinds": "text"
+						},
+						{
+							"ms": 2611,
+							"kinds": "text"
+						},
+						{
+							"ms": 2674,
+							"kinds": "text"
+						},
+						{
+							"ms": 2739,
+							"kinds": "text"
+						},
+						{
+							"ms": 2746,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2747,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 2,
+			"prompt": "p3-non-pun",
+			"failure": null,
+			"reply": "Hello! I'm Otto. It's lovely to meet you. I'm always happy to help dive into the mechanics of language.\n\nI floated on my back for a moment to think about your sentence, but I have to tell you that \"I baked sourdough this morning and it has to cool for an hour before slicing\" is not a pun. \n\nA pun relies on words that sound the same or are spelled the same but have different meanings to create a clever or humorous effect. Your sentence is a very clear, straightforward statement of fact about your baking—though it sounds like that sourdough will be delicious once it’s ready!\n\nDo you have another sentence you'd like me to look at? I'm ready to help you spot the wordplay!",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 2456,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 2457,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2457,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2450,
+							"kinds": "text"
+						},
+						{
+							"ms": 2483,
+							"kinds": "text"
+						},
+						{
+							"ms": 2622,
+							"kinds": "text"
+						},
+						{
+							"ms": 2657,
+							"kinds": "text"
+						},
+						{
+							"ms": 2748,
+							"kinds": "text"
+						},
+						{
+							"ms": 2887,
+							"kinds": "text"
+						},
+						{
+							"ms": 2973,
+							"kinds": "text"
+						},
+						{
+							"ms": 2998,
+							"kinds": "text"
+						},
+						{
+							"ms": 3004,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3005,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 2,
+			"prompt": "p4-no-dictionary",
+			"failure": null,
+			"reply": "Hi there! I'm Otto. I'm happy to help you figure out if that's a pun! \n\n*I float on my back for a moment, paws tucked under my chin, thinking about your sentence.*\n\nThat is indeed a pun! That's punny!\n\nThis is a homophonic pun, meaning it relies on two words that sound the same but have different meanings. The pun hinges on the word \"seafood,\" which sounds identical to the phrase \"see food.\"\n\nIn the first meaning, \"seafood\" refers to a diet consisting of fish and shellfish. In the second meaning, it plays on the visual action of seeing food and then choosing to eat it. By bridging these two meanings, the sentence turns a health-conscious term into a humorous observation about hunger. \n\nDoes that help clear it up? Do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 380,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 350,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 6969,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 6969,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 6970,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 1871,
+							"kinds": "text"
+						},
+						{
+							"ms": 1929,
+							"kinds": "text"
+						},
+						{
+							"ms": 2009,
+							"kinds": "text"
+						},
+						{
+							"ms": 2086,
+							"kinds": "text"
+						},
+						{
+							"ms": 2245,
+							"kinds": "text"
+						},
+						{
+							"ms": 2246,
+							"kinds": "text"
+						},
+						{
+							"ms": 2313,
+							"kinds": "text"
+						},
+						{
+							"ms": 2471,
+							"kinds": "text"
+						},
+						{
+							"ms": 2510,
+							"kinds": "text"
+						},
+						{
+							"ms": 2519,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2520,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 2,
+			"prompt": "p5-follow-up",
+			"failure": null,
+			"reply": "That's a great question! *I carefully stow your sentence away like a favorite pet rock.*\n\nLooking at that sentence, it is not a pun. In this version, \"seafood diet\" is used only in its literal sense—a diet consisting of seafood—because you follow it up by saying you only eat fish. Since there is no longer a play on the phrase \"see food,\" the clever double meaning is gone, and it becomes a simple, straightforward statement of fact.\n\nA pun needs that bridge between two different meanings for the same word or phrase. Without that \"aha!\" moment where the language takes a surprise turn, it's just a sentence. \n\nDo you have any other sentences you'd like me to analyze?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 288,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 4265,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 4265,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 4265,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [],
+					"endMs": 334,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [],
+					"endMs": 247,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 3131,
+							"kinds": "text"
+						},
+						{
+							"ms": 3189,
+							"kinds": "text"
+						},
+						{
+							"ms": 3286,
+							"kinds": "text"
+						},
+						{
+							"ms": 3385,
+							"kinds": "text"
+						},
+						{
+							"ms": 3574,
+							"kinds": "text"
+						},
+						{
+							"ms": 3674,
+							"kinds": "text"
+						},
+						{
+							"ms": 3711,
+							"kinds": "text"
+						},
+						{
+							"ms": 3723,
+							"kinds": "text"
+						},
+						{
+							"ms": 3729,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3732,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 3,
+			"prompt": "p1-homographic",
+			"failure": null,
+			"reply": "Hey there! I'm Otto—you can usually find me floating on my back to think things through, rocking my glasses, and proudly sporting this black and gold Purdue hoodie. \n\nThat classic joke you shared is indeed a pun! That's punny! \n\nHere is how it works: it plays on the double meaning of the word **dressing**. \n\n1. **Meaning one:** The liquid sauce or vinaigrette put on top of a salad.\n2. **Meaning two:** The act of putting one's clothes on (as in the salad is \"getting dressed\").\n\nBecause a tomato would theoretically see a salad getting dressed (or see the condiment being poured), the word bridges those two ideas for comedic effect. This makes it a **homographic pun** (or polyseme), because the exact same word is spelled and pronounced the same way while carrying two entirely different meanings. \n\nDid you want to dive deeper into this one, or do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 854,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 854,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 855,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 677,
+							"kinds": "text"
+						},
+						{
+							"ms": 800,
+							"kinds": "text"
+						},
+						{
+							"ms": 872,
+							"kinds": "text"
+						},
+						{
+							"ms": 912,
+							"kinds": "text"
+						},
+						{
+							"ms": 1017,
+							"kinds": "text"
+						},
+						{
+							"ms": 1153,
+							"kinds": "text"
+						},
+						{
+							"ms": 1324,
+							"kinds": "text"
+						},
+						{
+							"ms": 1453,
+							"kinds": "text"
+						},
+						{
+							"ms": 1536,
+							"kinds": "text"
+						},
+						{
+							"ms": 1601,
+							"kinds": "text"
+						},
+						{
+							"ms": 1607,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1608,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 3,
+			"prompt": "p2-homophonic",
+			"failure": null,
+			"reply": "Hello there! I'm Otto—you'll often catch me floating on my back to think things through, wearing my favorite black and gold Purdue hoodie and these trusty glasses. \n\nLet me crack that joke open like a delicious shellfish on a rock! \n\nYes, that is definitely a pun. That's punny! \n\nSpecifically, this is a **homophonic pun**. It plays on the words **\"hole\"** and **\"whole,\"** which sound identical (homophones) but have entirely different spellings and meanings:\n\n1. **Hole:** The physical empty space in the middle of a doughnut.\n2. **Whole:** Entire or complete (as in running an \"entire business\").\n\nThe humor comes from substituting \"hole\" for \"whole\" in the common phrase \"the whole business,\" linking a baker's daily routine with doughnuts to the exhausting nature of running a company. \n\nWould you like to explore how other puns work, or do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 846,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 846,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 847,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 685,
+							"kinds": "text"
+						},
+						{
+							"ms": 686,
+							"kinds": "text"
+						},
+						{
+							"ms": 860,
+							"kinds": "text"
+						},
+						{
+							"ms": 861,
+							"kinds": "text"
+						},
+						{
+							"ms": 1063,
+							"kinds": "text"
+						},
+						{
+							"ms": 1063,
+							"kinds": "text"
+						},
+						{
+							"ms": 1096,
+							"kinds": "text"
+						},
+						{
+							"ms": 1204,
+							"kinds": "text"
+						},
+						{
+							"ms": 1387,
+							"kinds": "text"
+						},
+						{
+							"ms": 1387,
+							"kinds": "text"
+						},
+						{
+							"ms": 1387,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1388,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 3,
+			"prompt": "p3-non-pun",
+			"failure": null,
+			"reply": "*Floats on my back for a second, peering over the rim of my glasses* \n\nLet's crack that sentence open and see what's inside, just like a tasty crab on a rock! \n\nNope, that one isn't a pun! It's just a straightforward, delicious statement about baking bread. There are no double meanings or words playing on two different senses at once. \n\nDo you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 836,
+							"kinds": "text"
+						},
+						{
+							"ms": 836,
+							"kinds": "text"
+						},
+						{
+							"ms": 973,
+							"kinds": "text"
+						},
+						{
+							"ms": 1008,
+							"kinds": "text"
+						},
+						{
+							"ms": 1107,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 1108,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1108,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 710,
+							"kinds": "text"
+						},
+						{
+							"ms": 761,
+							"kinds": "text"
+						},
+						{
+							"ms": 948,
+							"kinds": "text"
+						},
+						{
+							"ms": 1051,
+							"kinds": "text"
+						},
+						{
+							"ms": 1051,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1052,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 3,
+			"prompt": "p4-no-dictionary",
+			"failure": null,
+			"reply": "Hey there! I'm Otto, your friendly neighborhood otter in glasses and a black and gold Purdue hoodie. \n\nLet me flip over onto my back and float for a moment to crack this one open like a shellfish on a rock! \n\nYes, that is definitely a pun! That's punny! \n\nThis is a classic **homophonic pun** (sometimes called a sound-alike pun). Here is how it works:\n\n* **The words involved:** The phrase **\"seafood\"** sounds identical to the phrase **\"see food\"**.\n* **The two meanings:** \n  1. **Seafood:** A category of food that comes from the sea, like fish or shrimp, implying a specific type of healthy eating plan or diet.\n  2. **See food:** The literal action of looking at any food item (\"I *see food* and I eat it\").\n\nThe humor comes from setting up the expectation that you are eating fish and ocean delicacies for your health, only to reveal that your \"diet\" just means you eat whatever food happens to pass in front of your eyes! \n\nDo you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 806,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 806,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 807,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 615,
+							"kinds": "text"
+						},
+						{
+							"ms": 677,
+							"kinds": "text"
+						},
+						{
+							"ms": 753,
+							"kinds": "text"
+						},
+						{
+							"ms": 816,
+							"kinds": "text"
+						},
+						{
+							"ms": 999,
+							"kinds": "text"
+						},
+						{
+							"ms": 1037,
+							"kinds": "text"
+						},
+						{
+							"ms": 1168,
+							"kinds": "text"
+						},
+						{
+							"ms": 1262,
+							"kinds": "text"
+						},
+						{
+							"ms": 1379,
+							"kinds": "text"
+						},
+						{
+							"ms": 1575,
+							"kinds": "text"
+						},
+						{
+							"ms": 1593,
+							"kinds": "text"
+						},
+						{
+							"ms": 1601,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1603,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 3,
+			"prompt": "p5-follow-up",
+			"failure": null,
+			"reply": "That's a fun follow-up question! Let me stash that thought away in my pouch like a favorite pet rock for a second.\n\nIf you say \"I'm on a seafood diet because I only eat fish,\" **no, it is no longer a pun!** \n\nHere is why: a pun relies on playing with double meanings or sound-alikes. By adding \"because I only eat fish,\" you are using the word \"seafood\" in its literal, straightforward sense (food from the sea). The punchline and the double meaning are gone, so it just becomes a normal, factual statement about your eating habits rather than a joke. \n\nDo you have another sentence or joke you'd like me to analyze?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 687,
+							"kinds": "text"
+						},
+						{
+							"ms": 725,
+							"kinds": "text"
+						},
+						{
+							"ms": 787,
+							"kinds": "text"
+						},
+						{
+							"ms": 882,
+							"kinds": "text"
+						},
+						{
+							"ms": 998,
+							"kinds": "text"
+						},
+						{
+							"ms": 1112,
+							"kinds": "text"
+						},
+						{
+							"ms": 1240,
+							"kinds": "text"
+						},
+						{
+							"ms": 1256,
+							"kinds": "text"
+						},
+						{
+							"ms": 1266,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1267,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 3,
+			"prompt": "p1-homographic",
+			"failure": null,
+			"reply": "Hi there! I'm Otto. I'm always happy to help you explore the fun side of language. \n\nI just floated on my back for a moment to think about that joke. \"That's punny!\" \n\nYes, that is definitely a pun! It relies on the word \"dressing\" to create a humorous effect. This is a form of wordplay where a single word has two different meanings, known as polysemy. \n\nHere is how it works:\n*   **The word involved:** \"Dressing.\"\n*   **Meaning one:** A sauce used to flavor a salad (the common condiment).\n*   **Meaning two:** The act of putting on clothes. \n\nThe humor comes from the double meaning: the tomato blushed because it saw the salad *getting dressed*, while we also interpret \"salad dressing\" as the liquid topping. Does that help you see how the pun is constructed?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 3461,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 3461,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3461,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 3417,
+							"kinds": "text"
+						},
+						{
+							"ms": 3548,
+							"kinds": "text"
+						},
+						{
+							"ms": 3611,
+							"kinds": "text"
+						},
+						{
+							"ms": 3731,
+							"kinds": "text"
+						},
+						{
+							"ms": 3793,
+							"kinds": "text"
+						},
+						{
+							"ms": 3889,
+							"kinds": "text"
+						},
+						{
+							"ms": 4063,
+							"kinds": "text"
+						},
+						{
+							"ms": 4073,
+							"kinds": "text"
+						},
+						{
+							"ms": 4079,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 4080,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 3,
+			"prompt": "p2-homophonic",
+			"failure": null,
+			"reply": "Hi there! I'm Otto. I'm so glad you stopped by!\n\n*I float on my back in the water, tucking my little paws behind my head to think about your sentence.*\n\nThat's punny! You have a great example of a homophonic pun there. A homophonic pun happens when two words sound the same but have different meanings.\n\nIn your sentence, the word \"hole\" is playing on the word \"whole.\" \n\n*   **\"Whole business\"** refers to the entirety of his work or the industry he was in.\n*   **\"Hole\"** refers specifically to the empty center of a doughnut.\n\nBy swapping \"whole\" for \"hole,\" the baker is making a joke about his specific product. Does that help clarify how it works? Do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 3598,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 3600,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3602,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 4011,
+							"kinds": "text"
+						},
+						{
+							"ms": 4075,
+							"kinds": "text"
+						},
+						{
+							"ms": 4162,
+							"kinds": "text"
+						},
+						{
+							"ms": 4238,
+							"kinds": "text"
+						},
+						{
+							"ms": 4312,
+							"kinds": "text"
+						},
+						{
+							"ms": 4484,
+							"kinds": "text"
+						},
+						{
+							"ms": 4499,
+							"kinds": "text"
+						},
+						{
+							"ms": 4514,
+							"kinds": "text"
+						},
+						{
+							"ms": 4520,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 4521,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 3,
+			"prompt": "p3-non-pun",
+			"failure": null,
+			"reply": "I’m Otto, and I'd be happy to look at that for you! I'll just float here on my back for a moment to think it over.\n\nAfter looking at your sentence, I can tell you that it isn't a pun. A pun relies on wordplay, where a word or phrase has two meanings, or sounds like another word with a different meaning, to create a humorous effect. \n\nYour sentence, \"I baked sourdough this morning and it has to cool for an hour before slicing,\" is a clear, literal statement about the process of baking bread. There aren't any words here that are playing on a second meaning or sound-alike, so it functions as a straightforward observation.\n\nDo you have any other sentences you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 3953,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 3954,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3954,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [],
+					"endMs": 562,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 3614,
+							"kinds": "text"
+						},
+						{
+							"ms": 3722,
+							"kinds": "text"
+						},
+						{
+							"ms": 3879,
+							"kinds": "text"
+						},
+						{
+							"ms": 3879,
+							"kinds": "text"
+						},
+						{
+							"ms": 3933,
+							"kinds": "text"
+						},
+						{
+							"ms": 4070,
+							"kinds": "text"
+						},
+						{
+							"ms": 4112,
+							"kinds": "text"
+						},
+						{
+							"ms": 4118,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 4120,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 3,
+			"prompt": "p4-no-dictionary",
+			"failure": null,
+			"reply": "Hi there! I'm Otto, and I'd be happy to help you with that.\n\nThat is definitely a pun! I'll just float here on my back for a moment to break that one down for you. This is a homophonic pun, which means it relies on words that sound the same but have different meanings.\n\nThe pun hinges on the word **\"seafood\"** and the phrase **\"see food.\"** \n* In the first instance, \"seafood\" refers to the culinary category of marine life. \n* In the second instance, it plays on the sound of the words to describe the literal act of seeing food and then choosing to eat it. \n\n\"That's punny!\" Do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 2627,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 2627,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2628,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2270,
+							"kinds": "text"
+						},
+						{
+							"ms": 2329,
+							"kinds": "text"
+						},
+						{
+							"ms": 2420,
+							"kinds": "text"
+						},
+						{
+							"ms": 2500,
+							"kinds": "text"
+						},
+						{
+							"ms": 2616,
+							"kinds": "text"
+						},
+						{
+							"ms": 2681,
+							"kinds": "text"
+						},
+						{
+							"ms": 2722,
+							"kinds": "text"
+						},
+						{
+							"ms": 2766,
+							"kinds": "text"
+						},
+						{
+							"ms": 2773,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2774,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 3,
+			"prompt": "p5-follow-up",
+			"failure": null,
+			"reply": "That's a great question! In that case, it would no longer be a pun.\n\nTo be a pun, the sentence needs to play on two different meanings of a word or phrase. When you say \"I'm on a seafood diet because I only eat fish,\" you are using the word \"seafood\" in its literal sense—food that comes from the sea. Since there is no secondary meaning or phonetic similarity being exploited to create humor or wordplay, it is just a literal statement.\n\nI'll stash that explanation away like a pet rock for safekeeping. Do you have any other sentences you'd like me to analyze for you?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 391,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 3169,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 3169,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3170,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [],
+					"endMs": 583,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2612,
+							"kinds": "text"
+						},
+						{
+							"ms": 2682,
+							"kinds": "text"
+						},
+						{
+							"ms": 17522,
+							"kinds": "text"
+						},
+						{
+							"ms": 17868,
+							"kinds": "text"
+						},
+						{
+							"ms": 17887,
+							"kinds": "text"
+						},
+						{
+							"ms": 17936,
+							"kinds": "text"
+						},
+						{
+							"ms": 17942,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 17943,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 4,
+			"prompt": "p1-homographic",
+			"failure": null,
+			"reply": "Hello there! I'm Otto—you can usually find me floating comfortably on my back to think, wearing my favorite glasses and black and gold Purdue hoodie. \n\nLet's crack this joke open like a shellfish on a rock! Yes, that classic joke is definitely a pun. \n\nThat's punny!\n\nHere is how it works:\n* **The pun type:** This is a **homographic** pun (specifically, playing on polysemy—a word with multiple meanings).\n* **The word involved:** *dressing*.\n* **The two meanings:** \n  1. The liquid condiment poured over a salad (vinaigrette, ranch, etc.).\n  2. The act of putting clothes on.\n\nThe joke sets up a human scenario (blushing because someone was getting undressed), but the punchline pivots to the culinary meaning, imagining that the salad was putting its \"dressing\" on in plain view. \n\nWould you like to look at another piece of text?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 908,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 908,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 909,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 973,
+							"kinds": "text"
+						},
+						{
+							"ms": 973,
+							"kinds": "text"
+						},
+						{
+							"ms": 973,
+							"kinds": "text"
+						},
+						{
+							"ms": 973,
+							"kinds": "text"
+						},
+						{
+							"ms": 1020,
+							"kinds": "text"
+						},
+						{
+							"ms": 1497,
+							"kinds": "text"
+						},
+						{
+							"ms": 1498,
+							"kinds": "text"
+						},
+						{
+							"ms": 1498,
+							"kinds": "text"
+						},
+						{
+							"ms": 1498,
+							"kinds": "text"
+						},
+						{
+							"ms": 1498,
+							"kinds": "text"
+						},
+						{
+							"ms": 1498,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1499,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 4,
+			"prompt": "p2-homophonic",
+			"failure": null,
+			"reply": "Hello there! I'm Otto—you'll often catch me floating on my back to think things through, rocking my glasses, and sporting this cozy black and gold Purdue hoodie. \n\nLet's crack that sentence open like a tasty shellfish on a rock! \n\nYes, that is definitely a pun! That's punny! \n\nSpecifically, it's a **homophonic pun**. It relies on words that sound the same (or very similar) but have different meanings and spellings:\n\n* **The words involved:** \"hole\" and \"whole.\"\n* **The meanings it plays on:** \n  1. The literal central opening of a doughnut (\"hole\").\n  2. The entirety or complete nature of an enterprise or trade (\"whole business\").\n\nWhen the baker says he's tired of the \"hole business,\" it sounds like he's just fed up with making the empty centers of doughnuts, but it also puns on being sick of the *entire* trade of baking! \n\nWould you like to try another one? Toss a sentence my way and we'll take a look!",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 929,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 930,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 930,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 569,
+							"kinds": "text"
+						},
+						{
+							"ms": 682,
+							"kinds": "text"
+						},
+						{
+							"ms": 754,
+							"kinds": "text"
+						},
+						{
+							"ms": 778,
+							"kinds": "text"
+						},
+						{
+							"ms": 902,
+							"kinds": "text"
+						},
+						{
+							"ms": 972,
+							"kinds": "text"
+						},
+						{
+							"ms": 1056,
+							"kinds": "text"
+						},
+						{
+							"ms": 1206,
+							"kinds": "text"
+						},
+						{
+							"ms": 1278,
+							"kinds": "text"
+						},
+						{
+							"ms": 1427,
+							"kinds": "text"
+						},
+						{
+							"ms": 1461,
+							"kinds": "text"
+						},
+						{
+							"ms": 1466,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1467,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 4,
+			"prompt": "p3-non-pun",
+			"failure": null,
+			"reply": "*Floats on my back for a second, peering over the top of my glasses* \n\nLet's crack that sentence open and see what we've got inside!\n\nNope, that one isn't a pun! It's just a straightforward, honest statement about baking some delicious sourdough and practicing the hardest part of the whole process—waiting for it to cool down so it doesn't get gummy. \n\nIf you've got a clever sentence or a joke you'd like me to look at, send it my way!",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 1116,
+							"kinds": "text"
+						},
+						{
+							"ms": 1116,
+							"kinds": "text"
+						},
+						{
+							"ms": 1174,
+							"kinds": "text"
+						},
+						{
+							"ms": 1232,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 1236,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1236,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 620,
+							"kinds": "text"
+						},
+						{
+							"ms": 642,
+							"kinds": "text"
+						},
+						{
+							"ms": 841,
+							"kinds": "text"
+						},
+						{
+							"ms": 842,
+							"kinds": "text"
+						},
+						{
+							"ms": 842,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 843,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 4,
+			"prompt": "p4-no-dictionary",
+			"failure": null,
+			"reply": "Hello there! I'm Otto, and I'd love to help you with that. Let me float on my back for just a second to think this one through... \n\nYes, that is definitely a pun! That's punny! \n\nThis one is a classic **homophonic pun** (sometimes called a sound-alike pun). Here is how it works:\n\n* **The words involved:** \"seafood\" and \"see food\" sound almost identical when spoken aloud, even though they are spelled differently and mean completely different things.\n* **The two meanings it plays on:** \n  1. **\"Seafood\":** A category of food that comes from the sea, like fish, shrimp, and lobster (implying a healthy, specific diet).\n  2. **\"See food\":** The literal action of using your eyes to look at any food whatsoever and immediately eating it. \n\nDo you have any other sentences you'd like me to crack open and analyze?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 766,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 766,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 767,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 743,
+							"kinds": "text"
+						},
+						{
+							"ms": 743,
+							"kinds": "text"
+						},
+						{
+							"ms": 785,
+							"kinds": "text"
+						},
+						{
+							"ms": 949,
+							"kinds": "text"
+						},
+						{
+							"ms": 1042,
+							"kinds": "text"
+						},
+						{
+							"ms": 1050,
+							"kinds": "text"
+						},
+						{
+							"ms": 1127,
+							"kinds": "text"
+						},
+						{
+							"ms": 1217,
+							"kinds": "text"
+						},
+						{
+							"ms": 1314,
+							"kinds": "text"
+						},
+						{
+							"ms": 1353,
+							"kinds": "text"
+						},
+						{
+							"ms": 1361,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1364,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 4,
+			"prompt": "p5-follow-up",
+			"failure": null,
+			"reply": "If you phrased it that way, it wouldn't really be a pun anymore! \n\nLet's crack that sentence open: saying \"I'm on a seafood diet because I only eat fish\" just describes a literal, actual diet consisting of seafood. The clever wordplay depends entirely on the double meaning of \"seafood\" sounding like \"see food\" (looking at something and eating it). Without that phonetic switch, it's just a straightforward statement about what you like to eat for dinner.\n\nDo you have any other sentences you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 645,
+							"kinds": "text"
+						},
+						{
+							"ms": 668,
+							"kinds": "text"
+						},
+						{
+							"ms": 753,
+							"kinds": "text"
+						},
+						{
+							"ms": 849,
+							"kinds": "text"
+						},
+						{
+							"ms": 983,
+							"kinds": "text"
+						},
+						{
+							"ms": 1030,
+							"kinds": "text"
+						},
+						{
+							"ms": 1036,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1037,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 4,
+			"prompt": "p1-homographic",
+			"failure": null,
+			"reply": "Hello there! I'm Otto. I'm happy to help you figure out this joke!\n\nThat is indeed a pun! I’ll just float here on my back for a moment while I crack this one open like a shellfish on a rock to show you how it works. That's punny!\n\nThe pun relies on the word \"dressing.\" It uses two different meanings for the same word (a homographic pun):\n\n1.  **\"Salad dressing\"**: A sauce or condiment poured over a salad.\n2.  **\"Dressing\"**: The act of putting on clothes.\n\nThe joke suggests that the tomato blushed because it saw the salad \"getting dressed\" (putting on its clothes), rather than just having sauce poured over it. Does that make sense? Do you have any other sentences you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 4371,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 4372,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 4373,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2611,
+							"kinds": "text"
+						},
+						{
+							"ms": 2657,
+							"kinds": "text"
+						},
+						{
+							"ms": 2721,
+							"kinds": "text"
+						},
+						{
+							"ms": 2813,
+							"kinds": "text"
+						},
+						{
+							"ms": 2894,
+							"kinds": "text"
+						},
+						{
+							"ms": 2979,
+							"kinds": "text"
+						},
+						{
+							"ms": 3136,
+							"kinds": "text"
+						},
+						{
+							"ms": 3136,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3137,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 4,
+			"prompt": "p2-homophonic",
+			"failure": null,
+			"reply": "Hi there! I'm Otto, and I'm happy to help you with your question. I'll just float on my back for a second while I think about this one.\n\nYes, that is definitely a pun! \"That's punny!\"\n\nThis is a **homophonic** pun, which means it uses two words that sound the same but have different meanings. The play here is between the words **\"hole\"** and **\"whole.\"**\n\n*   **\"Hole\"** refers to the empty space in the middle of a doughnut.\n*   **\"Whole\"** refers to the entire business operation. \n\nThe humor comes from the baker using the word \"hole\"—referencing his product—to also describe his frustration with the \"whole\" (entire) business. Do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 5146,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 5146,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 5146,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 3334,
+							"kinds": "text"
+						},
+						{
+							"ms": 3368,
+							"kinds": "text"
+						},
+						{
+							"ms": 3482,
+							"kinds": "text"
+						},
+						{
+							"ms": 3525,
+							"kinds": "text"
+						},
+						{
+							"ms": 3597,
+							"kinds": "text"
+						},
+						{
+							"ms": 3692,
+							"kinds": "text"
+						},
+						{
+							"ms": 3802,
+							"kinds": "text"
+						},
+						{
+							"ms": 3884,
+							"kinds": "text"
+						},
+						{
+							"ms": 3894,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3894,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 4,
+			"prompt": "p3-non-pun",
+			"failure": null,
+			"reply": "Hi there! I'm Otto. It's nice to meet you!\n\nI just floated on my back for a moment to think about your sentence, but I didn't find any wordplay there. That sentence is a straightforward, factual observation about your morning baking. Puns usually require a word to have two different meanings, or for two words to sound the same, which creates that \"aha!\" moment.\n\nDo you have another sentence you'd like me to look at? I'd be happy to analyze it for you!",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 417,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 4027,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 4028,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 4028,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 3815,
+							"kinds": "text"
+						},
+						{
+							"ms": 3907,
+							"kinds": "text"
+						},
+						{
+							"ms": 3962,
+							"kinds": "text"
+						},
+						{
+							"ms": 4190,
+							"kinds": "text"
+						},
+						{
+							"ms": 4248,
+							"kinds": "text"
+						},
+						{
+							"ms": 4264,
+							"kinds": "text"
+						},
+						{
+							"ms": 4268,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 4269,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 4,
+			"prompt": "p4-no-dictionary",
+			"failure": null,
+			"reply": "Hi there! I'm Otto, and I'm happy to help you with your question. I'll just float here on my back for a moment to think about this one!\n\nThat's punny! Yes, that is definitely a pun. Specifically, it is a **homophonic pun**.\n\nIt works by playing on the sound similarity between the word **\"seafood\"** (a noun referring to fish or shellfish) and the phrase **\"see food\"** (the verb \"see\" followed by the noun \"food\"). \n\nIn the first part of the sentence, \"seafood diet\" leads the listener to think you are following a specific nutrition plan based on ocean-dwelling creatures. However, the second part, \"I see food and I eat it,\" redefines the \"diet\" as simply eating whatever you happen to look at. By making those two phrases sound the same, the joke hinges on that clever twist in meaning! \n\nDoes that help clarify how it works? Do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 2994,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 2994,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2995,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [],
+					"endMs": 443,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 1916,
+							"kinds": "text"
+						},
+						{
+							"ms": 1974,
+							"kinds": "text"
+						},
+						{
+							"ms": 2066,
+							"kinds": "text"
+						},
+						{
+							"ms": 2132,
+							"kinds": "text"
+						},
+						{
+							"ms": 2217,
+							"kinds": "text"
+						},
+						{
+							"ms": 2315,
+							"kinds": "text"
+						},
+						{
+							"ms": 2441,
+							"kinds": "text"
+						},
+						{
+							"ms": 2556,
+							"kinds": "text"
+						},
+						{
+							"ms": 2644,
+							"kinds": "text"
+						},
+						{
+							"ms": 2676,
+							"kinds": "text"
+						},
+						{
+							"ms": 2680,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2681,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 4,
+			"prompt": "p5-follow-up",
+			"failure": null,
+			"reply": "No, that wouldn't be a pun. \n\nIn this version, you've removed the wordplay. When you say, \"I'm on a seafood diet because I only eat fish,\" you are using the word \"seafood\" in its literal sense—food from the sea. Because you provide the explanation immediately after (\"because I only eat fish\"), there is no ambiguity or double meaning for the listener to stumble over. \n\nA pun requires that shift in meaning between two things that sound the same or are spelled the same. Without that \"Aha!\" moment of re-interpreting the phrase, it’s just a straightforward statement.\n\nI'll just stash that thought away like a favorite pet rock for later. Do you have any other sentences you'd like me to analyze?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 289,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 3404,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 3404,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3405,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [],
+					"endMs": 163,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 1194,
+							"kinds": "text"
+						},
+						{
+							"ms": 1241,
+							"kinds": "text"
+						},
+						{
+							"ms": 1309,
+							"kinds": "text"
+						},
+						{
+							"ms": 1454,
+							"kinds": "text"
+						},
+						{
+							"ms": 1536,
+							"kinds": "text"
+						},
+						{
+							"ms": 1684,
+							"kinds": "text"
+						},
+						{
+							"ms": 1824,
+							"kinds": "text"
+						},
+						{
+							"ms": 1862,
+							"kinds": "text"
+						},
+						{
+							"ms": 1868,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1869,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 5,
+			"prompt": "p1-homographic",
+			"failure": null,
+			"reply": "Hey there! I'm Otto—you can usually find me floating on my back to think things through, rocking my glasses and my favorite black and gold Purdue hoodie. \n\nLet's crack that joke open like a shellfish on a rock! Yes, \"Why did the tomato blush? Because it saw the salad dressing\" is definitely a pun. That's punny!\n\nHere is how it works:\n* **Type:** This is a **homographic pun** (specifically a polyseme), because it plays on two different meanings of the exact same word.\n* **The word involved:** *\"Dressing\"*\n* **The two meanings:** \n  1. The liquid condiment put on a salad (like vinaigrette or ranch).\n  2. The act of putting clothes on (getting dressed).\n\nThe humor comes from imagining a tomato turning red because it caught a salad in the middle of getting dressed! Would you like to look at another piece of text?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 887,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 887,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 888,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 763,
+							"kinds": "text"
+						},
+						{
+							"ms": 763,
+							"kinds": "text"
+						},
+						{
+							"ms": 814,
+							"kinds": "text"
+						},
+						{
+							"ms": 912,
+							"kinds": "text"
+						},
+						{
+							"ms": 980,
+							"kinds": "text"
+						},
+						{
+							"ms": 1091,
+							"kinds": "text"
+						},
+						{
+							"ms": 1170,
+							"kinds": "text"
+						},
+						{
+							"ms": 1265,
+							"kinds": "text"
+						},
+						{
+							"ms": 1387,
+							"kinds": "text"
+						},
+						{
+							"ms": 1415,
+							"kinds": "text"
+						},
+						{
+							"ms": 1420,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1420,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 5,
+			"prompt": "p2-homophonic",
+			"failure": null,
+			"reply": "Hello there! I'm Otto—you'll usually find me floating on my back to think things through, rocking my favorite black and gold Purdue hoodie, and pushing my glasses up my snout. \n\nLet's crack that sentence open like a tasty shellfish on a rock! I ran it through my tool, and yes, that is definitely a pun. That's punny!\n\nHere is how it works:\n* **Type of pun:** It's a **homophonic** pun, meaning it plays on two words that sound identical (or nearly identical) but mean different things. In this case, \"hole\" and \"whole\" sound the exact same.\n* **The words involved:** \"hole business\" plays on the phrase **\"whole business.\"**\n* **The two meanings:** \n  1. The literal circular holes in the middle of doughnuts that the baker makes every day.\n  2. The entire enterprise or occupation of running a baking business (\"the whole business\").\n\nWould you like to look at another sentence, or do you have any questions about how this one works?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 665,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 666,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 666,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 529,
+							"kinds": "text"
+						},
+						{
+							"ms": 621,
+							"kinds": "text"
+						},
+						{
+							"ms": 662,
+							"kinds": "text"
+						},
+						{
+							"ms": 796,
+							"kinds": "text"
+						},
+						{
+							"ms": 888,
+							"kinds": "text"
+						},
+						{
+							"ms": 991,
+							"kinds": "text"
+						},
+						{
+							"ms": 1024,
+							"kinds": "text"
+						},
+						{
+							"ms": 1086,
+							"kinds": "text"
+						},
+						{
+							"ms": 1180,
+							"kinds": "text"
+						},
+						{
+							"ms": 1266,
+							"kinds": "text"
+						},
+						{
+							"ms": 1281,
+							"kinds": "text"
+						},
+						{
+							"ms": 1292,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1293,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 5,
+			"prompt": "p3-non-pun",
+			"failure": null,
+			"reply": "Hey there! I'm Otto, your friendly neighborhood otter in glasses and a black and gold Purdue hoodie. Let me flip onto my back for a quick second and float while I check this text out. \n\n* * *\n\nNo, that sentence isn't a pun! It's just a straightforward, everyday statement about baking bread. \n\nA pun needs to play on words—either by using a word that has two different meanings (a homographic pun) or two words that sound the same but mean different things (a homophonic pun). Your sentence doesn't have that double layer of meaning. \n\nDo you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 684,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 684,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 685,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 443,
+							"kinds": "text"
+						},
+						{
+							"ms": 497,
+							"kinds": "text"
+						},
+						{
+							"ms": 628,
+							"kinds": "text"
+						},
+						{
+							"ms": 728,
+							"kinds": "text"
+						},
+						{
+							"ms": 832,
+							"kinds": "text"
+						},
+						{
+							"ms": 914,
+							"kinds": "text"
+						},
+						{
+							"ms": 962,
+							"kinds": "text"
+						},
+						{
+							"ms": 967,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 968,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 5,
+			"prompt": "p4-no-dictionary",
+			"failure": null,
+			"reply": "Hello there! I'm Otto—you can spot me by my glasses and this cozy black and gold Purdue hoodie. Let me float on my back for a second to crack this one open like a shellfish on a rock. \n\nYes, that is definitely a pun! That's punny! \n\nThis one is a **homophonic pun** (sometimes called a heterographic pun). It plays on the sound-alike nature of two phrases:\n1. **\"Seafood\"** (the category of fish and shellfish you eat)\n2. **\"See food\"** (the action of looking at food with your eyes)\n\nThe joke relies on the setup \"seafood diet,\" which normally implies a healthy eating plan focused on fish, only to instantly subvert your expectations by revealing it actually means \"I see food and I eat it.\" \n\nWould you like to look at another sentence, or do you have any questions about how this one works?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 798,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 798,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 799,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 766,
+							"kinds": "text"
+						},
+						{
+							"ms": 867,
+							"kinds": "text"
+						},
+						{
+							"ms": 867,
+							"kinds": "text"
+						},
+						{
+							"ms": 993,
+							"kinds": "text"
+						},
+						{
+							"ms": 1122,
+							"kinds": "text"
+						},
+						{
+							"ms": 1137,
+							"kinds": "text"
+						},
+						{
+							"ms": 1236,
+							"kinds": "text"
+						},
+						{
+							"ms": 1393,
+							"kinds": "text"
+						},
+						{
+							"ms": 1414,
+							"kinds": "text"
+						},
+						{
+							"ms": 1423,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1424,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"run": 5,
+			"prompt": "p5-follow-up",
+			"failure": null,
+			"reply": "No, it wouldn't be a pun anymore! If you change it to mean you only eat fish, you're using \"seafood\" in its literal, expected sense—the category of marine animals used as food. \n\nWithout that clever double meaning where \"seafood\" sounds like \"see food\" (the act of looking at food and eating it), the wordplay disappears. It just becomes a straightforward statement about your dietary preferences! \n\nStashing that little thought away like a favorite pet rock—do you have another sentence you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.5-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 737,
+							"kinds": "text"
+						},
+						{
+							"ms": 813,
+							"kinds": "text"
+						},
+						{
+							"ms": 847,
+							"kinds": "text"
+						},
+						{
+							"ms": 982,
+							"kinds": "text"
+						},
+						{
+							"ms": 1097,
+							"kinds": "text"
+						},
+						{
+							"ms": 1148,
+							"kinds": "text"
+						},
+						{
+							"ms": 1151,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 1152,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 5,
+			"prompt": "p1-homographic",
+			"failure": "UNAVAILABLE",
+			"reply": null,
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 357,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 415,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 257,
+					"failure": "UNAVAILABLE"
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 5,
+			"prompt": "p2-homophonic",
+			"failure": null,
+			"reply": "Hi there! I'm Otto. I'd be happy to take a look at that for you. I’m just going to float here on my back for a moment to think about it... yes, that's definitely a pun! That's punny!\n\nThis is a classic example of a **homophonic pun**. It relies on two words that sound the same but have different meanings and spellings: \"hole\" and \"whole.\"\n\nThe word \"hole\" plays on two meanings here:\n1.  **Hole:** The literal empty space in the middle of a doughnut.\n2.  **Whole:** Meaning \"the entire\" or \"the complete\" business.\n\nBy swapping \"whole\" for \"hole,\" the sentence creates a clever double meaning that links the baker's product to his frustration with his career. Do you have any other sentences you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 3408,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 3409,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3409,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [],
+					"endMs": 293,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [],
+					"endMs": 511,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2940,
+							"kinds": "text"
+						},
+						{
+							"ms": 3001,
+							"kinds": "text"
+						},
+						{
+							"ms": 3081,
+							"kinds": "text"
+						},
+						{
+							"ms": 3376,
+							"kinds": "text"
+						},
+						{
+							"ms": 3376,
+							"kinds": "text"
+						},
+						{
+							"ms": 3376,
+							"kinds": "text"
+						},
+						{
+							"ms": 3431,
+							"kinds": "text"
+						},
+						{
+							"ms": 3564,
+							"kinds": "text"
+						},
+						{
+							"ms": 3564,
+							"kinds": "text"
+						},
+						{
+							"ms": 3564,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3565,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 5,
+			"prompt": "p3-non-pun",
+			"failure": null,
+			"reply": "Hi there! I'm Otto. I'm happy to help you with that! *Floats on my back for a moment to think.*\n\nAfter analyzing your sentence, I can tell you that it isn't a pun. A pun is a type of wordplay that uses words that either sound the same (homophonic) or are spelled the same (homographic) but have different meanings to create a clever or humorous effect. Your sentence is a straightforward statement about baking bread, with no double meanings or wordplay involved.\n\nIf you have a different sentence you think might be a pun, feel free to share it and I'll be happy to take a look!",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 2897,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 2897,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2898,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2159,
+							"kinds": "text"
+						},
+						{
+							"ms": 2328,
+							"kinds": "text"
+						},
+						{
+							"ms": 2393,
+							"kinds": "text"
+						},
+						{
+							"ms": 2525,
+							"kinds": "text"
+						},
+						{
+							"ms": 2618,
+							"kinds": "text"
+						},
+						{
+							"ms": 2671,
+							"kinds": "text"
+						},
+						{
+							"ms": 2675,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2676,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 5,
+			"prompt": "p4-no-dictionary",
+			"failure": null,
+			"reply": "Hi there! I'm Otto. It's nice to meet you!\n\nI'll just float here on my back for a moment to think about that one. *Floating on my back to think.*\n\nThat's punny! \n\nThis is a classic example of a homophonic pun. It plays on the similarity in sound between the compound word \"seafood\"—which refers to fish or shellfish—and the phrase \"see food\"—which means to look at items of sustenance. The humor comes from the setup leading you to expect a diet based on marine life, only to reveal the punchline that the \"diet\" is actually just eating everything you see! \n\nDo you have any other sentences you'd like me to look at?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 285,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 1263,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 3256,
+							"kinds": "toolRequest"
+						},
+						{
+							"ms": 3256,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 3257,
+					"failure": null
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": true,
+					"chunks": [
+						{
+							"ms": 2025,
+							"kinds": "text"
+						},
+						{
+							"ms": 2062,
+							"kinds": "text"
+						},
+						{
+							"ms": 2141,
+							"kinds": "text"
+						},
+						{
+							"ms": 2305,
+							"kinds": "text"
+						},
+						{
+							"ms": 2362,
+							"kinds": "text"
+						},
+						{
+							"ms": 2477,
+							"kinds": "text"
+						},
+						{
+							"ms": 2511,
+							"kinds": "text"
+						},
+						{
+							"ms": 2516,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 2518,
+					"failure": null
+				}
+			]
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"run": 5,
+			"prompt": "p5-follow-up",
+			"failure": null,
+			"reply": "If you say \"I'm on a seafood diet because I only eat fish,\" it is no longer a pun.\n\nA pun requires that double meaning to work. By clarifying that you only eat fish, you have locked the word \"seafood\" into its literal definition. You have removed the \"see food\" ambiguity, so there is no wordplay left to crack open! *Cracks a shell open on a rock.*\n\nWithout the play on words, it becomes a simple, literal statement about your dietary habits. Does that make sense, or would you like to try another one?",
+			"attempts": [
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [],
+					"endMs": 691,
+					"failure": "UNAVAILABLE"
+				},
+				{
+					"model": "gemini-3.1-flash-lite",
+					"afterToolResult": false,
+					"chunks": [
+						{
+							"ms": 5973,
+							"kinds": "text"
+						},
+						{
+							"ms": 5973,
+							"kinds": "text"
+						},
+						{
+							"ms": 6050,
+							"kinds": "text"
+						},
+						{
+							"ms": 6164,
+							"kinds": "text"
+						},
+						{
+							"ms": 6225,
+							"kinds": "text"
+						},
+						{
+							"ms": 6240,
+							"kinds": "text"
+						},
+						{
+							"ms": 6253,
+							"kinds": "empty"
+						}
+					],
+					"endMs": 6254,
+					"failure": null
+				}
+			]
+		}
+	]
+}

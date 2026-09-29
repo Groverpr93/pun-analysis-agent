@@ -4,7 +4,7 @@ title: 'Frontend: client-side timeout for /api/chat'
 status: To Do
 assignee: []
 created_date: '2026-09-25 18:30'
-updated_date: '2026-09-28 19:30'
+updated_date: '2026-09-29 10:32'
 labels: []
 dependencies:
   - TASK-42
@@ -53,4 +53,6 @@ Pitfall: a resettable timer is naturally built on an AbortController, and contro
 2026-09-28 (TASK-42, later): MODEL_STALL_LIMIT_MS was lowered from 30 s to 15 s before merge, so the maximum silence is 35 s, not the 50 s in the note above.
 
 2026-09-28 (TASK-44): the silence limit now lives in @pun-agent/timeouts as FRONTEND_SILENCE_LIMIT_MS (75 s), next to MAX_SILENCE_MS (MODEL_STALL_LIMIT_MS 30 s + INFERENCE_TIMEOUT_MS 20 s = 50 s), APP_CHECK_TIMEOUT_MS (10 s) and FRONTEND_SILENCE_MARGIN_MS (15 s); the numbers in the notes above are out of date. AC #1 restated to import it rather than choose a value. AC #5 added from TASK-44's architectural review: the module's own tests only compare values within one commit, so nothing yet stops a single change from lengthening the silence past the limit that open tabs already run; that only matters once this task makes Frontend enforce the limit, hence here.
+
+2026-09-29 (TASK-32): MODEL_STALL_LIMIT_MS was checked against measured silences for the Flash-Lite rungs (docs/experiments/task-32): kept at 30 s, so MAX_SILENCE_MS (50 s) and FRONTEND_SILENCE_LIMIT_MS (75 s) are unchanged. gemini-3.8-flash is unmeasured (TASK-50) and may still raise it. New for this task: the longest silence (14.8 s, gemini-3.1-flash-lite) came between two chunks, after text had started. The silence timer restarting on every event already covers that, but Frontend's thinking indicator (frontend/src/components/otto/thinking-otto.tsx) only shows before the first token, so such a pause looks like frozen text. The TASK-42 note's line that TASK-43 would lengthen Backend's longest silence is stale: its keepalives left MAX_SILENCE_MS unchanged.
 <!-- SECTION:NOTES:END -->

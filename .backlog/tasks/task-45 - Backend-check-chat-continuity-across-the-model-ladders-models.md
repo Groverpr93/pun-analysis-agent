@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 19:54'
-updated_date: '2026-09-29 09:44'
+updated_date: '2026-09-29 10:32'
 labels: []
 dependencies:
   - TASK-43
@@ -77,6 +77,8 @@ Correction: 3.5 reported the empty result in 5/5 follow-ups, not 4/4 (20:23 run'
 AC #3 left unchecked by design (user decision, 2026-09-29): verified for gemini-3.5-flash-lite and gemini-3.1-flash-lite; gemini-3.8-flash never answered in the recorded runs (capacity/quota only, no rejection), carried by TASK-46. Final checks: backend 166/166, packages/timeouts 7/7, tsc + Biome clean. Docs drift: README.md, project-spec.md, engineering-practices.md, AGENTS.md don't name the ladder's models; local-setup.md and contracts.md updated in this change.
 
 Merged in #77 as ff780ba (2026-09-29). Lint, Test, Deploy Backend and Deploy Frontend passed on main. AC #3 stays unchecked by agreement: gemini-3.8-flash is carried by TASK-46.
+
+2026-09-29 (TASK-32): the timing measurements this task deferred to TASK-32 AC #4 are done for the Flash-Lite models (docs/experiments/task-32); gemini-3.8-flash's are TASK-50, which still has to tell whether its 30 s+ silences were stalls or long thinking.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
