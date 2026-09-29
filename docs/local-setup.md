@@ -92,7 +92,7 @@ gcloud artifacts repositories set-cleanup-policies pun-agent --project=pun-agent
 
 Unlike Backend, the service is **private**: Cloud Run itself rejects any request without a Google-signed ID token from an identity allowed to invoke it. Backend's runtime service account is the only one granted `roles/run.invoker` on the service; project-level admins, including the CI deployer, can invoke it through their project roles. So you can't `curl` the deployed `/analyze` anonymously, and Backend's call to it has to carry an ID token (TASK-11). Every deploy re-applies Backend's invoker grant (a no-op once present), so a recreated service or a grant removed by hand is restored rather than leaving every Backend call to degrade to the undetermined result. The deploy then smoke-tests both sides: an anonymous request must get a 403, and a request with the deployer's own ID token must succeed. It checks `/openapi.json` rather than `/analyze`, which answers 500 until the classifier lands (TASK-16).
 
-The image keeps `uv` in its build stage only and starts `uvicorn` straight from the venv. `uv run` in the image would re-check the lockfile on every container start, which fetches `en-core-web-sm`'s metadata from GitHub (the container exits if it can't), so each Cloud Run cold start would depend on GitHub. The last build step looks up a word in WordNet and Wiktionary as the runtime user, so a broken data path fails the build (on pull requests too) instead of deploying: the smoke test never touches that data, and a Wiktionary failure only logs and returns no senses at runtime.
+The image keeps `uv` in its build stage only and starts `uvicorn` straight from the venv. `uv run` in the image would re-check the lockfile on every container start, which fetches `en-core-web-sm`'s metadata from GitHub (the container exits if it can't), so each Cloud Run cold start would depend on GitHub. The build stage also downloads sense scoring's embedding model (`all-MiniLM-L6-v2`, via `fastembed`) into `/fastembed_cache`, and the runtime sets `HF_HUB_OFFLINE=1`, so a cold start never fetches it from HuggingFace. The last build step looks up a word in WordNet and Wiktionary and embeds it as the runtime user, so a broken data path fails the build (on pull requests too) instead of deploying: the smoke test never touches that data, and a Wiktionary failure only logs and returns no senses at runtime.
 
 One-time GCP setup it relies on, alongside Backend's:
 
@@ -119,6 +119,7 @@ Python + [`uv`](https://docs.astral.sh/uv/) (fast, reproducible dependency manag
 cd inference
 uv sync
 uv run python -m wn download oewn:2025  # one-time: sense-selection's WordNet data
+# scoring's embedding model (~87 MB) downloads itself to fastembed's cache on first use; tests never need it
 curl -fL --create-dirs -o data/wiktionary.sqlite.gz https://github.com/team-play/pun-analysis-agent/releases/download/wiktionary-data-2026-09-25/wiktionary.sqlite.gz && gunzip -f data/wiktionary.sqlite.gz  # one-time: sense-selection's Wiktionary data
 uv run pytest
 uv run ruff check .

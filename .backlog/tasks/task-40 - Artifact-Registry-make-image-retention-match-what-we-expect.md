@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 09:46'
-updated_date: '2026-09-28 10:33'
+updated_date: '2026-09-29 01:52'
 labels: []
 dependencies:
   - TASK-14
@@ -55,4 +55,6 @@ Decision (2026-09-28, Yai): provenance off, keep 3 deploys per image.
 2026-09-28 correction (research): the cleanup policies DO run. Evidence: Backend pushes on 2026-09-24 (runs for 07fd20f, 6c933b1) and 2026-09-26T13:35Z (run 36245664866, 50e089c) pushed images (build-push-action + deploy succeeded) and none of their versions exist anymore. The 'not deleting' observation was a misreading: gcloud printed times in local EDT, and with keep-5-most-recent + delete-older-than-1d every version younger than ~1 day is kept regardless of count (KEEP wins only for the 5 newest; DELETE only matches >1 day). At 2026-09-28T10:21Z the only deletion-eligible Backend versions (pushed 2026-09-26T20:01Z) had been eligible ~14 h, within the documented ~1-day cadence ('Changes take effect within approximately one day'). Deletions are logged in Data Access logs (off by default), so an empty Admin Activity log proves nothing. Also from the docs: cleanup never deletes an image referenced by a parent manifest (index) until the index is deleted. So AC #1's 'fix' is: no fix needed; the remaining work is AC #2/#3 (deliberate retention depth, docs).
 
 2026-09-28 code review (subagent) findings, all fixed before commit: (1) set-cleanup-policies replaces the whole set rather than merging by name, so the docs had it backwards and could have led someone to drop the keep policy; confirmed in gcloud 584's set_cleanup_policies.yaml. (2) Deleting a serving revision's image doesn't affect Cloud Run, which keeps its own copy; reworded. (3) The repo size (393 MB) and a worst-case estimate were missing from the docs (AC #3); added. (4) During the transition, keep-3 would hold only 1-2 deploys, so the policy change waits for 3 provenance-free pushes per image. Not done (low, optional): a CI check that a push produced a single manifest rather than an index, to guard against a future platforms:/sbom: change.
+
+From TASK-19 (Andi, 2026-09-28): the PR adding scoring.py bakes fastembed + all-MiniLM-L6-v2 into the Inference image. Compressed image measured locally at ~333 MB vs ~207 MB on main (+126 MB, mostly onnxruntime and the 87 MB model), and its dependency change means new venv/model layers rather than shared ones. With the repo at 393 of 500 MB on 2026-09-28, the first deploy after it merges will likely push the registry past the free tier until older versions are cleaned up. Please confirm how to handle it before that PR merges.
 <!-- SECTION:NOTES:END -->
