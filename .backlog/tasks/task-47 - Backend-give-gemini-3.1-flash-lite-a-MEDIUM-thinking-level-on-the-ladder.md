@@ -1,11 +1,11 @@
 ---
 id: TASK-47
 title: 'Backend: give gemini-3.1-flash-lite a MEDIUM thinking level on the ladder'
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-29 09:19'
-updated_date: '2026-09-29 09:37'
+updated_date: '2026-09-29 09:46'
 labels: []
 dependencies:
   - TASK-45
@@ -57,6 +57,8 @@ TASK-45 found gemini-3.1-flash-lite often describes an analyze_pun result the to
 2026-09-29: comparison run 09:20 UTC (docs/experiments/task-47): 3.5 grounded 10/10 at default and MEDIUM (median first chunk 1.8 s -> 4.1 s); 3.1 0/9 -> 7/10 (2.8 s -> 4.1 s, slowest 7.3 s). Decision: MEDIUM for 3.1 only (GEMINI_MODEL_CONFIG). modelLadder now gives each rung's calls the generate call's config with that rung's ref config over it; chat.ts passes withoutModelConfig(models[0]) so rung 0's config can't leak. toReplyParts moved to docs/experiments/resent-parts.mjs (shared with task-45's check). Backend 171/171, tsc + Biome clean. Mutation checks: dropping the per-rung merge, reversing its precedence, chat.ts keeping the first model's config, genkit.ts not applying GEMINI_MODEL_CONFIG, and a no-op withoutModelConfig each fail a test.
 
 Reviews (code + architectural subagents): no blocking issues; config isolation, no thought text in reply/result (plugin maps thoughts to reasoning parts, chunk.text excludes them), no deploy ordering beyond merging #77 first. Fixed: README medians were upper medians (true: 3.5 1.7 -> 3.7 s, 3.1 2.8 -> 4.0 s); reply #34 (3.5 default) regraded misreport, so 3.5 is 9/10 at default vs 10/10 at MEDIUM (decision unchanged, wording fixed in config.ts/README); ladder test now uses a key only rung 1 sets (topP), plus tests for a settled model's later calls and for version; withoutModelConfig also strips version (Genkit copies it into every request and the plugin would call that version); isRef helper; contracts sentence limited to Gemini-supplied refs; timing may include retries; TASK-32 note added; .env.example and task-45 README note that pinned/rerun models keep GEMINI_MODEL_CONFIG. Backend 173/173, tsc + Biome clean; 6 mutations each fail a test.
+
+Merged in #78 as 57dc9bc (2026-09-29). Lint, Test and Deploy Backend passed on main.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
