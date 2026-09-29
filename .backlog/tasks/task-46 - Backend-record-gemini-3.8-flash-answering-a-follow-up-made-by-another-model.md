@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-29 08:53'
-updated_date: '2026-09-29 09:05'
+updated_date: '2026-09-29 10:42'
 labels: []
 dependencies:
   - TASK-45
@@ -36,3 +36,9 @@ TASK-45 checked that each model on /api/chat's ladder accepts a follow-up whose 
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+2026-09-29 (user): parked; the team's focus moved to Inference and ladder work stopped. gemini-3.8-flash, the ladder's last rung, stays unverified (docs/contracts.md says so); the ladder only reaches it after both Flash-Lite models fail. Pick this up only if Flash's place on the ladder, or a demo on Flash (TASK-37), comes back into scope.
+<!-- SECTION:NOTES:END -->

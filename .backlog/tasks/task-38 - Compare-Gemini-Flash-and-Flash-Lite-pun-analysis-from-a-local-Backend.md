@@ -1,11 +1,11 @@
 ---
 id: TASK-38
 title: Compare Gemini Flash and Flash-Lite pun analysis from a local Backend
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-27 20:49'
-updated_date: '2026-09-28 10:08'
+updated_date: '2026-09-29 10:42'
 labels: []
 dependencies:
   - TASK-9
@@ -84,6 +84,8 @@ Architectural review: not needed. No change to contracts.md, project-spec.md top
 Docs: local-setup.md and backend/.env.example describe GEMINI_MODEL and the new default (separate docs commit); README.md, project-spec.md and AGENTS.md don't name the model, so no drift.
 
 File names: the failed Flash streams mentioned above as *.attempt-N-503.stream.txt are now <id>.failed-N.stream.txt, which record.mjs writes itself.
+
+2026-09-29: closed. Its decision (production on Flash-Lite) shipped, and the ladder (TASK-43/45) has since superseded DEFAULT_GEMINI_MODEL. The remaining Flash retry, TASK-41, is parked.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary

@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 10:00'
-updated_date: '2026-09-29 09:05'
+updated_date: '2026-09-29 10:42'
 labels: []
 dependencies:
   - TASK-38
@@ -43,4 +43,6 @@ How: in backend/, run the dev server on Flash (GEMINI_MODEL=gemini-flash-latest 
 
 <!-- SECTION:NOTES:BEGIN -->
 From TASK-45 (2026-09-29): production's ladder now ends with gemini-3.8-flash, so Flash's free quota (20/day, per project) is production's last resort; this task's runs spend it.
+
+2026-09-29 (user): parked; the team's focus moved to Inference and ladder work stopped. gemini-3.8-flash, the ladder's last rung, stays unverified (docs/contracts.md says so); the ladder only reaches it after both Flash-Lite models fail. Pick this up only if Flash's place on the ladder, or a demo on Flash (TASK-37), comes back into scope.
 <!-- SECTION:NOTES:END -->

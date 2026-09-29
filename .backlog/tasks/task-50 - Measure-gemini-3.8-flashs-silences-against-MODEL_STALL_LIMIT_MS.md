@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-29 10:31'
-updated_date: '2026-09-29 10:31'
+updated_date: '2026-09-29 10:42'
 labels: []
 dependencies: []
 references:
@@ -40,4 +40,6 @@ TASK-32 checked MODEL_STALL_LIMIT_MS (30 s, packages/timeouts/index.js) against 
 
 <!-- SECTION:NOTES:BEGIN -->
 Not a formal dependency on TASK-32: TASK-32 stays open until TASK-16 lands (its Inference cold-start ACs), but this only needs TASK-32's harness (docs/experiments/task-32/measure.mjs) merged.
+
+2026-09-29 (user): parked; the team's focus moved to Inference and ladder work stopped. gemini-3.8-flash, the ladder's last rung, stays unverified (docs/contracts.md says so); the ladder only reaches it after both Flash-Lite models fail. Pick this up only if Flash's place on the ladder, or a demo on Flash (TASK-37), comes back into scope.
 <!-- SECTION:NOTES:END -->
