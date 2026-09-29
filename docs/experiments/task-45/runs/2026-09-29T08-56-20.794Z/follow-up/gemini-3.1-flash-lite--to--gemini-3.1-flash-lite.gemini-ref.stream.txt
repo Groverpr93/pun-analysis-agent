@@ -1,0 +1,22 @@
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":"Since"}
+
+data: {"message":" I already analyzed that sentence for you, I can certainly explain what the tool returned!\n\nFor"}
+
+data: {"message":" \"I'm on a seafood diet: I see food and I eat it,\" the analysis identified:\n\n*   **Type"}
+
+data: {"message":":** Homophonic.\n*   **Words Involved:** \"Seafood\" and \"see food.\"\n*   **Mean"}
+
+data: {"message":"ings:** It plays on the term \"seafood\" (marine animals eaten as food) versus the literal action of \"seeing food\""}
+
+data: {"message":" (the act of looking at something to eat).\n\nEssentially, the tool breaks down the mechanics so we can see exactly"}
+
+data: {"message":" where the play on words is hiding. Do you have another sentence you would like me to analyze?"}
+
+data: {"message":""}
+
+data: {"result":"Since I already analyzed that sentence for you, I can certainly explain what the tool returned!\n\nFor \"I'm on a seafood diet: I see food and I eat it,\" the analysis identified:\n\n*   **Type:** Homophonic.\n*   **Words Involved:** \"Seafood\" and \"see food.\"\n*   **Meanings:** It plays on the term \"seafood\" (marine animals eaten as food) versus the literal action of \"seeing food\" (the act of looking at something to eat).\n\nEssentially, the tool breaks down the mechanics so we can see exactly where the play on words is hiding. Do you have another sentence you would like me to analyze?"}
+

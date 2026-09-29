@@ -1,0 +1,24 @@
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":"The "}
+
+data: {"message":"`analyze_pun` tool is how I determine if something is a pun. For"}
+
+data: {"message":" that sentence, it returned the following information:\n\n*   **Is it a pun?**: Yes.\n*   **Type"}
+
+data: {"message":" of pun**: Homophonic.\n*   **Words involved**: \"seafood\" and \"see food.\"\n"}
+
+data: {"message":"*   **Meanings**:\n    1.  \"Seafood\": A culinary term for edible aquatic animals.\n    2.  \""}
+
+data: {"message":"See food\": The act of visually perceiving food.\n\nPuns like this work because the brain expects to hear one thing—"}
+
+data: {"message":"a diet based on fish—but the second part of the sentence forces you to re-interpret the sound as a completely"}
+
+data: {"message":" different phrase, \"see food.\"\n\nDo you have another sentence you would like me to analyze?"}
+
+data: {"message":""}
+
+data: {"result":"The `analyze_pun` tool is how I determine if something is a pun. For that sentence, it returned the following information:\n\n*   **Is it a pun?**: Yes.\n*   **Type of pun**: Homophonic.\n*   **Words involved**: \"seafood\" and \"see food.\"\n*   **Meanings**:\n    1.  \"Seafood\": A culinary term for edible aquatic animals.\n    2.  \"See food\": The act of visually perceiving food.\n\nPuns like this work because the brain expects to hear one thing—a diet based on fish—but the second part of the sentence forces you to re-interpret the sound as a completely different phrase, \"see food.\"\n\nDo you have another sentence you would like me to analyze?"}
+

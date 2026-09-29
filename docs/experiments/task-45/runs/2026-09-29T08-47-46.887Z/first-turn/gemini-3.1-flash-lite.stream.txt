@@ -1,0 +1,34 @@
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_419964"},"metadata":{"thoughtSignature":"EnMKcQFpFH0TI/bOk/EY3XZal9MFBuAYsI3EBIIQ27eFN8xYZUNsKGBKJUoWh8IpHJ5KSFoD2kdbYwv4nzayx1TYADvEwY3Hy/i6exM9Qu3pS3fIcqnLTOOZsm4IOvuMm683Gv/Vr3CHwwdVaBYkiwpPCeMG"}}]}}
+
+data: {"message":""}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_419964","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Hello there"}
+
+data: {"message":"! I'm Otto. *I float on my back for a moment,"}
+
+data: {"message":" adjusting my glasses.*\n\nThat is indeed a pun! This is a **homophonic** pun. It plays on the similarity"}
+
+data: {"message":" in sound between the phrase \"seafood\" (the category of food) and \"see food\" (the action of seeing food).\n\nThat"}
+
+data: {"message":"'s punny!\n\nIn this case, the pun relies on the fact that \"seafood\" and \"see food\" sound identical"}
+
+data: {"message":" when spoken aloud, even though they have different meanings and spellings. By using the phrase \"seafood diet,\" the"}
+
+data: {"message":" speaker sets up the expectation of a specific nutritional regimen, only to subvert that expectation by explaining it as simply looking at food and eating it"}
+
+data: {"message":".\n\nDo you have any other sentences you'd like me to look at?"}
+
+data: {"message":""}
+
+data: {"result":"Hello there! I'm Otto. *I float on my back for a moment, adjusting my glasses.*\n\nThat is indeed a pun! This is a **homophonic** pun. It plays on the similarity in sound between the phrase \"seafood\" (the category of food) and \"see food\" (the action of seeing food).\n\nThat's punny!\n\nIn this case, the pun relies on the fact that \"seafood\" and \"see food\" sound identical when spoken aloud, even though they have different meanings and spellings. By using the phrase \"seafood diet,\" the speaker sets up the expectation of a specific nutritional regimen, only to subvert that expectation by explaining it as simply looking at food and eating it.\n\nDo you have any other sentences you'd like me to look at?"}
+

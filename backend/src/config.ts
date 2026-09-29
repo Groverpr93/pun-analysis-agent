@@ -34,15 +34,23 @@ if (!isLogFormat(logFormat)) {
 }
 
 // The Gemini models /api/chat tries, in order, when one fails (TASK-43;
-// flows/model-ladder.ts). All Flash-Lite, chosen in TASK-38 for its free
-// tier and availability; quota and capacity are per model, so another one
-// often answers when the first can't. gemini-3.1-flash-lite shuts down no
-// earlier than 2027-05-07; gemini-2.5-flash-lite is open only to projects
-// that used it before, which this one has.
+// flows/model-ladder.ts). Quota and capacity are per model, so another one
+// often answers when the first can't. Two Flash-Lite models (TASK-38 chose
+// Flash-Lite for its free tier and availability; TASK-43 added 3.1), then
+// Flash as a last resort. Flash has the least of both (5 requests/min and
+// 20/day on the free tier), and TASK-38 and TASK-45 saw it overloaded, out
+// of quota and stalling. Three stalls (MODEL_STALL_LIMIT_MS each) on any
+// model spend the reply's whole RETRY_BUDGET_MS before it can step down, so
+// the top rung goes to a model that hasn't been seen stalling. Each rung
+// names a fixed version rather than a -latest alias, so two rungs can't turn
+// out to be the same model. gemini-3.1-flash-lite shuts down no
+// earlier than 2027-05-07. gemini-2.5-flash-lite was dropped in TASK-45:
+// Gemini answers it with 404 "no longer available to new users" for this
+// project.
 export const GEMINI_MODEL_LADDER = [
-	"gemini-flash-lite-latest",
+	"gemini-3.5-flash-lite",
 	"gemini-3.1-flash-lite",
-	"gemini-2.5-flash-lite",
+	"gemini-3.8-flash",
 ];
 
 const parsedAllowedOrigins = process.env.CORS_ORIGIN?.split(",")
@@ -55,8 +63,8 @@ export const config = {
 	// it) means GEMINI_MODEL_LADDER. Set, it replaces the ladder with that one
 	// model, which still gets the ladder's backoff but never steps down: to
 	// try another Gemini model without a code change, or to measure one model
-	// on its own (TASK-41). Switching production to Flash (TASK-37) this way
-	// would also give up the ladder's fallback.
+	// on its own (TASK-41). Pinning production to one model this way would
+	// also give up the ladder's fallback.
 	geminiModel: process.env.GEMINI_MODEL || undefined,
 	inferenceUrl: process.env.INFERENCE_URL ?? "http://localhost:8000",
 	allowedOrigins:

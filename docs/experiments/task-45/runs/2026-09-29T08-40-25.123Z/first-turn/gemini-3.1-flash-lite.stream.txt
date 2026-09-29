@@ -1,0 +1,28 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_1152"},"metadata":{"thoughtSignature":"EnMKcQFpFH0Tq2f7HKPjf5BUgEQdnOg3Opv6QowOztsHn1t/BKtAKwn0S1AEGbOe2JF9LEWorSswpteUFcQ09TcxkHzIA/LVOEDcPLfxL8wlz0sdJX9yuA6VTglde46TaBxFZnBHAk9gDBgHi7SKfOO0TQ8s"}}]}}
+
+data: {"message":""}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_1152","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Hi there"}
+
+data: {"message":"! I'm Otto. I love those glasses, and I'm quite"}
+
+data: {"message":" cozy in my Purdue hoodie.\n\nThat's a classic example! That's punny! \n\nThis is a homoph"}
+
+data: {"message":"onic pun, which means it relies on words that sound the same but have different meanings. The pun hinges on the phrase"}
+
+data: {"message":" \"seafood diet.\"\n\n1.  **Meaning 1:** The speaker sounds like they are on a \"sea"}
+
+data: {"message":"-food diet,\" which implies a diet consisting primarily of fish and other marine life.\n2.  **Meaning 2:** The speaker clarifies"}
+
+data: {"message":" they are actually on a \"see food\" diet—meaning they see food, and then they eat it!\n\nThe"}
+
+data: {"message":" joke works because \"seafood\" and \"see food\" are phonetically identical in this context. I'm going to stash that"}
+
+data: {"message":" one away in my favorite rock collection! Do you have another sentence you'd like me to look at?"}
+
+data: {"message":""}
+
+data: {"result":"Hi there! I'm Otto. I love those glasses, and I'm quite cozy in my Purdue hoodie.\n\nThat's a classic example! That's punny! \n\nThis is a homophonic pun, which means it relies on words that sound the same but have different meanings. The pun hinges on the phrase \"seafood diet.\"\n\n1.  **Meaning 1:** The speaker sounds like they are on a \"sea-food diet,\" which implies a diet consisting primarily of fish and other marine life.\n2.  **Meaning 2:** The speaker clarifies they are actually on a \"see food\" diet—meaning they see food, and then they eat it!\n\nThe joke works because \"seafood\" and \"see food\" are phonetically identical in this context. I'm going to stash that one away in my favorite rock collection! Do you have another sentence you'd like me to look at?"}
+

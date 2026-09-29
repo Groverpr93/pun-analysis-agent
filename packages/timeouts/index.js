@@ -41,7 +41,9 @@ export const INFERENCE_TIMEOUT_MS = 20_000;
  * restored once capping MAX_TOOL_ROUNDS and raising
  * CLOUD_RUN_REQUEST_TIMEOUT_MS made that room (TASK-44). The
  * cost is a smaller RETRY_BUDGET_MS and a longer MAX_SILENCE_MS for
- * Frontend to wait out. TASK-32 measures it.
+ * Frontend to wait out. It's unchecked for gemini-3.8-flash, the model
+ * ladder's last rung, which TASK-45 saw go past it before its first chunk.
+ * TASK-32 measures it.
  */
 export const MODEL_STALL_LIMIT_MS = 30_000;
 

@@ -1,0 +1,28 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_476579"},"metadata":{"thoughtSignature":"EnMKcQFpFH0T5bRvVU4dqlcV387pQwXJp/OgnbRmiqnXB+QCLLo9O4VpvrZsA9oZUitTKXzX3wvViQcBxOtJWnVgUP9eQdpjrBAwXrXiwGrVg5Dno6tIisBjprFRxhGSlk4WuP2EbrPqvCR3BlK+XS68FD9/"}}]}}
+
+data: {"message":""}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_476579","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Hi there"}
+
+data: {"message":"! I'm Otto. I'd be happy to help you with that."}
+
+data: {"message":" I'll float on my back for a moment to think about this one.\n\nThat sentence is indeed a pun! It’"}
+
+data: {"message":"s a homophonic pun, meaning it relies on words that sound alike but have different meanings.\n\nThe pun is centered"}
+
+data: {"message":" on the phrase \"seafood diet\" and the phrase \"see food and I eat it.\" \"Seafood\" ("}
+
+data: {"message":"the category of food including fish and shellfish) sounds just like the words \"see food\" (the act of looking at food"}
+
+data: {"message":"). By using this phrasing, the speaker makes it sound like they are on a specialized eating plan, when they are really"}
+
+data: {"message":" just describing the act of eating whatever they look at.\n\nThat's punny! Do you have any other sentences you'd like"}
+
+data: {"message":" me to look at?"}
+
+data: {"message":""}
+
+data: {"result":"Hi there! I'm Otto. I'd be happy to help you with that. I'll float on my back for a moment to think about this one.\n\nThat sentence is indeed a pun! It’s a homophonic pun, meaning it relies on words that sound alike but have different meanings.\n\nThe pun is centered on the phrase \"seafood diet\" and the phrase \"see food and I eat it.\" \"Seafood\" (the category of food including fish and shellfish) sounds just like the words \"see food\" (the act of looking at food). By using this phrasing, the speaker makes it sound like they are on a specialized eating plan, when they are really just describing the act of eating whatever they look at.\n\nThat's punny! Do you have any other sentences you'd like me to look at?"}
+

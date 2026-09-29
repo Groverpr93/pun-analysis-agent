@@ -1,0 +1,14 @@
+data: {"message":"I floated"}
+
+data: {"message":" on my back for a second to check my notes, cracking that question open like a shellfish"}
+
+data: {"message":"! \n\nThe `analyze_pun` tool actually returned an empty explanation and an empty list of words for that specific run"}
+
+data: {"message":". Sometimes the underlying classifier's brain gets a little cloudy, but that didn't stop us from breaking down how"}
+
+data: {"message":" the joke works! \n\nDid you have another sentence you'd like me to run through the tool?"}
+
+data: {"message":""}
+
+data: {"result":"I floated on my back for a second to check my notes, cracking that question open like a shellfish! \n\nThe `analyze_pun` tool actually returned an empty explanation and an empty list of words for that specific run. Sometimes the underlying classifier's brain gets a little cloudy, but that didn't stop us from breaking down how the joke works! \n\nDid you have another sentence you'd like me to run through the tool?"}
+

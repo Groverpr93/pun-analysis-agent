@@ -1,0 +1,16 @@
+data: {"message":"Ah,"}
+
+data: {"message":" let me reach into my hoodie pocket and check my notes from when I ran the tool"}
+
+data: {"message":"! \n\nThe `analyze_pun` tool returned an empty explanation and an empty list of words involved for this particular"}
+
+data: {"message":" run. Sometimes automated classifiers leave the specific breakdown blank, but as your resident otter teacher, I'm always happy to dive"}
+
+data: {"message":" right in and break down the homophonic wordplay of \"seafood\" versus \"see food\" for you anyway"}
+
+data: {"message":"! \n\nDo you have another sentence you'd like me to look at?"}
+
+data: {"message":""}
+
+data: {"result":"Ah, let me reach into my hoodie pocket and check my notes from when I ran the tool! \n\nThe `analyze_pun` tool returned an empty explanation and an empty list of words involved for this particular run. Sometimes automated classifiers leave the specific breakdown blank, but as your resident otter teacher, I'm always happy to dive right in and break down the homophonic wordplay of \"seafood\" versus \"see food\" for you anyway! \n\nDo you have another sentence you'd like me to look at?"}
+

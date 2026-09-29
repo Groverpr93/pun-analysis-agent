@@ -1,0 +1,110 @@
+{
+	"ranAt": "2026-09-28T20:23:54.157Z",
+	"firstTurns": [
+		{
+			"model": "gemini-3.8-flash",
+			"failure": "RESOURCE_EXHAUSTED",
+			"toolCalls": 0
+		},
+		{
+			"model": "gemini-3.5-flash-lite",
+			"failure": null,
+			"toolCalls": 1
+		},
+		{
+			"model": "gemini-3.1-flash-lite",
+			"failure": null,
+			"toolCalls": 1
+		}
+	],
+	"followUps": [
+		{
+			"from": "gemini-3.8-flash",
+			"to": "gemini-3.5-flash-lite",
+			"refKind": "gemini",
+			"skipped": true
+		},
+		{
+			"from": "gemini-3.8-flash",
+			"to": "gemini-3.5-flash-lite",
+			"refKind": "backend",
+			"skipped": true
+		},
+		{
+			"from": "gemini-3.8-flash",
+			"to": "gemini-3.1-flash-lite",
+			"refKind": "gemini",
+			"skipped": true
+		},
+		{
+			"from": "gemini-3.8-flash",
+			"to": "gemini-3.1-flash-lite",
+			"refKind": "backend",
+			"skipped": true
+		},
+		{
+			"from": "gemini-3.5-flash-lite",
+			"to": "gemini-3.8-flash",
+			"refKind": "gemini",
+			"resentRefs": ["call_151581"],
+			"failure": "RESOURCE_EXHAUSTED",
+			"reply": null
+		},
+		{
+			"from": "gemini-3.5-flash-lite",
+			"to": "gemini-3.8-flash",
+			"refKind": "backend",
+			"resentRefs": ["0"],
+			"failure": "RESOURCE_EXHAUSTED",
+			"reply": null
+		},
+		{
+			"from": "gemini-3.5-flash-lite",
+			"to": "gemini-3.1-flash-lite",
+			"refKind": "gemini",
+			"resentRefs": ["call_151581"],
+			"failure": null,
+			"reply": "When I used the `analyze_pun` tool on your sentence, it returned that it is indeed a pun, specifically a **homophonic** one. It identified \"seafood\" and \"see food\" as the words carrying the weight of the joke, explaining that it plays on the listener expecting a dietary category (seafood) while actually describing an impulsive eating habit (seeing food, then eating it).\n\nSince I already shared my analysis of that one, what do you think? Did that explanation help make sense of why it's structured that way? If you have another sentence you're curious about, I'm ready to take a look!"
+		},
+		{
+			"from": "gemini-3.5-flash-lite",
+			"to": "gemini-3.1-flash-lite",
+			"refKind": "backend",
+			"resentRefs": ["0"],
+			"failure": null,
+			"reply": "Ah, I see you're curious about what I found under the hood! My `analyze_pun` tool actually acts as a guide to help me identify if a sentence is a pun and, if so, what makes it tick.\n\nIn this specific case, it confirmed that the sentence is indeed a pun. While the technical output for the explanation was brief, it helped me break down that the play on words is centered on the phonetic similarity between \"seafood\" and \"see food.\"\n\nThink of the tool as my little research assistant—I check it to make sure I'm on the right track, and then I use my otter expertise to explain the nuances to you! \n\nDo you have another sentence you'd like me to analyze?"
+		},
+		{
+			"from": "gemini-3.1-flash-lite",
+			"to": "gemini-3.8-flash",
+			"refKind": "gemini",
+			"resentRefs": ["call_174319"],
+			"failure": "RESOURCE_EXHAUSTED",
+			"reply": null
+		},
+		{
+			"from": "gemini-3.1-flash-lite",
+			"to": "gemini-3.8-flash",
+			"refKind": "backend",
+			"resentRefs": ["0"],
+			"failure": "RESOURCE_EXHAUSTED",
+			"reply": null
+		},
+		{
+			"from": "gemini-3.1-flash-lite",
+			"to": "gemini-3.5-flash-lite",
+			"refKind": "gemini",
+			"resentRefs": ["call_174319"],
+			"failure": null,
+			"reply": "Ah, let me reach into my hoodie pocket and check my notes from when I ran the tool! \n\nThe `analyze_pun` tool returned an empty explanation and an empty list of words involved for this particular run. Sometimes automated classifiers leave the specific breakdown blank, but as your resident otter teacher, I'm always happy to dive right in and break down the homophonic wordplay of \"seafood\" versus \"see food\" for you anyway! \n\nDo you have another sentence you'd like me to look at?"
+		},
+		{
+			"from": "gemini-3.1-flash-lite",
+			"to": "gemini-3.5-flash-lite",
+			"refKind": "backend",
+			"resentRefs": ["0"],
+			"failure": "UNAVAILABLE",
+			"reply": null
+		}
+	]
+}

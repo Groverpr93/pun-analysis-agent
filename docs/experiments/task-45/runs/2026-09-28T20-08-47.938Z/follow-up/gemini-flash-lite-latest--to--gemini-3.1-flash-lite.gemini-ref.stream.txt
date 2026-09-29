@@ -1,0 +1,26 @@
+data: {"message":"Actually"}
+
+data: {"message":", it looks like my internal analyzer tool came up empty on the technical details this time! As an"}
+
+data: {"message":" otter who prides himself on being thorough, I'll fill in the gaps for you.\n\nWhen I run a text through `analyze_pun"}
+
+data: {"message":"`, I'm looking for a few specific things to help teach you how the wordplay is structured:\n\n*   **"}
+
+data: {"message":"Words involved:** These are the key players, like \"seafood\" and \"see food\" in your example.\n*   **"}
+
+data: {"message":"The type:** I determine if it is **homophonic** (words that sound the same but have different meanings/"}
+
+data: {"message":"spellings, like *seafood* and *see food*) or **homographic** (words that are spelled the same but have"}
+
+data: {"message":" different meanings, like *bark* meaning a tree covering or a dog sound).\n*   **The two meanings:** This"}
+
+data: {"message":" is the core \"clash\" of the pun. For your example, it plays on the *definition of a diet*"}
+
+data: {"message":" versus the *literal act of observing food*.\n\nEven when the tool is a little quiet, I'm always happy to break down"}
+
+data: {"message":" the mechanics for you. Do you have another sentence you'd like me to help you analyze?"}
+
+data: {"message":""}
+
+data: {"result":"Actually, it looks like my internal analyzer tool came up empty on the technical details this time! As an otter who prides himself on being thorough, I'll fill in the gaps for you.\n\nWhen I run a text through `analyze_pun`, I'm looking for a few specific things to help teach you how the wordplay is structured:\n\n*   **Words involved:** These are the key players, like \"seafood\" and \"see food\" in your example.\n*   **The type:** I determine if it is **homophonic** (words that sound the same but have different meanings/spellings, like *seafood* and *see food*) or **homographic** (words that are spelled the same but have different meanings, like *bark* meaning a tree covering or a dog sound).\n*   **The two meanings:** This is the core \"clash\" of the pun. For your example, it plays on the *definition of a diet* versus the *literal act of observing food*.\n\nEven when the tool is a little quiet, I'm always happy to break down the mechanics for you. Do you have another sentence you'd like me to help you analyze?"}
+

@@ -1,0 +1,26 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_9518"},"metadata":{"thoughtSignature":"EnMKcQFpFH0T92HTVw7wXg2d7tloAHcmeQTWzzDlcInxQHSlNghND35CrICWLHMZW2FLLvt9hnw2Eu4qhgbbajny3q8XHXvUdCn2tJ1zrWiAX/OwbwL/afJBWgX4O4tZsSOS0ZxlHd8umHB/+gxnqDIhmwVE"}}]}}
+
+data: {"message":""}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_9518","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Hi"}
+
+data: {"message":" there! I'm Otto. It's so nice to meet you!"}
+
+data: {"message":" *I float on my back for a moment to ponder this.* \n\nThat is indeed a pun! \"That's punny!\""}
+
+data: {"message":" \n\nThis is a **homophonic** pun. It plays on the similarity in sound between the word \"seafood\" ("}
+
+data: {"message":"the category of food from the sea) and the phrase \"see food\" (the act of looking at food). By"}
+
+data: {"message":" phrasing it as \"seafood diet,\" the joke leads the listener to expect a nutritional regimen, but then reinterprets the words"}
+
+data: {"message":" as a description of a simple action. \n\nPuns work by using words that sound the same or are spelled the same but"}
+
+data: {"message":" have different meanings, which creates a clever or humorous twist. Do you have any other sentences you'd like me to look at?"}
+
+data: {"message":""}
+
+data: {"result":"Hi there! I'm Otto. It's so nice to meet you! *I float on my back for a moment to ponder this.* \n\nThat is indeed a pun! \"That's punny!\" \n\nThis is a **homophonic** pun. It plays on the similarity in sound between the word \"seafood\" (the category of food from the sea) and the phrase \"see food\" (the act of looking at food). By phrasing it as \"seafood diet,\" the joke leads the listener to expect a nutritional regimen, but then reinterprets the words as a description of a simple action. \n\nPuns work by using words that sound the same or are spelled the same but have different meanings, which creates a clever or humorous twist. Do you have any other sentences you'd like me to look at?"}
+

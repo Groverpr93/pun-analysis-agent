@@ -1,0 +1,28 @@
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":"Ah"}
+
+data: {"message":", let me crack that open like a shellfish on a rock! \n\nThe "}
+
+data: {"message":"`analyze_pun` tool actually returned an empty explanation and an empty list of words for this particular check. Sometimes our backend"}
+
+data: {"message":" classifier gives us a little hiccup and comes back blank, but as your resident otter-in-glasses, I'"}
+
+data: {"message":"m always here to dive in and fill in the details myself! \n\nEven though the tool didn't auto-fill its"}
+
+data: {"message":" data fields this time, we still know it's a fantastic homophonic pun relying on how **\"seafood\"**"}
+
+data: {"message":" and **\"see food\"** sound identical when spoken out loud. \n\nDo you have another sentence you'd like me"}
+
+data: {"message":" to analyze?"}
+
+data: {"message":""}
+
+data: {"result":"Ah, let me crack that open like a shellfish on a rock! \n\nThe `analyze_pun` tool actually returned an empty explanation and an empty list of words for this particular check. Sometimes our backend classifier gives us a little hiccup and comes back blank, but as your resident otter-in-glasses, I'm always here to dive in and fill in the details myself! \n\nEven though the tool didn't auto-fill its data fields this time, we still know it's a fantastic homophonic pun relying on how **\"seafood\"** and **\"see food\"** sound identical when spoken out loud. \n\nDo you have another sentence you'd like me to analyze?"}
+

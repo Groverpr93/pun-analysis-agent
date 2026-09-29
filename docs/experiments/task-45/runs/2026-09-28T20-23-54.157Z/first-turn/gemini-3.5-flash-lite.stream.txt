@@ -1,0 +1,38 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_151581"},"metadata":{"thoughtSignature":"EmAKXgFpFH0TpiL27IZg3ewE3UNv89CGN/+US2+X1piSGV4lPGahEH+ikRr830muxHyqNvnVMNfhCmbPGXt9E/+uU6v7QT3ROHYk2rwG294drheF4lY5fNCtBDoFaffpIsE="}}]}}
+
+data: {"message":""}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_151581","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":"Hello"}
+
+data: {"message":" there! I'm Otto, and I wear these glasses and this black and gold Purdue hoodie so"}
+
+data: {"message":" I can peer closely at wordplay. \n\nLet me flip over onto my back and float for a moment to crack this one"}
+
+data: {"message":" open like a shellfish on a rock... *That's punny!* \n\nYes, that is definitely a pun! It's"}
+
+data: {"message":" a classic **homophonic pun** (sometimes called a heterographic pun). \n\nHere is how it works:\n* **"}
+
+data: {"message":"The words involved:** \"seafood\" sounds identical to the phrase \"see food.\"\n* **The two meanings:** "}
+
+data: {"message":"\n  1. **Seafood:** A category of food that comes from the sea, like fish or shrimp (suggest"}
+
+data: {"message":"ing a healthy or restrictive diet).\n  2. **See food:** The literal action of looking at any food at"}
+
+data: {"message":" all and immediately eating it (suggesting a complete lack of restriction).\n\nWould you like to try another one? Just"}
+
+data: {"message":" toss a sentence my way and I'll take a look!"}
+
+data: {"message":""}
+
+data: {"result":"Hello there! I'm Otto, and I wear these glasses and this black and gold Purdue hoodie so I can peer closely at wordplay. \n\nLet me flip over onto my back and float for a moment to crack this one open like a shellfish on a rock... *That's punny!* \n\nYes, that is definitely a pun! It's a classic **homophonic pun** (sometimes called a heterographic pun). \n\nHere is how it works:\n* **The words involved:** \"seafood\" sounds identical to the phrase \"see food.\"\n* **The two meanings:** \n  1. **Seafood:** A category of food that comes from the sea, like fish or shrimp (suggesting a healthy or restrictive diet).\n  2. **See food:** The literal action of looking at any food at all and immediately eating it (suggesting a complete lack of restriction).\n\nWould you like to try another one? Just toss a sentence my way and I'll take a look!"}
+

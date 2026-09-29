@@ -1,0 +1,34 @@
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_102773"},"metadata":{"thoughtSignature":"EnMKcQFpFH0Tk44MEX2jgbgY8u6Oaz9hkTVQUiyUQDJEL5GL+3EMtaWUvCs+cVZaYDHaUNiMxZlnHyaY3OcWK31j6bBRqnyaXBcIVuXLoGDCtwa4mFRxIx0vWUBIlQMlTbVkrTZyWu4M5aPhDQQz2GtSO0Pj"}}]}}
+
+data: {"message":""}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_102773","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Hi"}
+
+data: {"message":" there! I'm Otto. It's great to meet you!\n\nI"}
+
+data: {"message":"'ve looked at your sentence, \"I'm on a seafood diet: I see food and I eat it.\""}
+
+data: {"message":" That is indeed a pun! That's punny!\n\nThis is a **homophonic pun**. It plays"}
+
+data: {"message":" on the similarity in sound between two phrases:\n1.  **\"Seafood\"**: The noun referring to food"}
+
+data: {"message":" from the sea, like fish or shrimp.\n2.  **\"See food\"**: The verb \"see\" followed"}
+
+data: {"message":" by the noun \"food.\"\n\nThe joke works because the listener initially expects the speaker to be talking about a diet consisting"}
+
+data: {"message":" of fish, but the second half of the sentence redefines the term to mean \"I see food and I eat it.\" I"}
+
+data: {"message":"'m just going to float on my back for a second to let that clever wordplay sink in!\n\nDo you have any other"}
+
+data: {"message":" sentences you'd like me to look at?"}
+
+data: {"message":""}
+
+data: {"result":"Hi there! I'm Otto. It's great to meet you!\n\nI've looked at your sentence, \"I'm on a seafood diet: I see food and I eat it.\" That is indeed a pun! That's punny!\n\nThis is a **homophonic pun**. It plays on the similarity in sound between two phrases:\n1.  **\"Seafood\"**: The noun referring to food from the sea, like fish or shrimp.\n2.  **\"See food\"**: The verb \"see\" followed by the noun \"food.\"\n\nThe joke works because the listener initially expects the speaker to be talking about a diet consisting of fish, but the second half of the sentence redefines the term to mean \"I see food and I eat it.\" I'm just going to float on my back for a second to let that clever wordplay sink in!\n\nDo you have any other sentences you'd like me to look at?"}
+

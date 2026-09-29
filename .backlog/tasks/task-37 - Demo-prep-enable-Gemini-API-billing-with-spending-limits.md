@@ -4,7 +4,7 @@ title: 'Demo prep: enable Gemini API billing with spending limits'
 status: To Do
 assignee: []
 created_date: '2026-09-27 20:47'
-updated_date: '2026-09-28 19:56'
+updated_date: '2026-09-29 09:05'
 labels: []
 dependencies:
   - TASK-38
@@ -58,4 +58,6 @@ TASK-38 outcome (2026-09-28, @yaisiel.torres): production switched to gemini-fla
 2026-09-28 (TASK-44): MODEL_STALL_LIMIT_MS is back to 30 s and now lives in packages/timeouts/index.js. If Flash's time to first chunk needs a longer stall limit, the module's tests will require raising CLOUD_RUN_REQUEST_TIMEOUT_MS (400 s) above about 35 s, and FRONTEND_SILENCE_LIMIT_MS (75 s) for any longer silence; see docs/engineering-practices.md's 'Shared timeouts' for the deploy order.
 
 2026-09-28 (TASK-43): production now uses a ladder of models (GEMINI_MODEL_LADDER in backend/src/config.ts: gemini-flash-lite-latest -> gemini-3.1-flash-lite -> gemini-2.5-flash-lite) and steps down when one fails. DEFAULT_GEMINI_MODEL no longer exists, and GEMINI_MODEL now replaces the whole ladder with one model, retried with backoff but never stepped down from. AC #6 was rewritten to match: pinning Flash through GEMINI_MODEL gives up the fallback that TASK-38/41 showed Flash needs (503 on 3 of 3 attempts). Any change to the ladder's models should repeat TASK-45's cross-model continuity check for the new ones, and TASK-32 AC #4's stall-limit measurement. Also removed DoD #4, a duplicate of #3.
+
+From TASK-45 (2026-09-29): AC #6 is out of date. The ladder is now gemini-3.5-flash-lite -> gemini-3.1-flash-lite -> gemini-3.8-flash (gemini-flash-lite-latest and gemini-2.5-flash-lite are gone), and Flash at the head of the ladder was tried and reverted: three stalls on the top rung spend the whole RETRY_BUDGET_MS, failing the reply before it steps down. Revisit AC #6 before starting.
 <!-- SECTION:NOTES:END -->

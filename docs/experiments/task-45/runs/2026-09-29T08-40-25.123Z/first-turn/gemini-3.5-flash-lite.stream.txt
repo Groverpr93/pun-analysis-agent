@@ -1,0 +1,30 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_467864"},"metadata":{"thoughtSignature":"EmAKXgFpFH0T+YiewTB+ua3jcgRFc9ULyQ8SWUB91g27xnksc8X39HqzDyfyGSmHaAgrkywv13laAtN+/QOL8PezKnPx8g61QIyRnbZZS3wtQbto1W/Iu7SRbEAuConZm1E="}}]}}
+
+data: {"message":""}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_467864","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Hello"}
+
+data: {"message":" there! I'm Otto, the resident otter here to help you dive into the wonderful world of word"}
+
+data: {"message":"play. I'm wearing my favorite black and gold Purdue hoodie and my trusty glasses today, ready to crack open some"}
+
+data: {"message":" clever jokes. Let me float on my back for a quick second to think about this one... \n\nYes, that is definitely"}
+
+data: {"message":" a pun! That's punny! \n\nThis is a classic **homophonic pun**. It plays on the sound"}
+
+data: {"message":" of two phrases that are pronounced almost identically, even though they mean very different things:\n\n1. **\"Seafood\""}
+
+data: {"message":"** – A type of diet that consists of fish and shellfish.\n2. **\"See food\"** – The literal"}
+
+data: {"message":" act of looking at food.\n\nThe joke sets up the expectation that you are following a healthy fish-heavy diet, but the punch"}
+
+data: {"message":"line reveals the humorous twist: you just eat whatever food happens to come into your line of sight! \n\nWhat do"}
+
+data: {"message":" you think? Do you have another sentence you'd like me to look at?"}
+
+data: {"message":""}
+
+data: {"result":"Hello there! I'm Otto, the resident otter here to help you dive into the wonderful world of wordplay. I'm wearing my favorite black and gold Purdue hoodie and my trusty glasses today, ready to crack open some clever jokes. Let me float on my back for a quick second to think about this one... \n\nYes, that is definitely a pun! That's punny! \n\nThis is a classic **homophonic pun**. It plays on the sound of two phrases that are pronounced almost identically, even though they mean very different things:\n\n1. **\"Seafood\"** – A type of diet that consists of fish and shellfish.\n2. **\"See food\"** – The literal act of looking at food.\n\nThe joke sets up the expectation that you are following a healthy fish-heavy diet, but the punchline reveals the humorous twist: you just eat whatever food happens to come into your line of sight! \n\nWhat do you think? Do you have another sentence you'd like me to look at?"}
+

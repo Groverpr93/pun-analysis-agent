@@ -1,0 +1,14 @@
+data: {"message":"I floated"}
+
+data: {"message":" on my back for a second to check my notes, but the tool actually returned an"}
+
+data: {"message":" empty explanation and an empty word list for that one! The underlying classifier was a bit quiet on the details, but my otter brain"}
+
+data: {"message":" had no trouble cracking that shellfish open to see the tasty wordplay inside—the fun phonetic trick between \"seafood\" and"}
+
+data: {"message":" \"see food.\" \n\nDo you have another sentence you'd like me to look at?"}
+
+data: {"message":""}
+
+data: {"result":"I floated on my back for a second to check my notes, but the tool actually returned an empty explanation and an empty word list for that one! The underlying classifier was a bit quiet on the details, but my otter brain had no trouble cracking that shellfish open to see the tasty wordplay inside—the fun phonetic trick between \"seafood\" and \"see food.\" \n\nDo you have another sentence you'd like me to look at?"}
+

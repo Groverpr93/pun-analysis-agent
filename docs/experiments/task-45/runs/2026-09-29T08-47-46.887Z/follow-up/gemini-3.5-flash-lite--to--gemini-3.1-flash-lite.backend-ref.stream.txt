@@ -1,0 +1,16 @@
+data: {"message":"When I"}
+
+data: {"message":" called `analyze_pun` for \"I'm on a seafood diet: I see food"}
+
+data: {"message":" and I eat it.\", it identified it as a pun and broke it down by focusing on the phrase \"seafood\" and \""}
+
+data: {"message":"see food.\" It classified it as a homophonic pun, highlighting how those two sound-alike terms create the double"}
+
+data: {"message":" meaning that makes the joke work.\n\nDoes that clarify how the tool helps me take apart the mechanics of a pun? If you"}
+
+data: {"message":" have another sentence you are curious about, I would be happy to take a look!"}
+
+data: {"message":""}
+
+data: {"result":"When I called `analyze_pun` for \"I'm on a seafood diet: I see food and I eat it.\", it identified it as a pun and broke it down by focusing on the phrase \"seafood\" and \"see food.\" It classified it as a homophonic pun, highlighting how those two sound-alike terms create the double meaning that makes the joke work.\n\nDoes that clarify how the tool helps me take apart the mechanics of a pun? If you have another sentence you are curious about, I would be happy to take a look!"}
+

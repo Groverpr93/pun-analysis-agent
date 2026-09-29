@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 10:00'
-updated_date: '2026-09-28 10:01'
+updated_date: '2026-09-29 09:05'
 labels: []
 dependencies:
   - TASK-38
@@ -38,3 +38,9 @@ How: in backend/, run the dev server on Flash (GEMINI_MODEL=gemini-flash-latest 
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+From TASK-45 (2026-09-29): production's ladder now ends with gemini-3.8-flash, so Flash's free quota (20/day, per project) is production's last resort; this task's runs spend it.
+<!-- SECTION:NOTES:END -->

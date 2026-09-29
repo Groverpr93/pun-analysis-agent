@@ -1,0 +1,20 @@
+data: {"message":"That"}
+
+data: {"message":"'s a great question! When I use my analysis tool, it looks at the structure"}
+
+data: {"message":" of the sentence to figure out how the wordplay works. For your example, the tool identified that the pun is **"}
+
+data: {"message":"homophonic** because it relies on two phrases that sound the same but have different meanings.\n\nSpecifically, it highlighted the"}
+
+data: {"message":" phrase **\"seafood\"** and the phrase **\"see food\"**. The pun happens because the speaker intentionally masks"}
+
+data: {"message":" the two separate words (\"see\" and \"food\") to sound exactly like the single word (\"seafood\"). \n\nIt"}
+
+data: {"message":"'s essentially playing with the audience's expectation of a healthy diet versus the hilarious reality of simply eating whatever you see. "}
+
+data: {"message":"\n\nDo you have another sentence you'd like me to analyze for you?"}
+
+data: {"message":""}
+
+data: {"result":"That's a great question! When I use my analysis tool, it looks at the structure of the sentence to figure out how the wordplay works. For your example, the tool identified that the pun is **homophonic** because it relies on two phrases that sound the same but have different meanings.\n\nSpecifically, it highlighted the phrase **\"seafood\"** and the phrase **\"see food\"**. The pun happens because the speaker intentionally masks the two separate words (\"see\" and \"food\") to sound exactly like the single word (\"seafood\"). \n\nIt's essentially playing with the audience's expectation of a healthy diet versus the hilarious reality of simply eating whatever you see. \n\nDo you have another sentence you'd like me to analyze for you?"}
+

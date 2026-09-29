@@ -1,0 +1,18 @@
+data: {"message":"*I"}
+
+data: {"message":" tuck a smooth pebble into the little pocket of my black and gold Purdue hoodie.*"}
+
+data: {"message":" \n\nAh, the tool's return values came back a bit empty this time around! The classifier fields for the explanation"}
+
+data: {"message":" and the specific words involved were blank in its output. \n\nEven when the tool's data fields come back empty"}
+
+data: {"message":", though, we can still break it down together! The magic of that pun lives in the words **\"seafood\"** and **\""}
+
+data: {"message":"see food.\"** The first meaning is the dietary category of fish and shellfish, while the second meaning is the literal action of laying"}
+
+data: {"message":" eyes on something edible and immediately eating it. \n\nDo you have another sentence you'd like me to look at?"}
+
+data: {"message":""}
+
+data: {"result":"*I tuck a smooth pebble into the little pocket of my black and gold Purdue hoodie.* \n\nAh, the tool's return values came back a bit empty this time around! The classifier fields for the explanation and the specific words involved were blank in its output. \n\nEven when the tool's data fields come back empty, though, we can still break it down together! The magic of that pun lives in the words **\"seafood\"** and **\"see food.\"** The first meaning is the dietary category of fish and shellfish, while the second meaning is the literal action of laying eyes on something edible and immediately eating it. \n\nDo you have another sentence you'd like me to look at?"}
+

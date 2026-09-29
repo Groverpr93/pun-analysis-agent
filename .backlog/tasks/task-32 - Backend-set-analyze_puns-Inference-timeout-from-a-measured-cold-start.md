@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-27 15:25'
-updated_date: '2026-09-28 19:30'
+updated_date: '2026-09-29 09:05'
 labels: []
 milestone: m-4
 dependencies:
@@ -51,4 +51,6 @@ From TASK-14's architectural review (2026-09-28): AC #1 measures time to the fir
 2026-09-28 (TASK-42 architectural review): Frontend no longer relies on the per-reply Inference total (5 rounds x INFERENCE_TIMEOUT_MS) as its worst-case wait; it relies on the maximum silence between events in docs/contracts.md. AC #3 was reworded to match, and AC #4 widened from 'TASK-43's ladder' to every model production can run, since GEMINI_MODEL is configurable and -latest aliases move.
 
 2026-09-28 (TASK-44): MODEL_STALL_LIMIT_MS (30 s), INFERENCE_TIMEOUT_MS (20 s) and MAX_TOOL_ROUNDS (3, was Genkit's implicit 5) now live in packages/timeouts/index.js (@pun-agent/timeouts), not stall-guard.ts or analyze-pun.ts, and its tests check they still fit together. Headroom is small: with 3 rounds and Cloud Run's timeout at 400 s, the retry budget still fits one retry only while the stall limit stays at or below 35 s. A measured value above that must raise CLOUD_RUN_REQUEST_TIMEOUT_MS in the same change (safe in one deploy); a longer maximum silence must also raise FRONTEND_SILENCE_LIMIT_MS first (docs/engineering-practices.md, 'Shared timeouts'). Where the ACs above name stall-guard.ts, analyze-pun.ts or '5 rounds', read the module.
+
+From TASK-45 (2026-09-29): the ladder is now gemini-3.5-flash-lite -> gemini-3.1-flash-lite -> gemini-3.8-flash. Flash went past MODEL_STALL_LIMIT_MS (30 s) before its first chunk on 3 attempts in a row; whether that was a stall or long thinking is unknown. If Flash's normal time to first chunk is near 30 s, the bottom rung rarely answers, and raising the limit shrinks RETRY_BUDGET_MS (see the TASK-44 note above).
 <!-- SECTION:NOTES:END -->

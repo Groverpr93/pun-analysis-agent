@@ -12,9 +12,9 @@ test("the chat models are the ladder when GEMINI_MODEL is unset", () => {
 	assert.deepEqual(
 		chatModels.map((model) => model.name),
 		[
-			"googleai/gemini-flash-lite-latest",
+			"googleai/gemini-3.5-flash-lite",
 			"googleai/gemini-3.1-flash-lite",
-			"googleai/gemini-2.5-flash-lite",
+			"googleai/gemini-3.8-flash",
 		],
 	);
 });

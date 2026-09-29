@@ -1,0 +1,32 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_156860"},"metadata":{"thoughtSignature":"EmAKXgFpFH0TQcrpNG1bfGcQUDCjWjfdTsq8ca0cA24qGy5E0fMfTwHci9vkL/sLDpd3Oe2B72+xj0+LsIuTXuTuODNLOapkkdW1BJJ4Qy1vVApMRPc3wNbFTwW/+30mbV0="}}]}}
+
+data: {"message":""}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_156860","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Hello"}
+
+data: {"message":" there! I'm Otto—you can usually spot me floating on my back"}
+
+data: {"message":" to think through a tricky word puzzle, rocking these glasses and my favorite black and gold Purdue hoodie. \n\nThat's pun"}
+
+data: {"message":"ny! \n\nLet's crack this one open like a shellfish on a rock. Yes, \"I'm on a seafood"}
+
+data: {"message":" diet: I see food and I eat it\" is indeed a classic pun! \n\nIt's a **homophonic pun** ("}
+
+data: {"message":"sometimes called a sound-alike pun). Here is how it works:\n* **The words carrying the pun:** \"**"}
+
+data: {"message":"seafood**\" and \"**see food**\".\n* **The two meanings it plays on:** \n  1. *"}
+
+data: {"message":"Seafood* sounds like a specific type of diet that includes fish and shellfish.\n  2. *See food* describes"}
+
+data: {"message":" the literal action of looking at any food and immediately eating it. \n\nThe humor comes from setting up the listener to"}
+
+data: {"message":" expect a healthy eating lifestyle, only to pull the rug out with a joke about visual temptation! Do you have another sentence you'd like me"}
+
+data: {"message":" to look at?"}
+
+data: {"message":""}
+
+data: {"result":"Hello there! I'm Otto—you can usually spot me floating on my back to think through a tricky word puzzle, rocking these glasses and my favorite black and gold Purdue hoodie. \n\nThat's punny! \n\nLet's crack this one open like a shellfish on a rock. Yes, \"I'm on a seafood diet: I see food and I eat it\" is indeed a classic pun! \n\nIt's a **homophonic pun** (sometimes called a sound-alike pun). Here is how it works:\n* **The words carrying the pun:** \"**seafood**\" and \"**see food**\".\n* **The two meanings it plays on:** \n  1. *Seafood* sounds like a specific type of diet that includes fish and shellfish.\n  2. *See food* describes the literal action of looking at any food and immediately eating it. \n\nThe humor comes from setting up the listener to expect a healthy eating lifestyle, only to pull the rug out with a joke about visual temptation! Do you have another sentence you'd like me to look at?"}
+

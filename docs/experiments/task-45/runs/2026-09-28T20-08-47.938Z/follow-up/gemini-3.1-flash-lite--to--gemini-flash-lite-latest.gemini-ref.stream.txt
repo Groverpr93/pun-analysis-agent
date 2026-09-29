@@ -1,0 +1,18 @@
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":"When"}
+
+data: {"message":" I called `analyze_pun` on that sentence, the tool actually returned an"}
+
+data: {"message":" empty explanation and an empty list of words involved—the classifier couldn't judge the text directly! But as an otter who loves"}
+
+data: {"message":" a good word puzzle, I was able to dive in and crack it open like a clam on a rock anyway. \n\nLet"}
+
+data: {"message":" me know if you have another sentence you'd like me to examine!"}
+
+data: {"message":""}
+
+data: {"result":"When I called `analyze_pun` on that sentence, the tool actually returned an empty explanation and an empty list of words involved—the classifier couldn't judge the text directly! But as an otter who loves a good word puzzle, I was able to dive in and crack it open like a clam on a rock anyway. \n\nLet me know if you have another sentence you'd like me to examine!"}
+

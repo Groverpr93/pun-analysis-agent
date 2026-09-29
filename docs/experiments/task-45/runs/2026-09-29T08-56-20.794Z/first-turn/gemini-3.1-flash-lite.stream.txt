@@ -1,0 +1,30 @@
+data: {"message":""}
+
+data: {"message":""}
+
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_490011"},"metadata":{"thoughtSignature":"EnMKcQFpFH0T0x2xST0ZyWVaSdo7neBgsugZzMeK3VSYWQgYPExTcVcJ4HCDcc4m/t2CET4z3sSdV5Ugofa7ChUtR1njB4FlJb5XP+I8NXdNyzNSMmtQo6TmJt9MGuAwzslCkTm8JlGaSuupYyO3z02uickN"}}]}}
+
+data: {"message":""}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_490011","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Hi there"}
+
+data: {"message":"! I'm Otto. It's so nice to meet you! *"}
+
+data: {"message":"I float on my back for a moment to think.*\n\nThat sentence is indeed a classic pun! It's a **"}
+
+data: {"message":"homophonic** pun, which means it plays on words that sound alike but have different meanings.\n\nThe pun is"}
+
+data: {"message":" carried by the phrase \"seafood,\" which sounds identical to the phrase \"see food.\"\n\n*   One meaning is the category"}
+
+data: {"message":" of food that comes from the sea (fish, shellfish, etc.).\n*   The other meaning is the action of seeing"}
+
+data: {"message":" food (using your eyes to perceive something to eat).\n\nThat's punny! Do you have any other sentences you'd like"}
+
+data: {"message":" me to take a look at?"}
+
+data: {"message":""}
+
+data: {"result":"Hi there! I'm Otto. It's so nice to meet you! *I float on my back for a moment to think.*\n\nThat sentence is indeed a classic pun! It's a **homophonic** pun, which means it plays on words that sound alike but have different meanings.\n\nThe pun is carried by the phrase \"seafood,\" which sounds identical to the phrase \"see food.\"\n\n*   One meaning is the category of food that comes from the sea (fish, shellfish, etc.).\n*   The other meaning is the action of seeing food (using your eyes to perceive something to eat).\n\nThat's punny! Do you have any other sentences you'd like me to take a look at?"}
+

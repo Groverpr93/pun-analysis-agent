@@ -16,6 +16,7 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import { setTimeout as sleep } from "node:timers/promises";
 import { parseArgs } from "node:util";
+import { readStream } from "../read-stream.mjs";
 
 const BACKEND_URL = "http://localhost:8080/api/chat";
 // Flash's free tier allows 5 requests/min and each question takes about 2,
@@ -47,31 +48,6 @@ const PROMPTS = [
 		text: "Would it still be a pun if I said I'm on a seafood diet because I only eat fish?",
 	},
 ];
-
-/**
- * What a recorded stream says, per docs/contracts.md: its events are split
- * on the blank line that ends each one, then on the `data: ` / `error: `
- * prefix. A trailing piece with no blank line after it never finished
- * arriving, so it's dropped, and a stream with neither a result nor an
- * error was cut off, which counts as a failure too.
- */
-const readStream = (body) => {
-	const pieces = body.split("\n\n");
-	pieces.pop(); // Empty if the stream ended cleanly; unfinished otherwise.
-	const events = pieces.map((piece) => {
-		if (piece.startsWith("data: ")) return JSON.parse(piece.slice(6));
-		if (piece.startsWith("error: ")) return JSON.parse(piece.slice(7));
-		throw new Error(`not a stream event: ${piece.slice(0, 80)}`);
-	});
-	const final = events.at(-1);
-	return {
-		events,
-		reply: final && "result" in final ? final.result : undefined,
-		failure:
-			final?.error?.status ??
-			(final && "result" in final ? undefined : "CUT_OFF"),
-	};
-};
 
 /**
  * How many model calls a reply took. Genkit calls the model once, then once

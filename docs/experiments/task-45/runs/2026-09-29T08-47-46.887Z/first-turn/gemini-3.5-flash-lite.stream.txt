@@ -1,0 +1,28 @@
+data: {"message":{"role":"model","index":0,"content":[{"toolRequest":{"name":"analyze_pun","input":{"text":"I'm on a seafood diet: I see food and I eat it."},"ref":"call_373239"},"metadata":{"thoughtSignature":"EmAKXgFpFH0Tf+bvSRwgAYuRDnzZRJzbdQEsGVPle7Fal71UpNgdnPK0bOveMLeJJg7wa/6PZmNnxnYk+BUvx5RGk7yIqiQpmzzBFKmE0qQudJ+VHKbdwx2CeXKGN/fX5sA="}}]}}
+
+data: {"message":""}
+
+data: {"message":{"role":"tool","index":1,"content":[{"toolResponse":{"name":"analyze_pun","ref":"call_373239","output":{"is_pun":null,"pun_type":null,"words_involved":[],"explanation":"","confidence":null,"sense_source":null}}}]}}
+
+data: {"message":"Hello"}
+
+data: {"message":" there! I'm Otto, the resident otter here to help you dive into the wonderful world of word"}
+
+data: {"message":"play. Let me float on my back for a second to think about this one... \n\nYes, that is definitely"}
+
+data: {"message":" a pun! That's punny! \n\nHere is how it works: it's a **homophonic"}
+
+data: {"message":" pun** (sometimes called a sound-alike pun). The trick relies on how **\"seafood\"** and **\"see food"}
+
+data: {"message":"\"** sound exactly the same when spoken out loud, but they have completely different meanings:\n\n1. **Seafood:**"}
+
+data: {"message":" A type of diet involving fish and shellfish.\n2. **See food:** The literal action of looking at food (\""}
+
+data: {"message":"I see food, and I eat it\").\n\nThe joke sets you up to think you're talking about a healthy dietary choice,"}
+
+data: {"message":" only to reveal a hilarious lack of self-control. Would you like to check out another sentence?"}
+
+data: {"message":""}
+
+data: {"result":"Hello there! I'm Otto, the resident otter here to help you dive into the wonderful world of wordplay. Let me float on my back for a second to think about this one... \n\nYes, that is definitely a pun! That's punny! \n\nHere is how it works: it's a **homophonic pun** (sometimes called a sound-alike pun). The trick relies on how **\"seafood\"** and **\"see food\"** sound exactly the same when spoken out loud, but they have completely different meanings:\n\n1. **Seafood:** A type of diet involving fish and shellfish.\n2. **See food:** The literal action of looking at food (\"I see food, and I eat it\").\n\nThe joke sets you up to think you're talking about a healthy dietary choice, only to reveal a hilarious lack of self-control. Would you like to check out another sentence?"}
+
