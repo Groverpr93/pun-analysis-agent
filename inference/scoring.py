@@ -7,12 +7,13 @@ word's predicate/relation slot (TASK-18), and answers two questions:
   2. Are two clearly different senses both plausible? -> pun_margin()
 """
 
-import math
 import threading
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Literal
 
+import numpy as np
+import numpy.typing as npt
 from fastembed import TextEmbedding
 
 from senses import Sense
@@ -20,7 +21,10 @@ from senses import Sense
 # Takes a list of texts, returns one vector per text, in the same order.
 # Passed in as a parameter (not called directly) so tests can swap in a fake
 # with hand-picked vectors -- no model download, and exact control over scores.
-Embed = Callable[[list[str]], list[Sequence[float]]]
+Embed = Callable[[list[str]], Sequence[npt.ArrayLike]]
+
+# Which scorer produced a score; score_senses() picks one per word.
+Method = Literal["selectional_preference", "embedding_lesk"]
 
 # Hand-seeded selectional preferences (design doc step 4): for a
 # (predicate lemma, relation) slot, the WordNet hypernym lemmas of things that
@@ -60,6 +64,8 @@ SELECTIONAL_PREFERENCES: dict[tuple[str, str], frozenset[str]] = {
 
 # Placeholders until TASK-2.4 calibrates them against SemEval.
 # A margin at or below this counts as "both senses plausible" = pun tension.
+# Only embedding-Lesk margins depend on it: selectional-preference scores are
+# 0 or 1, so their margins are too.
 MARGIN_THRESHOLD = 0.1
 # Two glosses with cosine similarity below this count as different senses
 # (used only when lexfiles can't tell -- see _distinct()).
@@ -74,6 +80,7 @@ _UNINFORMATIVE_LEXFILES = frozenset({"adj.all"})
 class ScoredSense:
     sense: Sense
     score: float
+    method: Method
 
 
 @dataclass(frozen=True)
@@ -82,6 +89,11 @@ class PunSignal:
     runner_up: ScoredSense
     margin: float
     sense_source: Literal["wordnet", "wiktionary"]
+
+    @property
+    def method(self) -> Method:
+        # Both senses come from one score_senses() call, so they share a method.
+        return self.top.method
 
 
 def score_senses(
@@ -96,7 +108,7 @@ def score_senses(
     Selectional preference if SELECTIONAL_PREFERENCES has a seed for
     (predicate, relation), every sense is from WordNet, AND at least one
     sense matches; otherwise embedding-Lesk. Returns results in the same
-    order as `senses`.
+    order as `senses`, each tagged with the method used.
     """
     if not senses:
         return []
@@ -106,11 +118,13 @@ def score_senses(
     if not all(sense.source == "wordnet" for sense in senses):
         seeds = None
     scores = [_selectional_preference_score(sense, seeds) for sense in senses] if seeds else []
+    method: Method = "selectional_preference"
     if 1.0 not in scores:
         # No seed, or a seed no sense fits: all-zero scores would read as a
         # margin of 0 (a fake pun), so score by gloss similarity instead.
         scores = _embedding_lesk_scores(senses, text, embed)
-    return [ScoredSense(sense, score) for sense, score in zip(senses, scores)]
+        method = "embedding_lesk"
+    return [ScoredSense(sense, score, method) for sense, score in zip(senses, scores)]
 
 
 def _selectional_preference_score(sense: Sense, seeds: frozenset[str]) -> float:
@@ -130,12 +144,11 @@ def _embedding_lesk_scores(senses: list[Sense], text: str, embed: Embed) -> list
     return [_cosine(sentence_vector, gloss_vector) for gloss_vector in gloss_vectors]
 
 
-def _cosine(a: Sequence[float], b: Sequence[float]) -> float:
+def _cosine(a: npt.ArrayLike, b: npt.ArrayLike) -> float:
     """dot(a, b) / (|a| * |b|); 1.0 = same direction (similar meaning)."""
-    norm = math.sqrt(sum(x * x for x in a)) * math.sqrt(sum(y * y for y in b))
-    if norm == 0:
-        return 0.0
-    return sum(x * y for x, y in zip(a, b)) / norm
+    a, b = np.asarray(a), np.asarray(b)
+    norm = np.linalg.norm(a) * np.linalg.norm(b)
+    return float(a @ b / norm) if norm else 0.0
 
 
 def pun_margin(scored: list[ScoredSense], embed: Embed) -> PunSignal | None:
@@ -191,7 +204,7 @@ _embedder: TextEmbedding | None = None
 _embedder_lock = threading.Lock()
 
 
-def default_embed(texts: list[str]) -> list[Sequence[float]]:
+def default_embed(texts: list[str]) -> list[npt.NDArray[np.float32]]:
     """Production Embed: all-MiniLM-L6-v2 via fastembed, loaded lazily on first use.
 
     Lazy + locked for the same reasons as senses._get_wordnet(): don't pay the

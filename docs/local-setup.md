@@ -119,7 +119,7 @@ Python + [`uv`](https://docs.astral.sh/uv/) (fast, reproducible dependency manag
 cd inference
 uv sync
 uv run python -m wn download oewn:2025  # one-time: sense-selection's WordNet data
-# scoring's embedding model (~87 MB) downloads itself to fastembed's cache on first use; tests never need it
+uv run python -c "from scoring import default_embed; default_embed(['warm'])"  # one-time: scoring's embedding model (~87 MB, can take minutes); tests never need it. It's cached in the OS temp dir, so rerun this if that gets cleared
 curl -fL --create-dirs -o data/wiktionary.sqlite.gz https://github.com/team-play/pun-analysis-agent/releases/download/wiktionary-data-2026-09-25/wiktionary.sqlite.gz && gunzip -f data/wiktionary.sqlite.gz  # one-time: sense-selection's Wiktionary data
 uv run pytest
 uv run ruff check .

@@ -145,6 +145,11 @@ def unused_embed(texts: list[str]):
     raise AssertionError(f"embed should not be called here, got {texts!r}")
 
 
+def lesk(sense: Sense, score: float) -> ScoredSense:
+    """A hand-scored sense, for pun_margin tests that skip score_senses."""
+    return ScoredSense(sense, score, "embedding_lesk")
+
+
 def test_selectional_preference_pun_case_dough():
     # AC #4 pun case: "The baker needed more dough." -- both senses fit
     # ("need", "dobj") seeds, so both score 1.0 and the margin is 0.
@@ -157,6 +162,7 @@ def test_selectional_preference_pun_case_dough():
     assert (signal.top.sense, signal.runner_up.sense) == (DOUGH_FOOD, DOUGH_MONEY)
     assert signal.margin == 0.0
     assert signal.sense_source == "wordnet"
+    assert signal.method == "selectional_preference"
     assert has_pun_tension(signal)
 
 
@@ -172,6 +178,7 @@ def test_lesk_non_pun_case_large_margin():
     signal = pun_margin(scored, embed)
 
     assert signal.top.sense == DOUGH_FOOD
+    assert signal.method == "embedding_lesk"
     assert signal.margin > MARGIN_THRESHOLD
     assert not has_pun_tension(signal)
 
@@ -179,7 +186,7 @@ def test_lesk_non_pun_case_large_margin():
 def test_falls_back_to_lesk_when_seed_exists_but_no_sense_matches():
     # Seed exists for the slot but neither hypernym chain contains a seed class
     # -> must use Lesk, not return all-zero scores (a fake margin of 0).
-    text = "He swung at the bat."
+    text = "We need a new bat."
     embed = fake_embed_from(
         {text: [1.0, 0.0], BAT_ANIMAL.gloss: [1.0, 1.0], BAT_TURN.gloss: [0.0, 1.0]}
     )
@@ -187,14 +194,15 @@ def test_falls_back_to_lesk_when_seed_exists_but_no_sense_matches():
     scored = score_senses([BAT_ANIMAL, BAT_TURN], text, "need", "dobj", embed)
 
     assert [s.score for s in scored] == pytest.approx([2**-0.5, 0.0])
+    assert {s.method for s in scored} == {"embedding_lesk"}
 
 
 def test_runner_up_skips_senses_in_same_lexfile():
     # Decision #4: top vs best sense of a DIFFERENT category, not just #2.
     scored = [
-        ScoredSense(DOUGH_FOOD, 0.9),
-        ScoredSense(BREAD_FOOD, 0.85),
-        ScoredSense(DOUGH_MONEY, 0.8),
+        lesk(DOUGH_FOOD, 0.9),
+        lesk(BREAD_FOOD, 0.85),
+        lesk(DOUGH_MONEY, 0.8),
     ]
 
     signal = pun_margin(scored, unused_embed)
@@ -206,18 +214,18 @@ def test_runner_up_skips_senses_in_same_lexfile():
 def test_wiktionary_senses_use_gloss_distance_for_distinctness():
     # lexfile=None -> _distinct() falls back to gloss cosine vs GLOSS_DISTINCT_THRESHOLD.
     far_apart = fake_embed_from({RIZZ_CHARM.gloss: [1.0, 0.0], RIZZ_PAPER.gloss: [0.0, 1.0]})
-    signal = pun_margin([ScoredSense(RIZZ_CHARM, 0.6), ScoredSense(RIZZ_PAPER, 0.55)], far_apart)
+    signal = pun_margin([lesk(RIZZ_CHARM, 0.6), lesk(RIZZ_PAPER, 0.55)], far_apart)
 
     assert signal.runner_up.sense == RIZZ_PAPER
     assert signal.sense_source == "wiktionary"
 
     # Near-identical glosses aren't two meanings, so there's no pair at all.
     close = fake_embed_from({RIZZ_CHARM.gloss: [1.0, 0.0], RIZZ_PAPER.gloss: [1.0, 0.1]})
-    assert pun_margin([ScoredSense(RIZZ_CHARM, 0.6), ScoredSense(RIZZ_PAPER, 0.55)], close) is None
+    assert pun_margin([lesk(RIZZ_CHARM, 0.6), lesk(RIZZ_PAPER, 0.55)], close) is None
 
 
 def test_returns_none_for_fewer_than_two_senses():
-    assert pun_margin([ScoredSense(DOUGH_FOOD, 1.0)], unused_embed) is None
+    assert pun_margin([lesk(DOUGH_FOOD, 1.0)], unused_embed) is None
 
 
 def test_mixed_pair_reports_wiktionary():
@@ -225,7 +233,7 @@ def test_mixed_pair_reports_wiktionary():
     # that needs a Wiktionary sense couldn't come from WordNet alone.
     embed = fake_embed_from({PUN_WORDNET.gloss: [1.0, 0.0], PUN_COWRIES.gloss: [0.0, 1.0]})
 
-    signal = pun_margin([ScoredSense(PUN_WORDNET, 0.7), ScoredSense(PUN_COWRIES, 0.65)], embed)
+    signal = pun_margin([lesk(PUN_WORDNET, 0.7), lesk(PUN_COWRIES, 0.65)], embed)
 
     assert (signal.top.sense.source, signal.runner_up.sense.source) == ("wordnet", "wiktionary")
     assert signal.sense_source == "wiktionary"
@@ -238,8 +246,8 @@ def test_cosine_of_a_zero_vector_is_zero():
 def test_margin_exactly_at_threshold_counts_as_tension():
     def signal(margin):
         return PunSignal(
-            top=ScoredSense(DOUGH_FOOD, 1.0),
-            runner_up=ScoredSense(DOUGH_MONEY, 1.0 - margin),
+            top=lesk(DOUGH_FOOD, 1.0),
+            runner_up=lesk(DOUGH_MONEY, 1.0 - margin),
             margin=margin,
             sense_source="wordnet",
         )
@@ -278,17 +286,16 @@ def test_seeds_skip_lists_with_wiktionary_senses():
     scored = score_senses([CHEDDAR_CHEESE, CHEDDAR_MONEY], text, "want", "dobj", embed)
 
     assert [s.score for s in scored] == pytest.approx([2**-0.5, 1 / 1.64**0.5])
+    assert {s.method for s in scored} == {"embedding_lesk"}
 
 
 def test_adjective_senses_use_gloss_distance():
     # Nearly all WordNet adjectives share lexfile adj.all, so lexfiles can't
     # tell them apart; the gloss embeddings decide instead.
     far_apart = fake_embed_from({READY_PREPARED.gloss: [1.0, 0.0], READY_QUICK.gloss: [0.0, 1.0]})
-    signal = pun_margin(
-        [ScoredSense(READY_PREPARED, 0.6), ScoredSense(READY_QUICK, 0.55)], far_apart
-    )
+    signal = pun_margin([lesk(READY_PREPARED, 0.6), lesk(READY_QUICK, 0.55)], far_apart)
     assert signal.runner_up.sense == READY_QUICK
 
     close = fake_embed_from({READY_PREPARED.gloss: [1.0, 0.0], READY_WILLING.gloss: [1.0, 0.1]})
-    scored = [ScoredSense(READY_PREPARED, 0.6), ScoredSense(READY_WILLING, 0.55)]
+    scored = [lesk(READY_PREPARED, 0.6), lesk(READY_WILLING, 0.55)]
     assert pun_margin(scored, close) is None
