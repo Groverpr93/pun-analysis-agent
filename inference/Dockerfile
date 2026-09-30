@@ -20,14 +20,23 @@ COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --no-dev
 ENV WN_DATA_DIR=/wn_data
 RUN .venv/bin/python -m wn download oewn:2025 && rm -rf /wn_data/downloads
+# The embedding model too: fastembed would otherwise fetch it from HuggingFace
+# into /tmp (in-memory on Cloud Run) on every cold start. Must match
+# scoring.EMBEDDING_MODEL; the offline check below fails the build if not.
+ENV FASTEMBED_CACHE_PATH=/fastembed_cache
+RUN .venv/bin/python -c "from fastembed import TextEmbedding; TextEmbedding('sentence-transformers/all-MiniLM-L6-v2')" \
+    && chmod -R a+rX /fastembed_cache
 
 # Same base as the build stage, which the venv's python symlink points into.
 FROM python:3.12-slim
 RUN useradd --system --no-create-home app
 WORKDIR /app
-ENV PATH=/app/.venv/bin:$PATH WN_DATA_DIR=/wn_data
+# HF_HUB_OFFLINE: load the baked-in model only, never download at runtime.
+ENV PATH=/app/.venv/bin:$PATH WN_DATA_DIR=/wn_data \
+    FASTEMBED_CACHE_PATH=/fastembed_cache HF_HUB_OFFLINE=1
 COPY --from=build /app/.venv .venv
 COPY --from=build /wn_data /wn_data
+COPY --from=build /fastembed_cache /fastembed_cache
 COPY --from=wiktionary /wiktionary.sqlite data/wiktionary.sqlite
 COPY . .
 USER app
@@ -39,7 +48,9 @@ from candidates import CandidateWord; \
 from senses import get_wiktionary_senses, get_wordnet_senses; \
 word = CandidateWord(text='interest', lemma='interest', pos='NOUN', index=0); \
 assert get_wordnet_senses(word), 'no WordNet senses: check WN_DATA_DIR'; \
-assert get_wiktionary_senses(word), 'no Wiktionary senses: check data/wiktionary.sqlite'"
+assert get_wiktionary_senses(word), 'no Wiktionary senses: check data/wiktionary.sqlite'; \
+from scoring import default_embed; \
+assert len(default_embed(['interest'])[0]) == 384, 'embedding model: check FASTEMBED_CACHE_PATH'"
 # Cloud Run sets PORT (8080 unless the service overrides it); exec hands
 # uvicorn the shell's PID so it gets Cloud Run's SIGTERM directly.
 CMD ["sh", "-c", "exec uvicorn main:app --host 0.0.0.0 --port \"${PORT:-8080}\""]

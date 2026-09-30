@@ -4,7 +4,7 @@ title: Template pun explanation string and finalize sense_source tiering
 status: To Do
 assignee: []
 created_date: '2026-09-20 10:04'
-updated_date: '2026-09-23 16:10'
+updated_date: '2026-09-30 00:47'
 labels:
   - wsd
 milestone: m-6
@@ -36,3 +36,15 @@ Step 6 of docs/design/sense-selection.md's approach: once TASK-19 has produced a
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+From TASK-17/19: a winning sense pair can mix a WordNet and a Wiktionary sense. Decide which `sense_source` `/analyze` reports for it (suggested: `"wiktionary"` if either sense came from Wiktionary, since WordNet alone couldn't produce that pair).
+
+Decided in TASK-19: a mixed WordNet+Wiktionary winning pair reports "wiktionary"; PunSignal.sense_source already carries this, so TASK-21 passes it through to /analyze.
+
+From TASK-19's architectural review (2026-09-28): (1) PunSignal.sense_source is set even when has_pun_tension() is false, but contracts.md only allows wordnet/wiktionary for a confident pair, so check has_pun_tension first; no signal, no tension, or an exception from default_embed must all become llm_fallback with an empty explanation. (2) Nothing yet decides which candidate's signal wins when several words in a sentence have one (e.g. smallest margin, or the pun detector's word). (3) scoring uses the placeholder MARGIN_THRESHOLD (0.1); see TASK-2.4.
+
+From TASK-19's review (2026-09-29): the two-category seeds (need/want + dobj -> food or money) tie any word with a food and a money WordNet sense, whatever the rest of the sentence says: "I want more bread with my soup." scores margin 0. Sense selection only runs when the detector says is_pun: true, but in a real pun sentence a seeded bystander word could still beat the actual pun word. So when choosing which candidate wins, don't let "selectional_preference beats embedding_lesk" decide on its own. PunSignal.method (added in TASK-19) says which scorer produced the pair.
+<!-- SECTION:NOTES:END -->
