@@ -3,11 +3,11 @@ id: TASK-19
 title: >-
   Score candidate senses via selectional preference and embedding-Lesk; compute
   pun-margin signal
-status: In Progress
+status: Done
 assignee:
   - Andi J. Castillo-Mauricio
 created_date: '2026-09-20 10:04'
-updated_date: '2026-09-29 01:59'
+updated_date: '2026-09-30 00:56'
 labels:
   - wsd
 milestone: m-6
@@ -58,10 +58,12 @@ Implemented inference/scoring.py (2026-09-28): score_senses uses ONE method per 
 Deploy check (2026-09-28, architectural + code review): the embedding model is baked into the image at build time (Dockerfile build stage downloads it to /fastembed_cache; runtime sets HF_HUB_OFFLINE=1; the build-time check calls default_embed), so a cold start never downloads it. Verified with docker build and the full pipeline in a container with --network none. Measured in the Linux container: peak RSS 186 MB (spaCy + WordNet + Wiktionary), 318 MB with the model loaded, 352 MB after scoring every candidate of 3 sentences with 40-60-sense verbs, vs Cloud Run's 512 MiB default; main.py doesn't import scoring yet, so production memory is unchanged until TASK-21. Compressed image grows from ~207 MB to ~333 MB (+126 MB): flagged for TASK-40 (Artifact Registry was 393 of 500 MB on 2026-09-28).
 
 Review round (2026-09-28): code review and AGENTS.md architectural review done; all 9 findings addressed: model baked into the image and loaded offline (HF_HUB_OFFLINE=1, build-time embed check); memory/image measured and flagged on TASK-40; ('deposit', 'prep_in') seed no longer includes 'container' (it tied the piggy-bank sense with the financial one: a fake pun); selectional preference skipped when any sense is from Wiktionary (no hypernym chain, so seeds can't judge it); adj.all test added; design doc/local-setup/README updated for fastembed; AC #4 reworded to match the design doc; TASK-21/TASK-2.4/TASK-32 notes added. Every rule verified by removing it (each fails at least one test).
+
+Review round 2 (Yai, 2026-09-29): ScoredSense now records the method that scored it ("selectional_preference" or "embedding_lesk"), exposed as PunSignal.method, so TASK-2.4 can calibrate on Lesk signals alone (selectional-preference margins are always 0 or 1) and TASK-21 can tell "fits the slot" from a cosine. _cosine uses numpy (now a direct dependency; same locked version). local-setup.md has an explicit one-time model download step. Two known limitations went to sense-selection.md's Open questions: Lesk margins shrink as a word gains senses (window 0.043, book 0.083 at the 0.1 placeholder; numbers on TASK-2.4), and binary seeds tie any food/money word after need/want ("I want more bread with my soup." margin 0), so they confirm a detector false positive instead of catching it (seeded-bystander risk noted on TASK-21). Artifact Registry: Yai OK'd merging over the free tier on promo credits; cleanup stays with TASK-40. Merged in #76 as cffd528.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Added inference/scoring.py: score_senses scores a candidate's senses against its TASK-18 slot with binary selectional preference (18 seeded slots, classes checked against OEWN) or, when there's no usable seed or any sense is from Wiktionary, embedding-Lesk via fastembed's all-MiniLM-L6-v2; pun_margin compares the top sense with the best sense of a different category (lexfile, or gloss distance for Wiktionary/adj.all senses) and reports sense_source (wiktionary if either sense is); has_pun_tension applies the placeholder MARGIN_THRESHOLD. The model is baked into the Docker image and loaded offline. Verified: 53/53 inference tests pass (13 scoring tests on hand-built senses and fake vectors, each rule confirmed covered by removing it), ruff clean, docker build with in-image checks, the full pipeline run offline in the container, and real-model runs ('The baker needed more dough.' -> margin 0.00, pun; 'She rolled the dough flat.' -> 0.43, not a pun). Peak memory 352 MB; compressed image +126 MB (flagged on TASK-40).
+Added inference/scoring.py: score_senses scores a candidate's senses against its TASK-18 slot with binary selectional preference (18 seeded slots, classes checked against OEWN) or, when there's no usable seed or any sense is from Wiktionary, embedding-Lesk via fastembed's all-MiniLM-L6-v2, and tags each score with the method used; pun_margin compares the top sense with the best sense of a different category (lexfile, or gloss distance for Wiktionary/adj.all senses) and reports sense_source (wiktionary if either sense is) and method; has_pun_tension applies the placeholder MARGIN_THRESHOLD, which only affects Lesk margins. The model is baked into the Docker image and loaded offline. Verified: 53/53 inference tests pass (12 scoring tests on hand-built senses and fake vectors, each rule confirmed covered by removing it), ruff clean, docker build with in-image checks, the full pipeline run offline in the container, and real-model runs ('The baker needed more dough.' -> margin 0.00, pun; 'She rolled the dough flat.' -> 0.43, not a pun). Peak memory 352 MB; compressed image +126 MB (TASK-40). Known limitations are in sense-selection.md's Open questions. Merged in #76 as cffd528.
 <!-- SECTION:FINAL_SUMMARY:END -->
