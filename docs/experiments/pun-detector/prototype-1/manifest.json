@@ -1,13 +1,13 @@
 {
-  "snapshot_date": "2026-09-30",
-  "note": "Existing prototype-1 training results; no retraining. Retired type-head experiments excluded.",
-  "dataset_sha256": "5406cd2a3bea034f3386a4de0144637e8b8de51efd6ebfc52195b3ac08507a11",
-  "model_artifact_sha256": "d2ff52f5c6b296f09996ce9c01a0415958b3ffdb0e12ff52744e05c5437a0bc7",
-  "files": {
-    "report.json": "7ef4a3e3dfd8847164210e983dee9c5a0630e9e0be633b90f3baa9318b693d41",
-    "splits.json": "3b753041bc6f4623323435ccf51ab997fb1887149670184183bc6f5d03a45239",
-    "test_predictions.jsonl": "808486d268be0bd8b660c4f32617fdd25131abdf8a6d71b74f57397076844754",
-    "model_metadata.json": "78776384867ae78a007d1625a5266ae7b48eada11f4088c2a4e8410bc82abdf4",
-    "confusion_matrices.json": "4293977c26af49dd3c312848f676dd82a7134bd8d14773e909d6fcf5cc15e52b"
-  }
+	"snapshot_date": "2026-09-30",
+	"note": "Existing prototype-1 training results; no retraining. Retired type-head experiments excluded.",
+	"dataset_sha256": "5406cd2a3bea034f3386a4de0144637e8b8de51efd6ebfc52195b3ac08507a11",
+	"model_artifact_sha256": "d2ff52f5c6b296f09996ce9c01a0415958b3ffdb0e12ff52744e05c5437a0bc7",
+	"files": {
+		"report.json": "7ef4a3e3dfd8847164210e983dee9c5a0630e9e0be633b90f3baa9318b693d41",
+		"splits.json": "3b753041bc6f4623323435ccf51ab997fb1887149670184183bc6f5d03a45239",
+		"test_predictions.jsonl": "808486d268be0bd8b660c4f32617fdd25131abdf8a6d71b74f57397076844754",
+		"model_metadata.json": "78776384867ae78a007d1625a5266ae7b48eada11f4088c2a4e8410bc82abdf4",
+		"confusion_matrices.json": "4293977c26af49dd3c312848f676dd82a7134bd8d14773e909d6fcf5cc15e52b"
+	}
 }
