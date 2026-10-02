@@ -5,6 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-10-02 10:04'
+updated_date: '2026-10-02 11:24'
 labels: []
 milestone: m-4
 dependencies:
@@ -32,6 +33,7 @@ PR 85 added `backend/src/tools/inference-fetch.ts`, a hand-written metadata-serv
 - [ ] #5 Tests cover the probabilities rule: summing to 1, agreeing with confidence, absent when the result is undetermined, and an omitted field accepted
 - [ ] #6 A comment on the Zod `probabilities` field says why it is optional
 - [ ] #7 `deploy-backend.yml` fails the step that resolves Inference's URL when the URL cannot be read
+- [ ] #8 Backend's own undetermined result (`UNDETERMINED_ANALYZE_RESULT`) carries `probabilities: null`, as docs/contracts.md describes the undetermined result, and a test pins it (found during TASK-57: it currently omits the key, which Frontend tolerates)
 <!-- AC:END -->
 
 ## Definition of Done
