@@ -150,10 +150,9 @@ export const analyzePunInputSchema = z.object({
 
 export interface AnalyzePunToolOptions {
 	/**
-	 * Makes the HTTP call to Inference. Injected so tests
-	 * answer /analyze without a live
-	 * Inference service, per docs/engineering-practices.md's "Backend in
-	 * isolation" section.
+	 * Makes the HTTP call to Inference. Injected so tests answer /analyze
+	 * without a live Inference service, per docs/engineering-practices.md's
+	 * "Backend in isolation" section.
 	 */
 	fetch: typeof fetch;
 	/** Inference's base URL (config.inferenceUrl); the tool POSTs to its /analyze. */
