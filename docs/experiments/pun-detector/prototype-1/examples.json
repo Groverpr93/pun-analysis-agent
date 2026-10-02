@@ -1,0 +1,86 @@
+{
+  "checked_on": "2026-09-30",
+  "method": "Actual POST /analyze responses from http://127.0.0.1:8001; no Gemini reply evaluated. Qualitative hand-selected examples, not a benchmark.",
+  "examples": [
+    {
+      "text": "The baker needed more dough.",
+      "output": {
+        "is_pun": true,
+        "pun_type": "homographic",
+        "words_involved": [
+          "dough"
+        ],
+        "explanation": "\"dough\" can mean a flour mixture stiff enough to knead or roll or informal terms for money. Both meanings match the seeded 'need' / 'dobj' slot. Their score difference is 0.000. This is a proposed interpretation, not proof that both readings work.",
+        "confidence": 0.9491107700529797,
+        "sense_source": "wordnet"
+      },
+      "assessment": "works"
+    },
+    {
+      "text": "The train arrives at six.",
+      "output": {
+        "is_pun": false,
+        "pun_type": null,
+        "words_involved": [],
+        "explanation": "",
+        "confidence": 0.019814836111344963,
+        "sense_source": null
+      },
+      "assessment": "works"
+    },
+    {
+      "text": "His computer mouse stopped working.",
+      "output": {
+        "is_pun": false,
+        "pun_type": null,
+        "words_involved": [],
+        "explanation": "",
+        "confidence": 0.12081950857032814,
+        "sense_source": null
+      },
+      "assessment": "works"
+    },
+    {
+      "text": "I used to be a baker, but I couldn't make enough dough — so I kneaded a change.",
+      "output": {
+        "is_pun": true,
+        "pun_type": "homographic",
+        "words_involved": [
+          "change"
+        ],
+        "explanation": "\"change\" can mean a different or fresh set of clothes or the action of changing something. Both definitions have positive similarity to the sentence. Their score difference is 0.002. This is a proposed interpretation, not proof that both readings work.",
+        "confidence": 0.9997822787240584,
+        "sense_source": "wordnet"
+      },
+      "assessment": "fails"
+    },
+    {
+      "text": "The tallest building in town is the library — it has thousands of stories.",
+      "output": {
+        "is_pun": true,
+        "pun_type": "homographic",
+        "words_involved": [
+          "building"
+        ],
+        "explanation": "\"building\" can mean a structure that has a roof and walls and stands more or less permanently in one place or the occupants of a building. Both definitions have positive similarity to the sentence. Their score difference is 0.092. This is a proposed interpretation, not proof that both readings work.",
+        "confidence": 0.9947767176493252,
+        "sense_source": "wordnet"
+      },
+      "assessment": "fails"
+    },
+    {
+      "text": "She wasn't sure she could bear another delay.",
+      "output": {
+        "is_pun": true,
+        "pun_type": "homographic",
+        "words_involved": [
+          "sure"
+        ],
+        "explanation": "\"sure\" can mean certain not to fail or having or feeling no doubt or uncertainty; confident and assured. Both definitions have positive similarity to the sentence. Their score difference is 0.030. This is a proposed interpretation, not proof that both readings work.",
+        "confidence": 0.6536550136583696,
+        "sense_source": "wordnet"
+      },
+      "assessment": "fails"
+    }
+  ]
+}

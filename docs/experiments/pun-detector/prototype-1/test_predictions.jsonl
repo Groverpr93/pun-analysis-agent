@@ -1,0 +1,605 @@
+{"text": "\" I'm halfway up a mountain , \" Tom alleged .", "label": "homophonic", "ids": ["het_1"], "category": "place", "prediction": "homophonic"}
+{"text": "I'd like to be a Chinese laborer , said Tom coolly .", "label": "homophonic", "ids": ["het_2"], "category": "general", "prediction": "homophonic"}
+{"text": "No , baby oil does NOT come from squeezing dead babies .", "label": "non_pun", "ids": ["het_3"], "category": "general", "prediction": "homophonic"}
+{"text": "Yesterday I accidentally swallowed some food coloring . The doctor says I'm OK , but I feel like I've dyed a little inside .", "label": "homophonic", "ids": ["het_13"], "category": "food", "prediction": "homophonic"}
+{"text": "Diets are for people who are thick and tired of it all .", "label": "homophonic", "ids": ["het_25"], "category": "person", "prediction": "homographic"}
+{"text": "When Socrates needed to buy food he went to the grocery stoa .", "label": "homophonic", "ids": ["het_26"], "category": "food", "prediction": "homophonic"}
+{"text": "The cobbler was asked how many shoes he had soled by a well", "label": "homophonic", "ids": ["het_28"], "category": "general", "prediction": "homophonic"}
+{"text": "Features should be discovered , not documented !", "label": "non_pun", "ids": ["het_30"], "category": "general", "prediction": "non_pun"}
+{"text": "Let's all play an A , a C sharp , and an E , cried Tom's band with one accord .", "label": "homophonic", "ids": ["het_33"], "category": "general", "prediction": "homophonic"}
+{"text": "What kind of flooring do alligator hunters use ? Reptiles !", "label": "homophonic", "ids": ["het_46"], "category": "general", "prediction": "homophonic"}
+{"text": "When his clothes dryer broke he was lint another one .", "label": "homophonic", "ids": ["het_49"], "category": "general", "prediction": "homographic"}
+{"text": "Cows make noise only when they're in the mood .", "label": "homophonic", "ids": ["het_51"], "category": "animal", "prediction": "homographic"}
+{"text": "Children can do some knotty things with string .", "label": "homophonic", "ids": ["het_77"], "category": "person", "prediction": "homographic"}
+{"text": "I'm from a Humberside port , said Tom ghoulishly .", "label": "homophonic", "ids": ["het_89"], "category": "general", "prediction": "homophonic"}
+{"text": "My name is Matt . I'm a doorman .", "label": "homophonic", "ids": ["het_97"], "category": "abstract", "prediction": "homographic"}
+{"text": "The self - conscious shipbuilder tried to recruit extremely sycophantic sailors to compliment her newly designed destroyer .", "label": "homophonic", "ids": ["het_113"], "category": "general", "prediction": "homophonic"}
+{"text": "In the dark ? Follow the son .", "label": "homophonic", "ids": ["het_119"], "category": "general", "prediction": "non_pun"}
+{"text": "I used to do rock climbing as a youth , but I was much boulder back then .", "label": "homophonic", "ids": ["het_123"], "category": "general", "prediction": "homographic"}
+{"text": "Some childen are often on their pest behavior .", "label": "homophonic", "ids": ["het_125"], "category": "general", "prediction": "homophonic"}
+{"text": "When gossip finally led to the landlady's arrest for murdering her tenants and scattering parts of their bodies around town , her only comment was , \" Well , that's what comes of spreading roomers . \"", "label": "homophonic", "ids": ["het_126"], "category": "place", "prediction": "homophonic"}
+{"text": "\" I have to keep this fire alight , \" Tom bellowed .", "label": "homophonic", "ids": ["het_145"], "category": "nature", "prediction": "homophonic"}
+{"text": "Dentist's famous last words : \" You won't feel a thing . . . \"", "label": "non_pun", "ids": ["het_147"], "category": "abstract", "prediction": "homographic"}
+{"text": "A reconciled friend is a double enemy .", "label": "non_pun", "ids": ["het_167"], "category": "person", "prediction": "non_pun"}
+{"text": "She became an art dealer because she wanted more Monet .", "label": "homophonic", "ids": ["het_168"], "category": "general", "prediction": "homographic"}
+{"text": "7 days without prayer makes 1 weak", "label": "homophonic", "ids": ["het_174"], "category": "time", "prediction": "homophonic"}
+{"text": "\" I swallowed some of the glass from that broken window , \" Tom said painfully .", "label": "homophonic", "ids": ["het_187"], "category": "object", "prediction": "homophonic"}
+{"text": "If you want the last word with a woman , apologize .", "label": "non_pun", "ids": ["het_205"], "category": "person", "prediction": "non_pun"}
+{"text": "If you ride a bus you have to pay your fare share .", "label": "homophonic", "ids": ["het_219"], "category": "object", "prediction": "homographic"}
+{"text": "If you work in a bakery you may have to take on many roles .", "label": "homophonic", "ids": ["het_221"], "category": "abstract", "prediction": "homophonic"}
+{"text": "A perfectly spherical pumpkin makes good pi .", "label": "homophonic", "ids": ["het_239"], "category": "general", "prediction": "homophonic"}
+{"text": "The overweight fighter pilot was grounded for violating the rules of engorgement .", "label": "homophonic", "ids": ["het_244"], "category": "general", "prediction": "homographic"}
+{"text": "The proof of the pudding is in the eating .", "label": "non_pun", "ids": ["het_266"], "category": "food", "prediction": "non_pun"}
+{"text": "\" This is where I keep my arrows , \" said Tom quiveringly .", "label": "homophonic", "ids": ["het_270"], "category": "general", "prediction": "homophonic"}
+{"text": "Some days you get the bear , other days the bear gets you .", "label": "non_pun", "ids": ["het_274"], "category": "animal", "prediction": "homographic"}
+{"text": "Never mind the star , get those camels off my lawn !", "label": "non_pun", "ids": ["het_279"], "category": "nature", "prediction": "homographic"}
+{"text": "The mad scientist in the old castle had a strange secret ? but he kept it under his bat .", "label": "homophonic", "ids": ["het_283"], "category": "general", "prediction": "homophonic"}
+{"text": "A teacher having a tough time longs for the end of the school daze .", "label": "homophonic", "ids": ["het_284"], "category": "person", "prediction": "homographic"}
+{"text": "The Keystone Kops were frequently criticized for excessive use of farce .", "label": "homophonic", "ids": ["het_285"], "category": "general", "prediction": "homophonic"}
+{"text": "First Rule of Intelligent Tinkering - Save all parts", "label": "non_pun", "ids": ["het_290"], "category": "general", "prediction": "homographic"}
+{"text": "Scientists studying the sun have a flare for research .", "label": "homophonic", "ids": ["het_292"], "category": "nature", "prediction": "homographic"}
+{"text": "The chickens were distraught when the tornado destroyed their home . Hopefully they will be able to recoup .", "label": "homophonic", "ids": ["het_299"], "category": "animal", "prediction": "homophonic"}
+{"text": "The fish were shy - obviously koi .", "label": "homophonic", "ids": ["het_301"], "category": "animal", "prediction": "homophonic"}
+{"text": "A skunk fell in the river and stank to the bottom .", "label": "homophonic", "ids": ["het_303"], "category": "place", "prediction": "homophonic"}
+{"text": "A good baker will rise to the occasion , it's the yeast he can do .", "label": "homophonic", "ids": ["het_311"], "category": "general", "prediction": "homographic"}
+{"text": "The vendor at the Arab market resented how I haggled and told me to take a haik .", "label": "homophonic", "ids": ["het_313"], "category": "general", "prediction": "homophonic"}
+{"text": "Some people who cut hair can be quite barbarous .", "label": "homophonic", "ids": ["het_315"], "category": "person", "prediction": "homographic"}
+{"text": "The man leaned on the printer cartridge because he wanted to tone up his abs .", "label": "homophonic", "ids": ["het_322"], "category": "person", "prediction": "homographic"}
+{"text": "Partying Saturday and Sunday leaves me feeling weakened .", "label": "homophonic", "ids": ["het_329"], "category": "general", "prediction": "homophonic"}
+{"text": "Because they moved into an apartment , they didn't need to cut the grass any mow .", "label": "homophonic", "ids": ["het_332"], "category": "nature", "prediction": "homophonic"}
+{"text": "\" Once upon a time there was a beautiful princess , \" Tom began grimly .", "label": "homophonic", "ids": ["het_345"], "category": "time", "prediction": "homophonic"}
+{"text": "The new father of quintuplets could hardly believe his own census .", "label": "homophonic", "ids": ["het_364"], "category": "person", "prediction": "homographic"}
+{"text": "If you want those ashes , you'll have to urn them .", "label": "homophonic", "ids": ["het_396"], "category": "general", "prediction": "homographic"}
+{"text": "Is there a lawyer in the house ? < BLAM ! > Is there another ?", "label": "non_pun", "ids": ["het_407"], "category": "place", "prediction": "non_pun"}
+{"text": "Old cotton - pickers never die . They just bale out .", "label": "homophonic", "ids": ["het_408"], "category": "general", "prediction": "homographic"}
+{"text": "Russia was slow to recover after WW2 because it kept Stalin around .", "label": "homophonic", "ids": ["het_409"], "category": "general", "prediction": "homophonic"}
+{"text": "\" Why shouldn't I stir my coffee with a ballpoint pen ? \" Tom bickered .", "label": "homophonic", "ids": ["het_412"], "category": "food", "prediction": "homophonic"}
+{"text": "If roosters saw how hens are treated they'd turn over in their gravy .", "label": "homophonic", "ids": ["het_421"], "category": "animal", "prediction": "homographic"}
+{"text": "May the 4th be with you .", "label": "homophonic", "ids": ["het_434"], "category": "general", "prediction": "non_pun"}
+{"text": "Mickey Mouse gives some people Disney spells .", "label": "homophonic", "ids": ["het_444"], "category": "animal", "prediction": "homophonic"}
+{"text": "The nudist defended himself by citing his Constitutional right to bare arms .", "label": "homophonic", "ids": ["het_445"], "category": "general", "prediction": "homographic"}
+{"text": "Piano players are considered to be Baldwin they lose their hair .", "label": "homophonic", "ids": ["het_449"], "category": "body", "prediction": "homographic"}
+{"text": "The race horse went lame early . It was the first out of its gait .", "label": "homophonic", "ids": ["het_451"], "category": "animal", "prediction": "homographic"}
+{"text": "My pet bird can predict the future . He is an omen pigeon .", "label": "homophonic", "ids": ["het_458"], "category": "animal", "prediction": "homophonic"}
+{"text": "\" I'm waiting to see the doctor , \" said Tom patiently .", "label": "homophonic", "ids": ["het_459"], "category": "person", "prediction": "homophonic"}
+{"text": "If this were an actual tagline , it would be funny .", "label": "non_pun", "ids": ["het_474"], "category": "general", "prediction": "non_pun"}
+{"text": "Let's go to the gym and weight a while .", "label": "homophonic", "ids": ["het_502"], "category": "general", "prediction": "non_pun"}
+{"text": "To emphasize that someone is a stranger : \" As we used to say in the cheese industry , I don't know him from Edam . \"", "label": "homophonic", "ids": ["het_513"], "category": "food", "prediction": "homophonic"}
+{"text": "What did the nice girl say when her date invited her home to see his stamp collection ?'Philately will get you nowhere'.", "label": "homophonic", "ids": ["het_520"], "category": "person", "prediction": "homophonic"}
+{"text": "Selling gasoline too cheaply would be fuelish .", "label": "homophonic", "ids": ["het_544"], "category": "general", "prediction": "homophonic"}
+{"text": "\" This steamroller is amazing , \" said Tom flatteringly .", "label": "homophonic", "ids": ["het_558"], "category": "general", "prediction": "homophonic"}
+{"text": "Better go about than fall into the ditch .", "label": "non_pun", "ids": ["het_563"], "category": "general", "prediction": "non_pun"}
+{"text": "On the old trains the engineer had a lot of esteem .", "label": "homophonic", "ids": ["het_573"], "category": "object", "prediction": "homographic"}
+{"text": "\" I presented my case to the judge , \" Tom said briefly .", "label": "homophonic", "ids": ["het_582"], "category": "general", "prediction": "homographic"}
+{"text": "Why did the dairy churn ? The less said , the butter . . .", "label": "homophonic", "ids": ["het_586"], "category": "general", "prediction": "homographic"}
+{"text": "Avoid the 5 o'clock rush - always leave work at noon .", "label": "non_pun", "ids": ["het_590"], "category": "object", "prediction": "homophonic"}
+{"text": "The squeaky wheel gets the grease .", "label": "non_pun", "ids": ["het_594"], "category": "general", "prediction": "homophonic"}
+{"text": "This is a good bra , she said upliftingly .", "label": "homophonic", "ids": ["het_601"], "category": "general", "prediction": "non_pun"}
+{"text": "A problem shared is a problem halved .", "label": "non_pun", "ids": ["het_604"], "category": "abstract", "prediction": "non_pun"}
+{"text": "\" I'd like to be a Chinese labourer , \" said Tom coolly .", "label": "homophonic", "ids": ["het_607"], "category": "general", "prediction": "homophonic"}
+{"text": "She was only a Carpenter's daughter , but she knows every vise .", "label": "homophonic", "ids": ["het_609"], "category": "general", "prediction": "homophonic"}
+{"text": "I'm single , Tom said wanly .", "label": "homophonic", "ids": ["het_649"], "category": "general", "prediction": "homophonic"}
+{"text": "\" Let's take a vacation in the south of France , \" said Tom nicely .", "label": "homophonic", "ids": ["het_651"], "category": "general", "prediction": "homophonic"}
+{"text": "Humpty Dumpty was pushed ! Well , I saw it on X - Files . . . .", "label": "non_pun", "ids": ["het_660"], "category": "general", "prediction": "homographic"}
+{"text": "Take me to the dance , Tom bawled .", "label": "homophonic", "ids": ["het_669"], "category": "general", "prediction": "homophonic"}
+{"text": "While attempting to decipher complicated technical instructions : \" It's all Geek to me . \"", "label": "homophonic", "ids": ["het_674"], "category": "general", "prediction": "homographic"}
+{"text": "When the creator of Tarzan wrote about Pellucidar and other Earth - core stories , was it Edgar Rice burrows ?", "label": "homophonic", "ids": ["het_684"], "category": "food", "prediction": "homophonic"}
+{"text": "OLD FARMERS never die , they just spade away .", "label": "homophonic", "ids": ["het_698"], "category": "general", "prediction": "homophonic"}
+{"text": "Finding all possible logical relations between a finite collection of sets is not a matter of If but Venn .", "label": "homophonic", "ids": ["het_700", "het_1039"], "category": "general", "prediction": "non_pun"}
+{"text": "My name is Gail . I'm a meteorologist", "label": "homophonic", "ids": ["het_705"], "category": "abstract", "prediction": "homographic"}
+{"text": "A hay farmer in jail could get out on bale .", "label": "homophonic", "ids": ["het_709"], "category": "general", "prediction": "homophonic"}
+{"text": "An alien landed at a soft drink company and said'take me to your liter'.", "label": "homophonic", "ids": ["het_721"], "category": "food", "prediction": "homophonic"}
+{"text": "The sheep robber was caught on the lamb .", "label": "homophonic", "ids": ["het_724"], "category": "animal", "prediction": "homophonic"}
+{"text": "His wife loved pottery making but for him it was just kiln time .", "label": "homophonic", "ids": ["het_725"], "category": "person", "prediction": "homophonic"}
+{"text": "Life is a puzzle ; look here for the missing peace .", "label": "homophonic", "ids": ["het_736"], "category": "abstract", "prediction": "non_pun"}
+{"text": "World Ends at 3pm ; Film at 5 on WLKY Early News . . . .", "label": "non_pun", "ids": ["het_739"], "category": "general", "prediction": "non_pun"}
+{"text": "Old programmers never die , they just can't C as well .", "label": "homophonic", "ids": ["het_751"], "category": "general", "prediction": "homographic"}
+{"text": "\" I'm the butcher's assistant , \" said Tom cuttingly .", "label": "homophonic", "ids": ["het_757"], "category": "general", "prediction": "homophonic"}
+{"text": "Insanity is doing the same thing over and over , expecting different results .", "label": "non_pun", "ids": ["het_766"], "category": "general", "prediction": "homographic"}
+{"text": "We give nothing as willingly as our advice .", "label": "non_pun", "ids": ["het_772"], "category": "general", "prediction": "non_pun"}
+{"text": "She was only a Grape picker's daughter , but she was never Chablis dressed .", "label": "homophonic", "ids": ["het_799"], "category": "food", "prediction": "homophonic"}
+{"text": "Sometimes a pregnancy is so long it seems like a maternity .", "label": "homophonic", "ids": ["het_807"], "category": "general", "prediction": "homophonic"}
+{"text": "I used up all my sick days , so I'm calling in dead .", "label": "non_pun", "ids": ["het_809"], "category": "time", "prediction": "homographic"}
+{"text": "The dentist decided he was going to try a new path to fame and fortune , and this time he would choose a different root .", "label": "homophonic", "ids": ["het_821"], "category": "time", "prediction": "homographic"}
+{"text": "Revenge is a dish best served cold .", "label": "non_pun", "ids": ["het_823"], "category": "general", "prediction": "non_pun"}
+{"text": "Please mix me a martini , said Tom , dryly .", "label": "homophonic", "ids": ["het_824"], "category": "general", "prediction": "homophonic"}
+{"text": "\" I'm just going to put these handcuffs on you , \" said Tom manically .", "label": "homophonic", "ids": ["het_829"], "category": "general", "prediction": "homophonic"}
+{"text": "You'll never conquer me , Goliath said stonily .", "label": "homophonic", "ids": ["het_830"], "category": "general", "prediction": "homophonic"}
+{"text": "If you don't have anything nice to say , don't say anything at all .", "label": "non_pun", "ids": ["het_850"], "category": "general", "prediction": "non_pun"}
+{"text": "Podiatrist malpractice : Callous neglect", "label": "homophonic", "ids": ["het_852"], "category": "general", "prediction": "homophonic"}
+{"text": "Those whose child is going through a'phase'may wish they had a phaser .", "label": "homophonic", "ids": ["het_857"], "category": "person", "prediction": "homophonic"}
+{"text": "He cussed in his sleep all night and woke up all swore out .", "label": "homophonic", "ids": ["het_859"], "category": "time", "prediction": "homographic"}
+{"text": "My name is Les . I'm a dietician", "label": "homophonic", "ids": ["het_876"], "category": "abstract", "prediction": "homographic"}
+{"text": "I was completely exonerated , said Tom clearly .", "label": "homophonic", "ids": ["het_889"], "category": "general", "prediction": "homophonic"}
+{"text": "Dr . Jekyll's more successful second formula turned him into a world - class sprinter rather than a violent psychopath , proving that you can run but you can't always Hyde .", "label": "homophonic", "ids": ["het_891"], "category": "general", "prediction": "homophonic"}
+{"text": "The door swings both ways .", "label": "non_pun", "ids": ["het_894"], "category": "object", "prediction": "homographic"}
+{"text": "My name is Belle . I play the carillon .", "label": "homophonic", "ids": ["het_904"], "category": "abstract", "prediction": "homophonic"}
+{"text": "My name is Bea . I'm in the honey business . .", "label": "homophonic", "ids": ["het_912"], "category": "abstract", "prediction": "homographic"}
+{"text": "Hard words break no bones .", "label": "non_pun", "ids": ["het_918"], "category": "abstract", "prediction": "non_pun"}
+{"text": "I'll get to it on the 2nd Tuesday of next week .", "label": "non_pun", "ids": ["het_927"], "category": "time", "prediction": "homographic"}
+{"text": "I love hockey , said Tom , puckishly .", "label": "homophonic", "ids": ["het_934"], "category": "abstract", "prediction": "homophonic"}
+{"text": "There is nothing more precious than time and nothing more prodigally wasted .", "label": "non_pun", "ids": ["het_938"], "category": "time", "prediction": "non_pun"}
+{"text": "After delivering a presentation last fall , I sent a message to friends who were unable to attend . The report concluded : \" A good time was heard by all . \"", "label": "homophonic", "ids": ["het_944"], "category": "person", "prediction": "homographic"}
+{"text": "A woman's work is never done .", "label": "non_pun", "ids": ["het_947"], "category": "person", "prediction": "homographic"}
+{"text": "Don't make the same mistake twice .", "label": "non_pun", "ids": ["het_957"], "category": "general", "prediction": "non_pun"}
+{"text": "I have seen the data . . . now bring me some I can agree with", "label": "non_pun", "ids": ["het_961"], "category": "general", "prediction": "non_pun"}
+{"text": "This message written with recycled electrons .", "label": "non_pun", "ids": ["het_963"], "category": "general", "prediction": "homophonic"}
+{"text": "\" I wonder where the next character is going to appear , \" said Tom with a cursory glance .", "label": "homophonic", "ids": ["het_971"], "category": "general", "prediction": "homophonic"}
+{"text": "I always had wanted to know how ships really worked , and now I finally was going to sea .", "label": "homophonic", "ids": ["het_974"], "category": "place", "prediction": "homographic"}
+{"text": "People who hate the marines are rotten to the corps .", "label": "homophonic", "ids": ["het_985"], "category": "person", "prediction": "homophonic"}
+{"text": "You never know what you can do until you try .", "label": "non_pun", "ids": ["het_988"], "category": "general", "prediction": "non_pun"}
+{"text": "\" I visit my parents every Sunday , \" said Tom weakly .", "label": "homophonic", "ids": ["het_1002"], "category": "general", "prediction": "homophonic"}
+{"text": "When I asked him whether we ought to climb the steep hill , he started up the incline and , in ascent , said , \" Yes . \"", "label": "homophonic", "ids": ["het_1012"], "category": "general", "prediction": "homographic"}
+{"text": "As anyone who has ever lived in the area can tell you , life is different in Montana . Since golf courses are often placed in areas ideal for hunting , most golfers carry a hunting rifle in their golf bag and when the opportunity presents itself combine their two favorite pastimes . Recently one such sportsman got lost and had to stop for directions asking , \" Which way to the lynx . \"", "label": "homophonic", "ids": ["het_1018"], "category": "object", "prediction": "homophonic"}
+{"text": "I had such a bad cold , I thought I was coffin to death .", "label": "homophonic", "ids": ["het_1020"], "category": "abstract", "prediction": "homophonic"}
+{"text": "' Sweeney Todd'is a good source of sheer terror .", "label": "homophonic", "ids": ["het_1030"], "category": "general", "prediction": "homographic"}
+{"text": "It was such a big piece of gold , he didn't know what to assay .", "label": "homophonic", "ids": ["het_1033"], "category": "general", "prediction": "homographic"}
+{"text": "My dog swallowed my engagement ring . I ended up with a diamond in the ruff .", "label": "homophonic", "ids": ["het_1042"], "category": "animal", "prediction": "homophonic"}
+{"text": "My grandmother learned grammar by wrote .", "label": "homophonic", "ids": ["het_1049"], "category": "general", "prediction": "homophonic"}
+{"text": "The shoemaker did not deny his apprentice anything he needed . He gave his awl .", "label": "homophonic", "ids": ["het_1053"], "category": "general", "prediction": "homophonic"}
+{"text": "Absent the fungus , the story had no morel", "label": "homophonic", "ids": ["het_1057"], "category": "general", "prediction": "homophonic"}
+{"text": "This is some pretty good tapioca . That's one way of pudding it .", "label": "homophonic", "ids": ["het_1063"], "category": "general", "prediction": "homographic"}
+{"text": "Try our Sundays , they ? re better than Baskin Robbins", "label": "homophonic", "ids": ["het_1075"], "category": "general", "prediction": "homophonic"}
+{"text": "' I got lost in the streets of Paris ,'he said ruefully .", "label": "homophonic", "ids": ["het_1089"], "category": "place", "prediction": "homophonic"}
+{"text": "OLD SAUSAGE MAKERS never die , they just take a turn for the wurst .", "label": "homophonic", "ids": ["het_1113"], "category": "general", "prediction": "homographic"}
+{"text": "He rose through the ranks of the International Corn Growers association , eventually becoming a kernel .", "label": "homophonic", "ids": ["het_1114"], "category": "food", "prediction": "homographic"}
+{"text": "A scientist who wanted a tattoo got a skin graph .", "label": "homophonic", "ids": ["het_1115"], "category": "general", "prediction": "homographic"}
+{"text": "She must be wearing mink , Tom inferred .", "label": "homophonic", "ids": ["het_1126"], "category": "general", "prediction": "homophonic"}
+{"text": "\" I've got sand in my dinner , \" said Tom grittily .", "label": "homophonic", "ids": ["het_1127"], "category": "general", "prediction": "homophonic"}
+{"text": "A kangaroo that can't jump is completely hopless .", "label": "homophonic", "ids": ["het_1136"], "category": "general", "prediction": "homographic"}
+{"text": "When the cat is away , the mice will play .", "label": "non_pun", "ids": ["het_1139"], "category": "animal", "prediction": "non_pun"}
+{"text": "The mathematics professor , lamenting his students'lackadaisical approach to trigonometry , sighed , \" It's a sine of the times . \"", "label": "homophonic", "ids": ["het_1141"], "category": "time", "prediction": "homophonic"}
+{"text": "There was a guy who played the organ in his garden to get organically grown food .", "label": "homophonic", "ids": ["het_1142"], "category": "food", "prediction": "homophonic"}
+{"text": "A candle loses nothing by lighting another candle .", "label": "non_pun", "ids": ["het_1146"], "category": "general", "prediction": "non_pun"}
+{"text": "\" Who discovered radium ? \" asked Tom curiously .", "label": "homophonic", "ids": ["het_1159"], "category": "general", "prediction": "homophonic"}
+{"text": "There is nothing new under the sun .", "label": "non_pun", "ids": ["het_1169"], "category": "nature", "prediction": "non_pun"}
+{"text": "I am the Marlboro Man of Borg . I ( cough ) will assim - ( choke , wheeze ) . .", "label": "non_pun", "ids": ["het_1178"], "category": "person", "prediction": "homophonic"}
+{"text": "Laws catch flies , but lets hornets go free .", "label": "non_pun", "ids": ["het_1182"], "category": "general", "prediction": "non_pun"}
+{"text": "\" Nobody has scored yet in the tennis game , \" said Tom lovingly .", "label": "homophonic", "ids": ["het_1183"], "category": "general", "prediction": "homophonic"}
+{"text": "When walking through a pig barn be careful how you maneuver .", "label": "homophonic", "ids": ["het_1184"], "category": "animal", "prediction": "homographic"}
+{"text": "\" Stop , horse ! Stop ! \" cried Tom woefully .", "label": "homophonic", "ids": ["het_1186"], "category": "animal", "prediction": "homophonic"}
+{"text": "Insanity is just a state of mind .", "label": "non_pun", "ids": ["het_1187"], "category": "general", "prediction": "homophonic"}
+{"text": "A miss by an inch is a miss by a mile .", "label": "non_pun", "ids": ["het_1191"], "category": "general", "prediction": "homophonic"}
+{"text": "A doctor who fell on his funny bone had a nurse tell him it was a humerus incident .", "label": "homophonic", "ids": ["het_1195"], "category": "person", "prediction": "homographic"}
+{"text": "Good laws have sprung from bad customs .", "label": "non_pun", "ids": ["het_1211"], "category": "general", "prediction": "homographic"}
+{"text": "The first time wine taster had a blanc stare on his face .", "label": "homophonic", "ids": ["het_1218"], "category": "food", "prediction": "homophonic"}
+{"text": "The bullfighter's display of timidity left macho to be desired .", "label": "homophonic", "ids": ["het_1225"], "category": "general", "prediction": "homographic"}
+{"text": "You can't trust a tiger . You never know when he might be lion .", "label": "homophonic", "ids": ["het_1232"], "category": "animal", "prediction": "non_pun"}
+{"text": "Fight Truth Decay ? Study The Bible Daily", "label": "homophonic", "ids": ["het_1238"], "category": "abstract", "prediction": "non_pun"}
+{"text": "Advisers run no risks .", "label": "non_pun", "ids": ["het_1240"], "category": "general", "prediction": "non_pun"}
+{"text": "The editor inserted a caret in the recipe .", "label": "homophonic", "ids": ["het_1262"], "category": "general", "prediction": "homophonic"}
+{"text": "\" Cosign here , \" read the first instruction on the trigonometry placement exam .", "label": "homophonic", "ids": ["het_1264"], "category": "general", "prediction": "homophonic"}
+{"text": "OLD SLAVS never die , they just czech out .", "label": "homophonic", "ids": ["het_1273"], "category": "general", "prediction": "homophonic"}
+{"text": "My name is Mary . I'm a justice of the peace .", "label": "homophonic", "ids": ["het_1280"], "category": "abstract", "prediction": "homographic"}
+{"text": "Carmen is my favorite opera , said Tom busily .", "label": "homophonic", "ids": ["het_1285"], "category": "general", "prediction": "homophonic"}
+{"text": "I really regretted the inconsiderate comment I made . It was rued .", "label": "homophonic", "ids": ["het_1290"], "category": "general", "prediction": "homophonic"}
+{"text": "The first scientists who studied fog were mistified .", "label": "homophonic", "ids": ["het_1305"], "category": "general", "prediction": "homographic"}
+{"text": "Fortune favors the brave .", "label": "non_pun", "ids": ["het_1313"], "category": "general", "prediction": "non_pun"}
+{"text": "Have you ever been whitewater rafting ? Tom asked rapidly .", "label": "homophonic", "ids": ["het_1319"], "category": "general", "prediction": "homophonic"}
+{"text": "An explosion at the meat packing plant caused quite a meatier shower .", "label": "homophonic", "ids": ["het_1322"], "category": "food", "prediction": "homographic"}
+{"text": "Look after the pennies and the pounds will look after themselves .", "label": "non_pun", "ids": ["het_1324"], "category": "general", "prediction": "homophonic"}
+{"text": "That's no beagle ; that's a mongrel , Tom muttered .", "label": "homophonic", "ids": ["het_1328"], "category": "general", "prediction": "homophonic"}
+{"text": "\" It's a unit of electric current , \" said Tom amply .", "label": "homophonic", "ids": ["het_1342"], "category": "general", "prediction": "homophonic"}
+{"text": "Many people are strongly attracted to a magnate .", "label": "homophonic", "ids": ["het_1349"], "category": "person", "prediction": "homophonic"}
+{"text": "Tact is for weenies .", "label": "non_pun", "ids": ["het_1357"], "category": "general", "prediction": "non_pun"}
+{"text": "Another batch of shells for me ! Tom clamored .", "label": "homophonic", "ids": ["het_1363"], "category": "general", "prediction": "homographic"}
+{"text": "Yes , I have been reading Voltaire , Tom admitted candidly .", "label": "homophonic", "ids": ["het_1364"], "category": "general", "prediction": "homophonic"}
+{"text": "\" Please return stewardess to original upright position \"", "label": "non_pun", "ids": ["het_1376"], "category": "general", "prediction": "homographic"}
+{"text": "OLD WEATHERMEN never die , they reign forever .", "label": "homophonic", "ids": ["het_1380"], "category": "general", "prediction": "homographic"}
+{"text": "I was kicked out of math class for one too many infractions .", "label": "homophonic", "ids": ["het_1389"], "category": "general", "prediction": "homographic"}
+{"text": "OLD DIETICIANS never die , they just waist away", "label": "homophonic", "ids": ["het_1394"], "category": "general", "prediction": "homographic"}
+{"text": "At a flower show the first prize is often a bloom ribbon .", "label": "homophonic", "ids": ["het_1395"], "category": "nature", "prediction": "homophonic"}
+{"text": "In War of the Worlds , humans survived the attack because of their unalienable right to life .", "label": "homophonic", "ids": ["het_1398"], "category": "person", "prediction": "homophonic"}
+{"text": "My name is Doug , I'm a grave digger", "label": "homophonic", "ids": ["het_1405"], "category": "abstract", "prediction": "homographic"}
+{"text": "On cooking shows , there is little margarine of error .", "label": "homophonic", "ids": ["het_1412"], "category": "general", "prediction": "homophonic"}
+{"text": "I've made up my mind to re - lay my lawn . It was a turf decision .", "label": "homophonic", "ids": ["het_1421"], "category": "general", "prediction": "homographic"}
+{"text": "I met a man who loves eating couches . I think he has a suite tooth .", "label": "homophonic", "ids": ["het_1427"], "category": "food", "prediction": "homographic"}
+{"text": "\" This is mutiny ! \" said Tom bountifully .", "label": "homophonic", "ids": ["het_1433"], "category": "general", "prediction": "homophonic"}
+{"text": "\" Rowing hurts my hands , \" said Tom callously .", "label": "homophonic", "ids": ["het_1436"], "category": "body", "prediction": "homophonic"}
+{"text": "Why was six afraid of seven ? Because seven eight nine .", "label": "homophonic", "ids": ["het_1463"], "category": "general", "prediction": "non_pun"}
+{"text": "Some women stay single and others are the Marion kind .", "label": "homophonic", "ids": ["het_1472"], "category": "person", "prediction": "homographic"}
+{"text": "I'm not sure about Heisenberg , said Tom uncertainly .", "label": "homophonic", "ids": ["het_1477"], "category": "general", "prediction": "homophonic"}
+{"text": "Give a dog a bad name and he'll live up to it .", "label": "non_pun", "ids": ["het_1496"], "category": "animal", "prediction": "homographic"}
+{"text": "Wow , thanks for the tea . I'm glad I got to Chai it .", "label": "homophonic", "ids": ["het_1502"], "category": "food", "prediction": "homophonic"}
+{"text": "One should be cherry of virgins .", "label": "homophonic", "ids": ["het_1507"], "category": "general", "prediction": "non_pun"}
+{"text": "\" This boat is leaking , \" said Tom balefully .", "label": "homophonic", "ids": ["het_1532"], "category": "general", "prediction": "homographic"}
+{"text": "Some people have to get up for work at the crank of dawn .", "label": "homophonic", "ids": ["het_1539"], "category": "person", "prediction": "homographic"}
+{"text": "Go ahead , correct my typos . I'll make more .", "label": "non_pun", "ids": ["het_1551"], "category": "general", "prediction": "non_pun"}
+{"text": "At shearing time there are some sheep thrills .", "label": "homophonic", "ids": ["het_1556"], "category": "animal", "prediction": "homophonic"}
+{"text": "Our theft of raw gold from the mine site was a fiasco because , as we jumped into the getaway boat , we dropped the ore .", "label": "homophonic", "ids": ["het_1558"], "category": "general", "prediction": "homographic"}
+{"text": "A store is no sore .", "label": "non_pun", "ids": ["het_1562"], "category": "place", "prediction": "homophonic"}
+{"text": "Kill them all ! . . . . Let God sort them out .", "label": "non_pun", "ids": ["het_1565"], "category": "general", "prediction": "non_pun"}
+{"text": "She was only a Postman's daughter , but she sure knew her males .", "label": "homophonic", "ids": ["het_1579"], "category": "general", "prediction": "homographic"}
+{"text": "A man attempting to walk around the world DROWNED today . .", "label": "non_pun", "ids": ["het_1584"], "category": "person", "prediction": "homophonic"}
+{"text": "Junk - stuff we throw away . Stuff - junk we keep .", "label": "non_pun", "ids": ["het_1585"], "category": "general", "prediction": "non_pun"}
+{"text": "Vampires are always looking for their necks victim .", "label": "homophonic", "ids": ["het_1598"], "category": "general", "prediction": "homographic"}
+{"text": "We found a dead crow in our front yard but have yet to hear the caws of death .", "label": "homophonic", "ids": ["het_1600"], "category": "abstract", "prediction": "homographic"}
+{"text": "The trucker was always irritated at an inspection station , it was the weight that bothered him .", "label": "homophonic", "ids": ["het_1602"], "category": "general", "prediction": "homographic"}
+{"text": "OLD SCOTSMEN never die , but they can be kilt .", "label": "homophonic", "ids": ["het_1610"], "category": "general", "prediction": "homophonic"}
+{"text": "As a young boy , Brutus'mother often cautioned him not to run with Caesars .", "label": "homophonic", "ids": ["het_1614"], "category": "person", "prediction": "homophonic"}
+{"text": "Business is business .", "label": "non_pun", "ids": ["het_1620"], "category": "general", "prediction": "non_pun"}
+{"text": "If you have nothing to say , please only say it once !", "label": "non_pun", "ids": ["het_1623"], "category": "general", "prediction": "non_pun"}
+{"text": "The percussionist was very good at analyzing symbols .", "label": "homophonic", "ids": ["het_1624"], "category": "general", "prediction": "homographic"}
+{"text": "Praise the day at sunset .", "label": "non_pun", "ids": ["het_1632"], "category": "time", "prediction": "homophonic"}
+{"text": "\" I'm on social security , \" said Tom dolefully .", "label": "homophonic", "ids": ["het_1636"], "category": "general", "prediction": "homographic"}
+{"text": "\" I have a gift for you , \" said Tom presently .", "label": "homophonic", "ids": ["het_1642"], "category": "general", "prediction": "homophonic"}
+{"text": "Those changing baby diapers sometimes act rashly .", "label": "homophonic", "ids": ["het_1659"], "category": "general", "prediction": "homographic"}
+{"text": "John plans to retire in the spring and , like the trees around us , will be leafing .", "label": "homophonic", "ids": ["het_1663"], "category": "nature", "prediction": "homographic"}
+{"text": "Cryptographers make terrible drummers . They just sit there , fascinated by all the cymbals .", "label": "homophonic", "ids": ["het_1665"], "category": "general", "prediction": "homophonic"}
+{"text": "Rats desert a sinking ship .", "label": "non_pun", "ids": ["het_1669"], "category": "animal", "prediction": "homophonic"}
+{"text": "Least said , soonest mended .", "label": "non_pun", "ids": ["het_1673"], "category": "general", "prediction": "non_pun"}
+{"text": "I have a speech impediment . . . my foot .", "label": "non_pun", "ids": ["het_1681"], "category": "body", "prediction": "non_pun"}
+{"text": "Despite the repressive restrictions in force against all of the fine arts , students in Kabul often gathered secretly to listen to band music .", "label": "homophonic", "ids": ["het_1697"], "category": "general", "prediction": "homophonic"}
+{"text": "ADVENTURE : The land between entertainment and panic .", "label": "non_pun", "ids": ["het_1705"], "category": "general", "prediction": "non_pun"}
+{"text": "Southerners are quick on the drawl .", "label": "homophonic", "ids": ["het_1714"], "category": "general", "prediction": "homophonic"}
+{"text": "I always pray to St . Ignatius , said Tom loyally .", "label": "homophonic", "ids": ["het_1719"], "category": "general", "prediction": "homophonic"}
+{"text": "Cheating on a test can put honorable students in conflict with their principals .", "label": "homophonic", "ids": ["het_1721"], "category": "general", "prediction": "homographic"}
+{"text": "I felt sick after I ate the scallopini . I didn't veal well at all .", "label": "homophonic", "ids": ["het_1734"], "category": "food", "prediction": "homophonic"}
+{"text": "Church disputes can be settled with canons .", "label": "homophonic", "ids": ["het_1742"], "category": "place", "prediction": "homophonic"}
+{"text": "A hermit drove to town and was charged with recluse driving .", "label": "homophonic", "ids": ["het_1750"], "category": "place", "prediction": "homographic"}
+{"text": "I'm here - with a gift ! said Tom presently .", "label": "homophonic", "ids": ["het_1752"], "category": "general", "prediction": "homophonic"}
+{"text": "If it ain't broke , don't fix it .", "label": "non_pun", "ids": ["het_1753"], "category": "general", "prediction": "non_pun"}
+{"text": "I love the novels of D . H . Lawrence , said the lady chattily .", "label": "homophonic", "ids": ["het_1754"], "category": "abstract", "prediction": "homophonic"}
+{"text": "There are none so blind as they who do not want to see .", "label": "non_pun", "ids": ["het_1759"], "category": "general", "prediction": "non_pun"}
+{"text": "My name is Derek . I'm in the oil rig business .", "label": "homophonic", "ids": ["het_1760"], "category": "abstract", "prediction": "homographic"}
+{"text": "Hospitals that buy in bulk get a valium discount .", "label": "homophonic", "ids": ["het_1765"], "category": "place", "prediction": "homographic"}
+{"text": "Herb gardeners who work extra get thyme and a half .", "label": "homophonic", "ids": ["het_1768"], "category": "abstract", "prediction": "homophonic"}
+{"text": "The size a dieter would like to get to is the sighs of relief .", "label": "homophonic", "ids": ["het_1771"], "category": "general", "prediction": "homophonic"}
+{"text": "Naughtily , Tom said nothing .", "label": "homophonic", "ids": ["het_1772"], "category": "general", "prediction": "homophonic"}
+{"text": "In a billiard hall life can be pretty rough at the wrong end of the queue .", "label": "homophonic", "ids": ["het_1774"], "category": "abstract", "prediction": "homographic"}
+{"text": "The pirates buried their treasure in the twinkling of an aye .", "label": "homophonic", "ids": ["het_1775"], "category": "general", "prediction": "homophonic"}
+{"text": "She was only a Blacksmith's daughter , but she knew how to forge ahead .", "label": "homographic", "ids": ["hom_5"], "category": "general", "prediction": "homographic"}
+{"text": "She was suspected of stealing a brooch but they couldn't pin it on her .", "label": "homographic", "ids": ["hom_10"], "category": "general", "prediction": "homographic"}
+{"text": "My advanced geometry class is full of squares .", "label": "homographic", "ids": ["hom_18"], "category": "general", "prediction": "homophonic"}
+{"text": "Jesus changes grave situations . Happy Easter .", "label": "homographic", "ids": ["hom_19"], "category": "general", "prediction": "homographic"}
+{"text": "\" Angel dust ? Me ? Never touch it ! \" Tom snorted .", "label": "homographic", "ids": ["hom_22"], "category": "general", "prediction": "homophonic"}
+{"text": "Some diets cause a gut reaction .", "label": "homographic", "ids": ["hom_25"], "category": "general", "prediction": "homographic"}
+{"text": "If you leave alphabet soup on the stove and go out , it could spell disaster .", "label": "homographic", "ids": ["hom_26"], "category": "food", "prediction": "homophonic"}
+{"text": "I've met zucchini with more potential .", "label": "non_pun", "ids": ["hom_32"], "category": "general", "prediction": "homophonic"}
+{"text": "Musical mechanics always sing in parts .", "label": "homographic", "ids": ["hom_45"], "category": "general", "prediction": "homographic"}
+{"text": "OLD QUILTERS never die , they just go under cover .", "label": "homographic", "ids": ["hom_48"], "category": "general", "prediction": "homographic"}
+{"text": "One evening King Arthur's men discovered Sir Lancelot's moonshine whiskey operation and shattered the still of the knight .", "label": "homographic", "ids": ["hom_52"], "category": "person", "prediction": "homophonic"}
+{"text": "Careless stair dancers are heading for a heavy landing .", "label": "homographic", "ids": ["hom_62"], "category": "general", "prediction": "homophonic"}
+{"text": "Misfortunes never come singly .", "label": "non_pun", "ids": ["hom_79"], "category": "general", "prediction": "non_pun"}
+{"text": "For every 45 I collected , I would write down the song and the artist so I could keep records .", "label": "homographic", "ids": ["hom_86"], "category": "general", "prediction": "homographic"}
+{"text": "I'm NOT \" white , \" I'm \" melanin - challenged . \"", "label": "non_pun", "ids": ["hom_95"], "category": "general", "prediction": "homophonic"}
+{"text": "A bad settlement is better than a good lawsuit .", "label": "non_pun", "ids": ["hom_121"], "category": "general", "prediction": "homographic"}
+{"text": "She was only a Pitcher's daughter , but you should have seen her curves .", "label": "homographic", "ids": ["hom_127"], "category": "general", "prediction": "homographic"}
+{"text": "\" Use your own toothbrush ! \" Tom bristled .", "label": "homographic", "ids": ["hom_130"], "category": "general", "prediction": "homographic"}
+{"text": "To err is human , to forgive is against my policy", "label": "non_pun", "ids": ["hom_131"], "category": "person", "prediction": "non_pun"}
+{"text": "The couple grew fruit trees and lived to a ripe old age .", "label": "homographic", "ids": ["hom_135"], "category": "food", "prediction": "homographic"}
+{"text": "Some commands given by the army are specific , others are General .", "label": "homographic", "ids": ["hom_140"], "category": "general", "prediction": "homophonic"}
+{"text": "A drowning man will clutch at a straw .", "label": "non_pun", "ids": ["hom_143"], "category": "person", "prediction": "homophonic"}
+{"text": "The grass is always greener on the other side .", "label": "non_pun", "ids": ["hom_146"], "category": "nature", "prediction": "non_pun"}
+{"text": "\" Perhaps I will , \" said Tom with all his might .", "label": "homographic", "ids": ["hom_151"], "category": "general", "prediction": "homophonic"}
+{"text": "Better safe than sorry .", "label": "non_pun", "ids": ["hom_158"], "category": "general", "prediction": "non_pun"}
+{"text": "In the air duct installers union they have lots of opportunity to vent .", "label": "homographic", "ids": ["hom_163"], "category": "general", "prediction": "homographic"}
+{"text": "First deserve , then desire .", "label": "non_pun", "ids": ["hom_166"], "category": "general", "prediction": "non_pun"}
+{"text": "\" I make the armour out of chain links , \" Tom replied by mail .", "label": "homographic", "ids": ["hom_174"], "category": "general", "prediction": "homophonic"}
+{"text": "Do not think that one enemy is insignificant , or that a thousand friends are too many .", "label": "non_pun", "ids": ["hom_182"], "category": "person", "prediction": "non_pun"}
+{"text": "Once the pin is pulled , Mr . Grenade is no longer a friend . . .", "label": "non_pun", "ids": ["hom_187"], "category": "person", "prediction": "non_pun"}
+{"text": "I'm not afraid of flying , I'm afraid of crashing .", "label": "non_pun", "ids": ["hom_192"], "category": "general", "prediction": "homographic"}
+{"text": "Jesus did the only extreme world makeover , the flood", "label": "homographic", "ids": ["hom_195"], "category": "general", "prediction": "homographic"}
+{"text": "A group called the Balloons sings pop music .", "label": "homographic", "ids": ["hom_203"], "category": "general", "prediction": "homographic"}
+{"text": "\" I have to check the score on this exam again , \" Tom remarked .", "label": "homographic", "ids": ["hom_204"], "category": "general", "prediction": "homographic"}
+{"text": "She was only a Gardener's daughter , but she knows all the rakes .", "label": "homographic", "ids": ["hom_206"], "category": "general", "prediction": "homographic"}
+{"text": "A locksmith has to have a good Combination of skills .", "label": "homographic", "ids": ["hom_207"], "category": "general", "prediction": "homographic"}
+{"text": "It's better to have loved and lost than never to have loved at all .", "label": "non_pun", "ids": ["hom_215"], "category": "general", "prediction": "non_pun"}
+{"text": "The mathematician worked at home because he only functioned in his domain .", "label": "homographic", "ids": ["hom_217"], "category": "place", "prediction": "homographic"}
+{"text": "Old bakers never die , they just keep making lots of dough .", "label": "homographic", "ids": ["hom_219"], "category": "general", "prediction": "homographic"}
+{"text": "Did you hear about the guy whose whole left side was cut off ? He's all right now .", "label": "homographic", "ids": ["hom_221"], "category": "general", "prediction": "homographic"}
+{"text": "Behind every great computer lies . . . a mess of wires !", "label": "non_pun", "ids": ["hom_244"], "category": "object", "prediction": "non_pun"}
+{"text": "A lawyer asked his dentist to give him a retainer .", "label": "homographic", "ids": ["hom_255"], "category": "general", "prediction": "homographic"}
+{"text": "My name is Wade and I'm in swimming pool maintenance .", "label": "homographic", "ids": ["hom_256"], "category": "abstract", "prediction": "homographic"}
+{"text": "Two brothers collaborated on haunted stories , but one was a ghost writer .", "label": "homographic", "ids": ["hom_260"], "category": "general", "prediction": "homographic"}
+{"text": "He bought a rope factory to tie into his empire .", "label": "homographic", "ids": ["hom_269"], "category": "general", "prediction": "homophonic"}
+{"text": "OLD KEY PUNCH OPERATORS never die they just punch out .", "label": "homographic", "ids": ["hom_273"], "category": "object", "prediction": "homographic"}
+{"text": "All women are automatically born with a shopping disorder", "label": "non_pun", "ids": ["hom_290"], "category": "person", "prediction": "homophonic"}
+{"text": "OLD BLASTING TECHNICIANS never die , they just lose their spark .", "label": "homographic", "ids": ["hom_294"], "category": "general", "prediction": "homographic"}
+{"text": "A mechanic who was also a musician was good at tuning things .", "label": "homographic", "ids": ["hom_298"], "category": "general", "prediction": "homographic"}
+{"text": "More haste , less speed .", "label": "non_pun", "ids": ["hom_299"], "category": "general", "prediction": "non_pun"}
+{"text": "Doctor , Doctor , you've got to help me . I think I'm a kleptomaniac . - Don't worry . I think there's something you can take for that . Next .", "label": "homographic", "ids": ["hom_308"], "category": "person", "prediction": "homophonic"}
+{"text": "Junior loved being a member of the wrestling team even though he was prone to lose .", "label": "homographic", "ids": ["hom_316"], "category": "general", "prediction": "homographic"}
+{"text": "God works in mysterious ways .", "label": "non_pun", "ids": ["hom_335"], "category": "general", "prediction": "non_pun"}
+{"text": "An egotist is a person who is more interested in himself than in me .", "label": "non_pun", "ids": ["hom_336"], "category": "person", "prediction": "homophonic"}
+{"text": "Loose lips sink ships .", "label": "non_pun", "ids": ["hom_343"], "category": "general", "prediction": "homophonic"}
+{"text": "Don?t let your footprints in the sands of time be the mark of a heel", "label": "homographic", "ids": ["hom_363"], "category": "time", "prediction": "homophonic"}
+{"text": "OLD GOLFERS never die , they just lose their drive .", "label": "homographic", "ids": ["hom_381"], "category": "general", "prediction": "homographic"}
+{"text": "There are as good fish in the sea as ever were caught .", "label": "non_pun", "ids": ["hom_384"], "category": "animal", "prediction": "non_pun"}
+{"text": "One palm tree said to another'let's have a date . '", "label": "homographic", "ids": ["hom_390"], "category": "nature", "prediction": "homographic"}
+{"text": "If all goes well , you've overlooked something !", "label": "non_pun", "ids": ["hom_410"], "category": "general", "prediction": "non_pun"}
+{"text": "Two companies that manufactured rulers decided to align .", "label": "homographic", "ids": ["hom_411"], "category": "general", "prediction": "homographic"}
+{"text": "A young man married is a young man marred .", "label": "non_pun", "ids": ["hom_420"], "category": "person", "prediction": "homophonic"}
+{"text": "Doctor , doctor , I keep thinking I'm a deck of cards . - I'll deal with you later . Next !", "label": "homographic", "ids": ["hom_432"], "category": "person", "prediction": "homographic"}
+{"text": "No longer foster , no longer friend .", "label": "non_pun", "ids": ["hom_459"], "category": "person", "prediction": "non_pun"}
+{"text": "To test a man's character , give him power .", "label": "non_pun", "ids": ["hom_466"], "category": "person", "prediction": "homographic"}
+{"text": "Those who polish cars so that they shine work in a buffer zone .", "label": "homographic", "ids": ["hom_470"], "category": "object", "prediction": "homophonic"}
+{"text": "None of you exist . The sysop types it all in . . .", "label": "non_pun", "ids": ["hom_472"], "category": "general", "prediction": "non_pun"}
+{"text": "When you give to god , you always get back change", "label": "homographic", "ids": ["hom_479"], "category": "general", "prediction": "homographic"}
+{"text": "I'm not paranoid ! Which of my enemies told you this ?", "label": "non_pun", "ids": ["hom_480"], "category": "general", "prediction": "homophonic"}
+{"text": "The sergeant drank whiskey in order to be fortified in his position .", "label": "homographic", "ids": ["hom_482"], "category": "general", "prediction": "homophonic"}
+{"text": "Hire teenagers while they still know everything .", "label": "non_pun", "ids": ["hom_494"], "category": "general", "prediction": "non_pun"}
+{"text": "When he fell in the wet concrete he left a bad impression .", "label": "homographic", "ids": ["hom_497"], "category": "general", "prediction": "homographic"}
+{"text": "I'm ! A ! Graduate ! Of ! The ! Bill ! Shatner ! Acting ! School !", "label": "non_pun", "ids": ["hom_510"], "category": "place", "prediction": "homographic"}
+{"text": "A wig van blew up on the motorway - police are combing the area .", "label": "homographic", "ids": ["hom_531"], "category": "general", "prediction": "homographic"}
+{"text": "Vegetarian : Indian word for lousy hunter ! ! !", "label": "non_pun", "ids": ["hom_532"], "category": "abstract", "prediction": "homophonic"}
+{"text": "OLD SOCCER PLAYERS never die , they just lose their kick .", "label": "homographic", "ids": ["hom_556"], "category": "general", "prediction": "homographic"}
+{"text": "Golfers hate cake because they might get a slice .", "label": "homographic", "ids": ["hom_557"], "category": "food", "prediction": "homographic"}
+{"text": "My name is Ray . I'm a roentgenologist .", "label": "homographic", "ids": ["hom_559"], "category": "abstract", "prediction": "homographic"}
+{"text": "A truly wise man never plays leapfrog with a unicorn .", "label": "non_pun", "ids": ["hom_561"], "category": "person", "prediction": "non_pun"}
+{"text": "If pride goes before a fall , humility should arrive by that winter", "label": "homographic", "ids": ["hom_563"], "category": "general", "prediction": "homophonic"}
+{"text": "The psychiatrist told the genie his emotions were all bottled up .", "label": "homographic", "ids": ["hom_565"], "category": "general", "prediction": "homophonic"}
+{"text": "She had two different jobs as a chef which gave her a full plate .", "label": "homographic", "ids": ["hom_572"], "category": "abstract", "prediction": "homographic"}
+{"text": "A rolling stone gathers no moss .", "label": "non_pun", "ids": ["hom_585"], "category": "nature", "prediction": "homophonic"}
+{"text": "If I want your opinion I'll beat it out of you !", "label": "non_pun", "ids": ["hom_611"], "category": "general", "prediction": "non_pun"}
+{"text": "\" She's dead , Jim . Still warm , though . Flip ya for her ? \"", "label": "non_pun", "ids": ["hom_618"], "category": "general", "prediction": "homographic"}
+{"text": "How do they get Teflon to stick to the pans ?", "label": "non_pun", "ids": ["hom_643"], "category": "general", "prediction": "homographic"}
+{"text": "I was going to buy a book on phobias , but I was afraid it wouldn't help me .", "label": "homographic", "ids": ["hom_655"], "category": "object", "prediction": "homophonic"}
+{"text": "The hypnotist went out of business because he ran out of suggestions .", "label": "homographic", "ids": ["hom_658"], "category": "general", "prediction": "homographic"}
+{"text": "He bent over to pick up a sieve and strained himself .", "label": "homographic", "ids": ["hom_662"], "category": "general", "prediction": "homographic"}
+{"text": "Winning candy as a prize is always a sweet victory .", "label": "homographic", "ids": ["hom_666"], "category": "food", "prediction": "non_pun"}
+{"text": "Press any key to continue . . Any other key to format hard drive .", "label": "non_pun", "ids": ["hom_669"], "category": "object", "prediction": "homophonic"}
+{"text": "\" I can take photographs if I want to ! \" Tom snapped .", "label": "homographic", "ids": ["hom_670"], "category": "general", "prediction": "homophonic"}
+{"text": "My name is Grant , I am a loan officer .", "label": "homographic", "ids": ["hom_678"], "category": "abstract", "prediction": "homographic"}
+{"text": "Suicidal twin kills sister by mistake . . . news at 11 !", "label": "non_pun", "ids": ["hom_683"], "category": "general", "prediction": "homographic"}
+{"text": "My name is Joe , an espresso vender", "label": "homographic", "ids": ["hom_684"], "category": "abstract", "prediction": "homophonic"}
+{"text": "Two friends took ropes to school so that they could skip out .", "label": "homographic", "ids": ["hom_686"], "category": "person", "prediction": "homographic"}
+{"text": "An exterminator in Idaho announced that he invented a new spray , one application of which will remain effective for a full season . \" Of course , \" he warned . \" I've still got a few bugs to iron out . \"", "label": "homographic", "ids": ["hom_693"], "category": "general", "prediction": "homophonic"}
+{"text": "OLD CARD PLAYERS never die , they just fold .", "label": "homographic", "ids": ["hom_700"], "category": "general", "prediction": "homographic"}
+{"text": "Fool me once , shame on you . Fool me twice , shame on me .", "label": "non_pun", "ids": ["hom_706"], "category": "general", "prediction": "non_pun"}
+{"text": "First come , first served .", "label": "non_pun", "ids": ["hom_709"], "category": "general", "prediction": "non_pun"}
+{"text": "In high school I recall having a beautiful but difficult math teacher . She was easy on the eyes and hard on the pupils !", "label": "homographic", "ids": ["hom_710"], "category": "person", "prediction": "homophonic"}
+{"text": "Those with scissors shouldn't use cutting words .", "label": "homographic", "ids": ["hom_711"], "category": "abstract", "prediction": "homographic"}
+{"text": "What's the deal with negotiations ?", "label": "homographic", "ids": ["hom_712"], "category": "general", "prediction": "homographic"}
+{"text": "The family elders have relative importance .", "label": "homographic", "ids": ["hom_713"], "category": "general", "prediction": "homophonic"}
+{"text": "Christians , keep the faith . . . but not from others !", "label": "homographic", "ids": ["hom_716"], "category": "general", "prediction": "non_pun"}
+{"text": "An experienced waiter can give a lot of good tips .", "label": "homographic", "ids": ["hom_718"], "category": "general", "prediction": "homographic"}
+{"text": "Money is the Root of All Evil . For more info , send $ 10 .", "label": "non_pun", "ids": ["hom_722"], "category": "object", "prediction": "non_pun"}
+{"text": "Actors are cast through their good and bad stages .", "label": "homographic", "ids": ["hom_727"], "category": "general", "prediction": "homographic"}
+{"text": "A thief fell and broke his leg in wet cement . He became a hardened criminal .", "label": "homographic", "ids": ["hom_732"], "category": "general", "prediction": "homographic"}
+{"text": "Strip mining prevents forest fires .", "label": "non_pun", "ids": ["hom_734"], "category": "general", "prediction": "homographic"}
+{"text": "I never understood why people liked to play soft ball . It's a very underhanded thing to do .", "label": "homographic", "ids": ["hom_753"], "category": "person", "prediction": "homographic"}
+{"text": "Home sweet home .", "label": "non_pun", "ids": ["hom_755"], "category": "place", "prediction": "non_pun"}
+{"text": "Goose , gander and gosling are three sounds but one thing .", "label": "non_pun", "ids": ["hom_761"], "category": "animal", "prediction": "non_pun"}
+{"text": "A farmer with a rip in his clothes has an overall problem .", "label": "homographic", "ids": ["hom_765"], "category": "abstract", "prediction": "homophonic"}
+{"text": "I just got back from a statistical probability conference . It was average .", "label": "homographic", "ids": ["hom_769"], "category": "general", "prediction": "homographic"}
+{"text": "If you trust before you try , you may repent before you die .", "label": "non_pun", "ids": ["hom_772"], "category": "general", "prediction": "homophonic"}
+{"text": "War is too important to be left to the generals .", "label": "non_pun", "ids": ["hom_776"], "category": "general", "prediction": "non_pun"}
+{"text": "Two podiatrists became arch rivals .", "label": "homographic", "ids": ["hom_789"], "category": "general", "prediction": "homophonic"}
+{"text": "A husband and wife argued over the weather , but it soon blew over .", "label": "homographic", "ids": ["hom_790"], "category": "person", "prediction": "homographic"}
+{"text": "I think Santa has riverfront property in Brazil . All our presents came from Amazon this year .", "label": "homographic", "ids": ["hom_792"], "category": "time", "prediction": "homophonic"}
+{"text": "An office with many people and few electrical outlets could be in for a power struggle .", "label": "homographic", "ids": ["hom_800"], "category": "person", "prediction": "homographic"}
+{"text": "After he bought his two - year - old a felt pen , he was a marked man .", "label": "homographic", "ids": ["hom_811"], "category": "person", "prediction": "homographic"}
+{"text": "When a duck is feeling down he might just be happy .", "label": "homographic", "ids": ["hom_815"], "category": "animal", "prediction": "homographic"}
+{"text": "The racers all had shorts on that were too small for them , so it was a tight race .", "label": "homographic", "ids": ["hom_828"], "category": "general", "prediction": "homographic"}
+{"text": "Why did CNN cancel that cool \" Desert Storm \" show ?", "label": "non_pun", "ids": ["hom_832"], "category": "general", "prediction": "homographic"}
+{"text": "You can't see the wood for the trees .", "label": "non_pun", "ids": ["hom_842"], "category": "nature", "prediction": "non_pun"}
+{"text": "The massage which came with the spa treatment was a nice touch .", "label": "homographic", "ids": ["hom_852"], "category": "general", "prediction": "homophonic"}
+{"text": "Hands in Prayer : Already Digital", "label": "homographic", "ids": ["hom_858"], "category": "body", "prediction": "non_pun"}
+{"text": "Resist everything but temptation .", "label": "non_pun", "ids": ["hom_879"], "category": "general", "prediction": "non_pun"}
+{"text": "My name is Ham . I raise pigs", "label": "homographic", "ids": ["hom_884"], "category": "animal/food", "prediction": "homophonic"}
+{"text": "Madame : \" Now remember , girls , when handling royalty the important thing is to keep up your dukes ! \"", "label": "homographic", "ids": ["hom_889"], "category": "person", "prediction": "homophonic"}
+{"text": "People who live in glass houses shouldn't throw stones .", "label": "non_pun", "ids": ["hom_893"], "category": "person", "prediction": "homographic"}
+{"text": "Daddy , how come my magnet won't pick up these disks ?", "label": "non_pun", "ids": ["hom_896"], "category": "general", "prediction": "homophonic"}
+{"text": "Gotta run . . . the cat's caught in the printer again !", "label": "non_pun", "ids": ["hom_899"], "category": "animal", "prediction": "non_pun"}
+{"text": "The untruthful deli clerk was full of baloney .", "label": "homographic", "ids": ["hom_900"], "category": "general", "prediction": "homophonic"}
+{"text": "In the house of the hanged man , mention not the rope .", "label": "non_pun", "ids": ["hom_904"], "category": "person", "prediction": "non_pun"}
+{"text": "He who does not advance goes backwards .", "label": "non_pun", "ids": ["hom_905"], "category": "general", "prediction": "non_pun"}
+{"text": "Pompous male bees are often known to drone on about themselves .", "label": "homographic", "ids": ["hom_910"], "category": "animal", "prediction": "homophonic"}
+{"text": "The parsley farmer couldn't pay his child support , so the courts garnished his wages .", "label": "homographic", "ids": ["hom_911"], "category": "person", "prediction": "homophonic"}
+{"text": "She started a new courier business for an express purpose .", "label": "homographic", "ids": ["hom_912"], "category": "general", "prediction": "homographic"}
+{"text": "When he found out that he would visit a real blacksmith he got all fired up .", "label": "homographic", "ids": ["hom_917"], "category": "general", "prediction": "homographic"}
+{"text": "Measure twice , cut once .", "label": "non_pun", "ids": ["hom_919"], "category": "general", "prediction": "non_pun"}
+{"text": "What you see is what you get .", "label": "non_pun", "ids": ["hom_921"], "category": "general", "prediction": "non_pun"}
+{"text": "When longshoremen show up late for work they get docked .", "label": "homographic", "ids": ["hom_925"], "category": "abstract", "prediction": "homographic"}
+{"text": "She was only a Electrician's daughter , but she went haywire .", "label": "homographic", "ids": ["hom_929"], "category": "general", "prediction": "homographic"}
+{"text": "This just in : Research causes cancer in rats !", "label": "non_pun", "ids": ["hom_936"], "category": "animal", "prediction": "homographic"}
+{"text": "I used to be afraid of purchasing residential property for the purpose of renting , but now I have an apartment complex .", "label": "homographic", "ids": ["hom_937"], "category": "general", "prediction": "homophonic"}
+{"text": "OLD LUMBERJACKS never die , they just split .", "label": "homographic", "ids": ["hom_938"], "category": "general", "prediction": "homographic"}
+{"text": "Don't burn the candle at both ends .", "label": "non_pun", "ids": ["hom_947"], "category": "general", "prediction": "non_pun"}
+{"text": "An accountant for a restaurant has to be sure the books are not cooked .", "label": "homographic", "ids": ["hom_969"], "category": "object", "prediction": "homographic"}
+{"text": "Doctor , Doctor I feel like a pair of curtains - Well pull yourself together then . Next .", "label": "homographic", "ids": ["hom_976"], "category": "person", "prediction": "homographic"}
+{"text": "I can't remember ever getting nits as a kid , although I do have a lousy memory .", "label": "homographic", "ids": ["hom_979"], "category": "general", "prediction": "non_pun"}
+{"text": "She was only a Rancher's daughter , but she couldn't keep her calves together .", "label": "homographic", "ids": ["hom_995"], "category": "general", "prediction": "homographic"}
+{"text": "Old school principals never die , they just lose their faculties .", "label": "homographic", "ids": ["hom_1006"], "category": "place", "prediction": "homographic"}
+{"text": "The fence builders were upset with their working conditions , so the started to picket .", "label": "homographic", "ids": ["hom_1017"], "category": "general", "prediction": "homographic"}
+{"text": "OLD ELECTRICIANS never die , they just can't make connections", "label": "homographic", "ids": ["hom_1024"], "category": "general", "prediction": "homographic"}
+{"text": "When the butter melted , it was rendered useless .", "label": "homographic", "ids": ["hom_1025"], "category": "general", "prediction": "homophonic"}
+{"text": "Beggars can't be choosers .", "label": "non_pun", "ids": ["hom_1059"], "category": "general", "prediction": "non_pun"}
+{"text": "My job as head chef at a top rated restaurant is in jeopardy because my latest culinary creation was called a recipe for disaster .", "label": "homographic", "ids": ["hom_1068"], "category": "body", "prediction": "homographic"}
+{"text": "Nothing succeeds like success .", "label": "non_pun", "ids": ["hom_1075"], "category": "general", "prediction": "non_pun"}
+{"text": "The unveiling of the statue was a monumental occasion .", "label": "homographic", "ids": ["hom_1078"], "category": "general", "prediction": "homophonic"}
+{"text": "As soon as the airplane was invented , things were looking up .", "label": "homographic", "ids": ["hom_1083"], "category": "general", "prediction": "homographic"}
+{"text": "When the plane hit turbulence , the passengers went flying .", "label": "homographic", "ids": ["hom_1085"], "category": "object", "prediction": "homographic"}
+{"text": "All are not friends who speak one fair .", "label": "non_pun", "ids": ["hom_1087"], "category": "person", "prediction": "non_pun"}
+{"text": "A book is a friend .", "label": "non_pun", "ids": ["hom_1089"], "category": "person", "prediction": "non_pun"}
+{"text": "Honor your mother and father rather than major credit cards .", "label": "homographic", "ids": ["hom_1091"], "category": "person", "prediction": "homographic"}
+{"text": "There is no such thing as bravery ; only degrees of fear .", "label": "non_pun", "ids": ["hom_1096"], "category": "abstract", "prediction": "non_pun"}
+{"text": "Florida bumper sticker : DON'T SHOOT ! I'M LOCAL !", "label": "non_pun", "ids": ["hom_1097"], "category": "general", "prediction": "homographic"}
+{"text": "The dermatologist was an avid gardener but he had a problem with moles .", "label": "homographic", "ids": ["hom_1102"], "category": "abstract", "prediction": "homographic"}
+{"text": "Sin enough and you will become dead to it .", "label": "homographic", "ids": ["hom_1117"], "category": "general", "prediction": "non_pun"}
+{"text": "Follow glory and it will flee , flee glory and it will follow thee .", "label": "non_pun", "ids": ["hom_1138"], "category": "general", "prediction": "non_pun"}
+{"text": "A Crucifix ? Oy vey , have YOU got the wrong vampire . . .", "label": "non_pun", "ids": ["hom_1146"], "category": "general", "prediction": "homophonic"}
+{"text": "His plan to manufacture pencils just didn't draw attention .", "label": "homographic", "ids": ["hom_1147"], "category": "general", "prediction": "homographic"}
+{"text": "Tony attempted to join his thin crust pizza company with Zimo's Thick Crust Pizza , but somehow it didn't pan out .", "label": "homographic", "ids": ["hom_1164"], "category": "food", "prediction": "homophonic"}
+{"text": "\" My parents are called Billy and Nanny , \" Tom kidded .", "label": "homographic", "ids": ["hom_1168"], "category": "general", "prediction": "homophonic"}
+{"text": "When thy friend asks , let there be no to - morrow .", "label": "non_pun", "ids": ["hom_1170"], "category": "person", "prediction": "non_pun"}
+{"text": "I once knew a guy who had fish and chips every day for a year . His stomach took a battering .", "label": "homographic", "ids": ["hom_1171"], "category": "animal", "prediction": "homographic"}
+{"text": "Continually discovering new viruses can become a strain .", "label": "homographic", "ids": ["hom_1173"], "category": "general", "prediction": "non_pun"}
+{"text": "A man tried working in a shoe store , but he just couldn't seem to fit in .", "label": "homographic", "ids": ["hom_1182"], "category": "person", "prediction": "homographic"}
+{"text": "Wrestlers don't like to be put on hold .", "label": "homographic", "ids": ["hom_1198"], "category": "general", "prediction": "homographic"}
+{"text": "The eye looks but it is the mind that sees .", "label": "non_pun", "ids": ["hom_1202"], "category": "body", "prediction": "non_pun"}
+{"text": "If there is no God , who pops up the next Kleenex ?", "label": "non_pun", "ids": ["hom_1205"], "category": "general", "prediction": "homographic"}
+{"text": "The lawyer asked a loaded question about guns .", "label": "homographic", "ids": ["hom_1211"], "category": "abstract", "prediction": "homographic"}
+{"text": "The boy's guitar teacher helped him pick up his skills .", "label": "homographic", "ids": ["hom_1214"], "category": "person", "prediction": "homographic"}
+{"text": "\" Well done \" is better than \" well said \" .", "label": "non_pun", "ids": ["hom_1220"], "category": "general", "prediction": "non_pun"}
+{"text": "His model airplane hobby really took off .", "label": "homographic", "ids": ["hom_1227"], "category": "general", "prediction": "homographic"}
+{"text": "She was only a Bootleggers daughter , but I loved her still .", "label": "homographic", "ids": ["hom_1229"], "category": "general", "prediction": "homographic"}
+{"text": "Make the best of a bad bargain .", "label": "non_pun", "ids": ["hom_1235"], "category": "general", "prediction": "non_pun"}
+{"text": "Using deodorant is no sweat .", "label": "homographic", "ids": ["hom_1238"], "category": "general", "prediction": "non_pun"}
+{"text": "A lawyer was defending a math teacher . He had to sum up .", "label": "homographic", "ids": ["hom_1239"], "category": "person", "prediction": "homographic"}
+{"text": "My name is Victor , and I'm a winner in everything I do .", "label": "homographic", "ids": ["hom_1243"], "category": "abstract", "prediction": "homographic"}
+{"text": "Old gardeners never die they just vegetate .", "label": "homographic", "ids": ["hom_1246"], "category": "general", "prediction": "homographic"}
+{"text": "Do not merely believe in miracles , rely on them .", "label": "non_pun", "ids": ["hom_1252"], "category": "general", "prediction": "homophonic"}
+{"text": "He that will not when he may , when he will he may have nay .", "label": "non_pun", "ids": ["hom_1255"], "category": "general", "prediction": "non_pun"}
+{"text": "Since I've taken the job in The Everglades I've been swamped !", "label": "homographic", "ids": ["hom_1265"], "category": "abstract", "prediction": "homographic"}
+{"text": "When talking nonsense try not to be serious .", "label": "non_pun", "ids": ["hom_1266"], "category": "general", "prediction": "non_pun"}
+{"text": "My name is Josh . I'm a talk show host", "label": "homographic", "ids": ["hom_1307"], "category": "abstract", "prediction": "homographic"}
+{"text": "You must not run after two hares at the same time .", "label": "non_pun", "ids": ["hom_1313"], "category": "time", "prediction": "non_pun"}
+{"text": "Plenty of people give the lord credit . Few give him cash .", "label": "homographic", "ids": ["hom_1315"], "category": "person", "prediction": "homophonic"}
+{"text": "He bought lots of pens before starting his new job . He wanted to make his mark .", "label": "homographic", "ids": ["hom_1339"], "category": "object", "prediction": "homographic"}
+{"text": "Eating too many snacks when studying for a test is called cramming .", "label": "homographic", "ids": ["hom_1343"], "category": "food", "prediction": "homophonic"}
+{"text": "She was only a Telephone operator's daughter , but she sure had good connections .", "label": "homographic", "ids": ["hom_1345"], "category": "general", "prediction": "homographic"}
+{"text": "A teacher used his index finger to ask a lot of pointed questions .", "label": "homographic", "ids": ["hom_1349"], "category": "person", "prediction": "homographic"}
+{"text": "Since Bruce got too close to the big blade at the saw mill he is no longer feeling chipper .", "label": "homographic", "ids": ["hom_1350"], "category": "general", "prediction": "homophonic"}
+{"text": "If you got it , flaunt it .", "label": "non_pun", "ids": ["hom_1353"], "category": "general", "prediction": "non_pun"}
+{"text": "If fortune favours , beware of being exalted ; if fortune thunders , beware of being overwhelmed .", "label": "non_pun", "ids": ["hom_1361"], "category": "general", "prediction": "homophonic"}
+{"text": "OLD BASKETBALL PLAYERS never die they just go on dribbling .", "label": "homographic", "ids": ["hom_1363"], "category": "general", "prediction": "homographic"}
+{"text": "Ducks don't have their palms read - they look for it on the web .", "label": "homographic", "ids": ["hom_1367"], "category": "animal", "prediction": "homographic"}
+{"text": "Captain we're at 1700 CPS . The UARTs canna take much more", "label": "non_pun", "ids": ["hom_1370"], "category": "general", "prediction": "homophonic"}
+{"text": "We have nothing to fear but fear itself .", "label": "non_pun", "ids": ["hom_1386"], "category": "abstract", "prediction": "non_pun"}
+{"text": "The cost of the space program is astronomical .", "label": "homographic", "ids": ["hom_1389"], "category": "general", "prediction": "non_pun"}
+{"text": "He got measles in jail when he broke out one night .", "label": "homographic", "ids": ["hom_1394"], "category": "time", "prediction": "homographic"}
+{"text": "A fisherman who was also a pianist was an expert with scales .", "label": "homographic", "ids": ["hom_1395"], "category": "general", "prediction": "homophonic"}
+{"text": "He had trouble in his new job making tents and got himself into a flap .", "label": "homographic", "ids": ["hom_1404"], "category": "abstract", "prediction": "homographic"}
+{"text": "My dentist seems distracted , I think he was brushing me off .", "label": "homographic", "ids": ["hom_1419"], "category": "general", "prediction": "homographic"}
+{"text": "On TV it's a maze of channels , luckily he had a guide .", "label": "homographic", "ids": ["hom_1423"], "category": "general", "prediction": "homographic"}
+{"text": "Doctor , doctor , people tell me I'm a wheelbarrow . - Don't let people push you around . Next .", "label": "homographic", "ids": ["hom_1424"], "category": "person", "prediction": "homographic"}
+{"text": "OLD BOXERS never die , they just punch out", "label": "homographic", "ids": ["hom_1428"], "category": "general", "prediction": "homographic"}
+{"text": "Sky divers don't jump , they just fall away .", "label": "homographic", "ids": ["hom_1431"], "category": "nature", "prediction": "homographic"}
+{"text": "\" Here's your allowance for the next two weeks , \" Tom advanced .", "label": "homographic", "ids": ["hom_1435"], "category": "time", "prediction": "homophonic"}
+{"text": "When a guillotine executioner is layed off he gets severance .", "label": "homographic", "ids": ["hom_1438"], "category": "general", "prediction": "homographic"}
+{"text": "I wanted to be a sonar technician , but it was out of my depth .", "label": "homographic", "ids": ["hom_1452"], "category": "general", "prediction": "homographic"}
+{"text": "The mother kangaroo tried to instill good financial habits in her baby . She told him to pocket all his allowance .", "label": "homographic", "ids": ["hom_1462"], "category": "person", "prediction": "homophonic"}
+{"text": "Anything not nailed down is a cat toy .", "label": "non_pun", "ids": ["hom_1467"], "category": "animal", "prediction": "non_pun"}
+{"text": "I'd love to change the world . . . if I can get the source code .", "label": "non_pun", "ids": ["hom_1472"], "category": "abstract", "prediction": "non_pun"}
+{"text": "Hell ! I thought I?d gotten away with it !", "label": "homographic", "ids": ["hom_1482"], "category": "general", "prediction": "homographic"}
+{"text": "Photographers are often very candid people .", "label": "homographic", "ids": ["hom_1486"], "category": "person", "prediction": "homographic"}
+{"text": "Hell ! I thought it didn't matter what you believed as long as you were sincere !", "label": "homographic", "ids": ["hom_1487"], "category": "general", "prediction": "homographic"}
+{"text": "A good beginning makes a good ending .", "label": "non_pun", "ids": ["hom_1490"], "category": "general", "prediction": "non_pun"}
+{"text": "It is always darkest just before you turn on the lights .", "label": "non_pun", "ids": ["hom_1493"], "category": "general", "prediction": "homographic"}
+{"text": "If it looks like a duck , swims like a duck , and quacks like a duck , then it probably is a duck .", "label": "non_pun", "ids": ["hom_1494"], "category": "animal", "prediction": "homographic"}
+{"text": "Doctor , Doctor My little boy has just swallowed a roll of film ! - Hmmmm . Let's hope nothing develops . Next .", "label": "homographic", "ids": ["hom_1495"], "category": "person", "prediction": "homophonic"}
+{"text": "I'm drawn to art .", "label": "homographic", "ids": ["hom_1503"], "category": "general", "prediction": "homographic"}
+{"text": "OLD MATHEMATICIANS never die , they just lose some functions .", "label": "homographic", "ids": ["hom_1504"], "category": "general", "prediction": "homographic"}
+{"text": "Well drilling is a deep subject .", "label": "homographic", "ids": ["hom_1514"], "category": "general", "prediction": "non_pun"}
+{"text": "Fine words butter no parsnips .", "label": "non_pun", "ids": ["hom_1533"], "category": "abstract", "prediction": "non_pun"}
+{"text": "OLD GAMBLERS never die , they just get discarded .", "label": "homographic", "ids": ["hom_1544"], "category": "general", "prediction": "homographic"}
+{"text": "A bowling team was called'lightning'because they had so many strikes .", "label": "homographic", "ids": ["hom_1549"], "category": "general", "prediction": "homographic"}
+{"text": "A wife lasts as long as a marriage , an ex - wife for ever .", "label": "non_pun", "ids": ["hom_1550"], "category": "person", "prediction": "homophonic"}
+{"text": "Underpaid weather forecasters predicted a storm of protest .", "label": "homographic", "ids": ["hom_1557"], "category": "nature", "prediction": "homophonic"}
+{"text": "When the janitor wanted to take up public speaking he always had the floor .", "label": "homographic", "ids": ["hom_1564"], "category": "general", "prediction": "homophonic"}
+{"text": "OLD GUITARISTS never die , they just become unstrung .", "label": "homographic", "ids": ["hom_1565"], "category": "general", "prediction": "homographic"}
+{"text": "For a long time , black holes were a dark secret .", "label": "homographic", "ids": ["hom_1578"], "category": "time", "prediction": "homographic"}
+{"text": "She was only a Conductor's daughter , but she told you where to get off .", "label": "homographic", "ids": ["hom_1579"], "category": "general", "prediction": "homographic"}
+{"text": "Don't wash your dirty linen in public .", "label": "non_pun", "ids": ["hom_1582"], "category": "general", "prediction": "non_pun"}
+{"text": "In medical school he worried about passing as a surgeon , but he made the cut .", "label": "homographic", "ids": ["hom_1588"], "category": "place", "prediction": "homographic"}
+{"text": "I used to work in a blanket factory but it folded .", "label": "homographic", "ids": ["hom_1592"], "category": "abstract", "prediction": "homographic"}
+{"text": "The environmentalist rode his bike 20 miles in the morning and 20 more in the evening . He loved recycling .", "label": "homographic", "ids": ["hom_1594"], "category": "time", "prediction": "homographic"}
+{"text": "Wade not in unknown waters .", "label": "non_pun", "ids": ["hom_1600"], "category": "general", "prediction": "non_pun"}
+{"text": "She was only a Electrician's daughter , and she made house calls to remove her customers'shorts .", "label": "homographic", "ids": ["hom_1602"], "category": "place", "prediction": "homographic"}
+{"text": "Politics makes strange bedfellows .", "label": "non_pun", "ids": ["hom_1606"], "category": "general", "prediction": "non_pun"}
+{"text": "If you want a metal dog leash go to a chain store .", "label": "homographic", "ids": ["hom_1608"], "category": "animal", "prediction": "homophonic"}
+{"text": "If they ever have a contest for the best looking mannequin , there will be stiff competition .", "label": "homographic", "ids": ["hom_1609"], "category": "general", "prediction": "homographic"}
+{"text": "OLD PHILOSOPHERS never die , they just retire to their own premises .", "label": "homographic", "ids": ["hom_1614"], "category": "general", "prediction": "homographic"}
+{"text": "Have an optometrist run for president , because they are people of vision .", "label": "homographic", "ids": ["hom_1618"], "category": "person", "prediction": "homographic"}
+{"text": "OLD BUTCHERS never die , they just get disjointed .", "label": "homographic", "ids": ["hom_1624"], "category": "general", "prediction": "homographic"}
+{"text": "The man addicted to brake fluid said he could stop any time .", "label": "homographic", "ids": ["hom_1628"], "category": "person", "prediction": "homophonic"}
+{"text": "Even the best bird dog is only good to a point .", "label": "homographic", "ids": ["hom_1635"], "category": "animal", "prediction": "non_pun"}
+{"text": "Pick Pockets 50 % Climb Walls 75 % Steal Tagline 99 %", "label": "non_pun", "ids": ["hom_1641"], "category": "general", "prediction": "non_pun"}
+{"text": "A seminar on Time Travel will be held 2 weeks ago . . . .", "label": "non_pun", "ids": ["hom_1643"], "category": "time", "prediction": "homographic"}
+{"text": "The hotel chef was noted for his tomfoolery and his capers .", "label": "homographic", "ids": ["hom_1645"], "category": "place", "prediction": "homophonic"}
+{"text": "He bought a donkey because he thought he might get a kick out of it .", "label": "homographic", "ids": ["hom_1661"], "category": "general", "prediction": "homographic"}
+{"text": "Windows isn't crippleware : it's \" Functionally Challenged \"", "label": "non_pun", "ids": ["hom_1667"], "category": "object", "prediction": "non_pun"}
+{"text": "There's no place like home .", "label": "non_pun", "ids": ["hom_1673"], "category": "place", "prediction": "non_pun"}
+{"text": "Beats me why anyone would want to be a masochist .", "label": "homographic", "ids": ["hom_1678"], "category": "general", "prediction": "homographic"}
+{"text": "The best way to stop a charging bull is to take away his credit card .", "label": "homographic", "ids": ["hom_1686"], "category": "general", "prediction": "homographic"}
+{"text": "A will is a relative thing .", "label": "homographic", "ids": ["hom_1709"], "category": "general", "prediction": "homophonic"}
+{"text": "I'm not lost , I'm \" locationally challenged . \"", "label": "non_pun", "ids": ["hom_1741"], "category": "general", "prediction": "non_pun"}
+{"text": "OLD ORGANISTS never die , they just come to a stop .", "label": "homographic", "ids": ["hom_1750"], "category": "general", "prediction": "homographic"}
+{"text": "I tried wrapping Christmas presents , but I didn't have the gift .", "label": "homographic", "ids": ["hom_1756"], "category": "general", "prediction": "homographic"}
+{"text": "In the army mess hall , the men were getting fed up .", "label": "homographic", "ids": ["hom_1758"], "category": "person", "prediction": "homographic"}
+{"text": "Piano players know what bar they are in .", "label": "homographic", "ids": ["hom_1761"], "category": "general", "prediction": "homographic"}
+{"text": "Never share a foxhole with anyone braver than you are .", "label": "non_pun", "ids": ["hom_1769"], "category": "general", "prediction": "non_pun"}
+{"text": "He's dead , Jim . Kick him if you don't believe me .", "label": "non_pun", "ids": ["hom_1777"], "category": "general", "prediction": "homographic"}
+{"text": "Meet me at the clothes line . That's where I hang out !", "label": "homographic", "ids": ["hom_1778"], "category": "general", "prediction": "non_pun"}
+{"text": "I've always pictured myself taking selfies .", "label": "homographic", "ids": ["hom_1781"], "category": "general", "prediction": "homographic"}
+{"text": "Though thou hast ever so many counsellors , yet do not forsake the counsel of thy own soul .", "label": "non_pun", "ids": ["hom_1788"], "category": "general", "prediction": "homophonic"}
+{"text": "Press any key to continue or any other key to quit", "label": "non_pun", "ids": ["hom_1789"], "category": "object", "prediction": "homophonic"}
+{"text": "A boiled egg in the morning is hard to beat .", "label": "homographic", "ids": ["hom_1790"], "category": "food", "prediction": "homographic"}
+{"text": "The enemy of my enemy , is my friend .", "label": "non_pun", "ids": ["hom_1818"], "category": "person", "prediction": "non_pun"}
+{"text": "The organizational get together for a company football team was called a kickoff meeting .", "label": "homographic", "ids": ["hom_1820"], "category": "general", "prediction": "homographic"}
+{"text": "OLD CHAUFFEURS never die they just lose their drive .", "label": "homographic", "ids": ["hom_1823"], "category": "general", "prediction": "homographic"}
+{"text": "She swallowed a peach seed and could feel it in the pit of her stomach .", "label": "homographic", "ids": ["hom_1826"], "category": "general", "prediction": "homophonic"}
+{"text": "Give him an inch and he'll take a yard .", "label": "non_pun", "ids": ["hom_1829"], "category": "general", "prediction": "non_pun"}
+{"text": "The hostage said he couldn't stay on the phone long because he was tied up at the moment .", "label": "homographic", "ids": ["hom_1840"], "category": "object", "prediction": "homographic"}
+{"text": "To save money for the company he cut all the electricity . They were soon in the black .", "label": "homographic", "ids": ["hom_1859"], "category": "object", "prediction": "homographic"}
+{"text": "Sheesh ! You start havin'fun , and they send the lawyers !", "label": "non_pun", "ids": ["hom_1881"], "category": "general", "prediction": "homographic"}
+{"text": "When the air conditioning failed in the indoor stadium there was a fan protest .", "label": "homographic", "ids": ["hom_1886"], "category": "general", "prediction": "homographic"}
+{"text": "The runaway beer truck barrelled down the freeway after its driver was mugged .", "label": "homographic", "ids": ["hom_1888"], "category": "food", "prediction": "homophonic"}
+{"text": "Why do we have training bras ? What can we teach them ?", "label": "non_pun", "ids": ["hom_1893"], "category": "general", "prediction": "non_pun"}
+{"text": "\" I find you guilty , \" said the judge with conviction .", "label": "homographic", "ids": ["hom_1905"], "category": "general", "prediction": "homographic"}
+{"text": "You are confused ; but this is your normal state .", "label": "non_pun", "ids": ["hom_1909"], "category": "general", "prediction": "homographic"}
+{"text": "OLD SHEET ROCKERS (dry wallers) never die , they just hang around .", "label": "homographic", "ids": ["hom_1917"], "category": "general", "prediction": "homographic"}
+{"text": "A pair of loud twins were stereo speakers .", "label": "homographic", "ids": ["hom_1926"], "category": "general", "prediction": "homographic"}
+{"text": "To be a mountain climber one needs to be in peak condition .", "label": "homographic", "ids": ["hom_1927"], "category": "place", "prediction": "homophonic"}
+{"text": "An idea is not responsible for fools who believe in it .", "label": "non_pun", "ids": ["hom_1931"], "category": "abstract", "prediction": "non_pun"}
+{"text": "Every rose has its thorn .", "label": "non_pun", "ids": ["hom_1935"], "category": "general", "prediction": "non_pun"}
+{"text": "Waiter , my bill please . - How did you find your luncheon , sir ? - With a magnifying glass .", "label": "homographic", "ids": ["hom_1944"], "category": "general", "prediction": "homographic"}
+{"text": "\" I'm burning aromatic substances , \" said Tom , incensed .", "label": "homographic", "ids": ["hom_1947"], "category": "general", "prediction": "homophonic"}
+{"text": "Squirt guns don't soak people , People soak people .", "label": "non_pun", "ids": ["hom_1950"], "category": "person", "prediction": "homographic"}
+{"text": "Tires cost 100 bucks a pop .", "label": "homographic", "ids": ["hom_1962"], "category": "general", "prediction": "homographic"}
+{"text": "When I asked if I could get insurance if the nearby volcano erupted they assured me I would be covered .", "label": "homographic", "ids": ["hom_1965"], "category": "general", "prediction": "homographic"}
+{"text": "A photographer taking pictures of golfers says'watch the birdie'.", "label": "homographic", "ids": ["hom_1975"], "category": "general", "prediction": "homographic"}
+{"text": "A dog gave birth to puppies near the road and was ticketed for littering .", "label": "homographic", "ids": ["hom_1976"], "category": "animal", "prediction": "homographic"}
+{"text": "Those who work on reducing auto emissions go home exhausted .", "label": "homographic", "ids": ["hom_1977"], "category": "place", "prediction": "homographic"}
+{"text": "The groundskeeper at a large cemetery was important because he had 5000 people under him .", "label": "homographic", "ids": ["hom_1983"], "category": "person", "prediction": "homophonic"}
+{"text": "Being a fire - fighter ignited my interest heavily .", "label": "homographic", "ids": ["hom_1996"], "category": "nature", "prediction": "homographic"}
+{"text": "If it ain't broke , let me have a shot at it .", "label": "non_pun", "ids": ["hom_1997"], "category": "general", "prediction": "non_pun"}
+{"text": "A boiled egg is hard to beat .", "label": "homographic", "ids": ["hom_1999"], "category": "food", "prediction": "homographic"}
+{"text": "I used to have a life , now I have a modem .", "label": "non_pun", "ids": ["hom_2003"], "category": "abstract", "prediction": "homographic"}
+{"text": "Those who make sinks often feel washed out .", "label": "homographic", "ids": ["hom_2005"], "category": "general", "prediction": "homographic"}
+{"text": "Grasp all , lose all .", "label": "non_pun", "ids": ["hom_2013"], "category": "general", "prediction": "non_pun"}
+{"text": "It was the first time she'd seen a live sponge on display , and she really soaked it in .", "label": "homographic", "ids": ["hom_2014"], "category": "time", "prediction": "homographic"}
+{"text": "The first guy to mass produce candies made a mint .", "label": "homographic", "ids": ["hom_2016"], "category": "general", "prediction": "homographic"}
+{"text": "When they claimed to house two thousand campers , it sounded like a lot of bunk .", "label": "homographic", "ids": ["hom_2018"], "category": "place", "prediction": "homophonic"}
+{"text": "He'd never gone hunting but decided to give it a shot .", "label": "homographic", "ids": ["hom_2019"], "category": "general", "prediction": "homographic"}
+{"text": "Building a cul - de - sac would be a bit of a dead - end job .", "label": "homographic", "ids": ["hom_2032"], "category": "abstract", "prediction": "non_pun"}
+{"text": "Swimming instructors are always getting immersed in their work .", "label": "homographic", "ids": ["hom_2037"], "category": "abstract", "prediction": "homographic"}
+{"text": "A summer is a mathematician .", "label": "homographic", "ids": ["hom_2041"], "category": "general", "prediction": "homographic"}
+{"text": "Violinists are often fiddling around .", "label": "homographic", "ids": ["hom_2045"], "category": "general", "prediction": "homographic"}
+{"text": "If at first you don't succeed , try , try again .", "label": "non_pun", "ids": ["hom_2047"], "category": "general", "prediction": "non_pun"}
+{"text": "Some thinkle peep I'm under the affluence of inkohol . . .", "label": "non_pun", "ids": ["hom_2054"], "category": "general", "prediction": "homophonic"}
+{"text": "We should make a beer commercial . It sounds simply intoxicating .", "label": "homographic", "ids": ["hom_2058"], "category": "food", "prediction": "non_pun"}
+{"text": "I love to eat eggs at the crack of dawn .", "label": "homographic", "ids": ["hom_2063"], "category": "food", "prediction": "homophonic"}
+{"text": "He realized he'd made the major leagues when it finally hit him .", "label": "homographic", "ids": ["hom_2071"], "category": "general", "prediction": "homographic"}
+{"text": "Leonardo Da Vinci could use a paint brush to make a stroke of genius .", "label": "homographic", "ids": ["hom_2076"], "category": "general", "prediction": "homographic"}
+{"text": "A church welcomed all denominations but preferred tens and twenties .", "label": "homographic", "ids": ["hom_2102"], "category": "place", "prediction": "homographic"}
+{"text": "OLD FORESTERS never die , they just pine away .", "label": "homographic", "ids": ["hom_2106"], "category": "general", "prediction": "homographic"}
+{"text": "A racehorse's life is always on track .", "label": "homographic", "ids": ["hom_2113"], "category": "abstract", "prediction": "homographic"}
+{"text": "I couldn't decide whether or not to make spiced apple cider , so I mulled it over .", "label": "homographic", "ids": ["hom_2114"], "category": "food", "prediction": "homographic"}
+{"text": "OLD CASHIERS never die they just check out .", "label": "homographic", "ids": ["hom_2122"], "category": "general", "prediction": "homographic"}
+{"text": "The forecaster was away because he was under the weather .", "label": "homographic", "ids": ["hom_2127"], "category": "nature", "prediction": "homographic"}
+{"text": "The cobbler's wife is the worst shod .", "label": "non_pun", "ids": ["hom_2128"], "category": "person", "prediction": "homophonic"}
+{"text": "A train load of paint derailed . Nearby businesses were put in the red .", "label": "homographic", "ids": ["hom_2129"], "category": "object", "prediction": "homographic"}
+{"text": "It was a lucky car . Until he had to push his luck .", "label": "homographic", "ids": ["hom_2132"], "category": "object", "prediction": "homophonic"}
+{"text": "I went to the theatre , it looked a bit suspicious . I reckon the whole thing was staged .", "label": "homographic", "ids": ["hom_2136"], "category": "general", "prediction": "homographic"}
+{"text": "Marconi was not wired up about going .", "label": "homographic", "ids": ["hom_2147"], "category": "general", "prediction": "homographic"}
+{"text": "Pick your friends , but not to pieces", "label": "homographic", "ids": ["hom_2150"], "category": "person", "prediction": "non_pun"}
+{"text": "OLD HOCKEY PLAYERS never die , they just achieve their final goal .", "label": "homographic", "ids": ["hom_2173"], "category": "general", "prediction": "homographic"}
+{"text": "Police can do a search if it's Warranted .", "label": "homographic", "ids": ["hom_2178"], "category": "general", "prediction": "homographic"}
+{"text": "There was a sale at the fish market today . I went to see what was the catch .", "label": "homographic", "ids": ["hom_2181"], "category": "animal", "prediction": "homographic"}
+{"text": "You often hear of a good wine through the grapevine .", "label": "homographic", "ids": ["hom_2183"], "category": "food", "prediction": "homographic"}
+{"text": "He was selling palm trees , but people thought it was a shady deal .", "label": "homographic", "ids": ["hom_2185"], "category": "person", "prediction": "homographic"}
+{"text": "Don't marry for money ; you can borrow it cheaper .", "label": "non_pun", "ids": ["hom_2198"], "category": "object", "prediction": "non_pun"}
+{"text": "Winning isn't everything , it's the only thing .", "label": "non_pun", "ids": ["hom_2201"], "category": "general", "prediction": "non_pun"}
+{"text": "My name is Carol . I sing during the holidays .", "label": "homographic", "ids": ["hom_2207"], "category": "abstract", "prediction": "homographic"}
+{"text": "Always trust a glue salesman . They tend to stick to their word .", "label": "homographic", "ids": ["hom_2208"], "category": "abstract", "prediction": "homographic"}
+{"text": "Archimedes was buoyant at the thought .", "label": "homographic", "ids": ["hom_2209"], "category": "general", "prediction": "homophonic"}
+{"text": "There is no greater torment than to be alone in paradise .", "label": "non_pun", "ids": ["hom_2211"], "category": "general", "prediction": "non_pun"}
+{"text": "A friend told me he dug a hole in my backyard and filled it with water . I thought he meant well .", "label": "homographic", "ids": ["hom_2212"], "category": "person", "prediction": "homographic"}
+{"text": "\" I invested in a hi - tech startup , \" Tom ventured .", "label": "homographic", "ids": ["hom_2217"], "category": "general", "prediction": "homophonic"}
+{"text": "Have an adequate day .", "label": "non_pun", "ids": ["hom_2225"], "category": "time", "prediction": "non_pun"}
+{"text": "You have to give credit to people who work in stores during a holiday - and many people do .", "label": "homographic", "ids": ["hom_2229"], "category": "person", "prediction": "homographic"}
+{"text": "The surest steps to happiness are the steps to church .", "label": "homographic", "ids": ["hom_2236"], "category": "place", "prediction": "homophonic"}
+{"text": "To become an electrician you have to pass a battery of tests .", "label": "homographic", "ids": ["hom_2245"], "category": "general", "prediction": "homographic"}

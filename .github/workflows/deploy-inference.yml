@@ -98,6 +98,8 @@ jobs:
             --invoker-iam-check
             --min-instances=0
             --max-instances=1
+            --memory=2Gi
+            --concurrency=1
 
       # Backend calls /analyze as its runtime service account, so it depends on
       # this grant on Inference's service. Applied on every deploy (a no-op
@@ -127,8 +129,8 @@ jobs:
           URL: ${{ steps.deploy.outputs.url }}
 
       # The deployer can invoke the service through its project-level
-      # roles/run.admin. /openapi.json rather than /analyze, which answers 500
-      # until the classifier lands (TASK-16).
+      # roles/run.admin. The image build already checks a real classifier result;
+      # this smoke test checks authenticated service reachability.
       - if: env.DEPLOY == 'true'
         name: Smoke-test the deployed service with an ID token
         run: |

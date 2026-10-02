@@ -104,6 +104,11 @@ jobs:
           cache-to: type=gha,scope=backend,mode=max
 
       - if: env.DEPLOY == 'true'
+        name: Resolve private Inference service
+        id: inference
+        run: echo "url=$(gcloud run services describe pun-agent-inference --project="$PROJECT_ID" --region="$REGION" --format='value(status.url)')" >> "$GITHUB_OUTPUT"
+
+      - if: env.DEPLOY == 'true'
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v3
         with:
@@ -113,6 +118,7 @@ jobs:
           image: ${{ env.IMAGE }}:${{ github.sha }}
           # Read at startup by the runtime service account; the key never passes through CI.
           secrets: GEMINI_API_KEY=gemini-api-key-runtime:latest
+          env_vars: INFERENCE_URL=${{ steps.inference.outputs.url }}
           # One instance, scaled to zero when idle: enough for the demo, and it
           # caps compute if the public URL is flooded (see TASK-13's notes).
           flags: >-

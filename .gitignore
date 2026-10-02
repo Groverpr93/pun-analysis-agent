@@ -23,3 +23,6 @@ __pycache__/
 
 # Inference: downloaded Wiktionary sense data (see docs/local-setup.md)
 inference/data/
+
+# Downloaded pretrained encoder (baked into the inference image)
+inference/pun_detector/.resources/

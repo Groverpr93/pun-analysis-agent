@@ -96,6 +96,29 @@ export const AnalyzePunToolUI: ToolCallMessagePartComponent<
 				<blockquote className="text-muted-foreground border-s-2 ps-3 italic">
 					{args.text}
 				</blockquote>
+				{result?.probabilities && (
+					<section aria-label="Classifier probabilities">
+						<p className="text-sm font-medium">Classifier probabilities</p>
+						<dl className="text-sm tabular-nums">
+							{(
+								[
+									["Non-pun", result.probabilities.non_pun],
+									["Homographic", result.probabilities.homographic],
+									["Homophonic", result.probabilities.homophonic],
+								] as const
+							).map(([name, value]) => (
+								<div key={name} className="flex justify-between gap-4">
+									<dt>{name}</dt>
+									<dd>{(value * 100).toFixed(2)}%</dd>
+								</div>
+							))}
+						</dl>
+						<p className="text-muted-foreground text-xs">
+							Model estimates, not calibrated confidence or sense-analysis
+							scores. Rounded values may not sum to 100%.
+						</p>
+					</section>
+				)}
 				{result?.explanation && <p>{result.explanation}</p>}
 				{result && result.words_involved.length > 0 && (
 					<p className="text-muted-foreground text-xs">

@@ -1,0 +1,19 @@
+{
+  "features": {
+    "schema": 1,
+    "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+    "revision": "c9745ed1d9f207416be6d2e6f8de32d1f16199bf",
+    "lexicon": "oewn:2025"
+  },
+  "threshold": 0.32032454013824463,
+  "version": "prototype-1",
+  "dataset_sha256": "5406cd2a3bea034f3386a4de0144637e8b8de51efd6ebfc52195b3ac08507a11",
+  "seed": 42,
+  "packages": {
+    "spacy": "3.8.16",
+    "wn": "1.1.1",
+    "sentence-transformers": "5.7.0",
+    "scikit-learn": "1.9.1",
+    "numpy": "2.5.3"
+  }
+}

@@ -79,4 +79,4 @@ flowchart LR
 
 ## Open items
 
-- No shared fixture format yet for the `/analyze` stand-in: Backend's tests ([`backend/tests/fixtures/analyze-results.ts`](../backend/tests/fixtures/analyze-results.ts)), Frontend's stub and Eval each keep their own. It should probably be one fixture referenced from [`contracts.md`](contracts.md) so they can't drift apart. Backend's production stand-in ([`backend/src/tools/analyze-pun-fixture.ts`](../backend/src/tools/analyze-pun-fixture.ts)) deliberately answers only the undetermined result.
+- No shared fixture format yet for the `/analyze` stand-in: Backend's tests ([`backend/tests/fixtures/analyze-results.ts`](../backend/tests/fixtures/analyze-results.ts)), Frontend's stub and Eval each keep their own. It should probably be one fixture referenced from [`contracts.md`](contracts.md) so they can't drift apart. Backend's test fixture ([`backend/src/tools/analyze-pun-fixture.ts`](../backend/src/tools/analyze-pun-fixture.ts)) answers the undetermined result. Runtime now uses the real Inference transport; Cloud Run authenticates with a service-account ID token.

@@ -13,11 +13,12 @@ POST /analyze
     "words_involved": [string],
     "explanation": string,
     "confidence": float | null,
+    "probabilities": {"non_pun": float, "homographic": float, "homophonic": float} | null,
     "sense_source": "wordnet" | "wiktionary" | "llm_fallback" | null
   }
 ```
 
-**Access:** locally, `/analyze` takes no credentials. The deployed Inference service is private: Cloud Run answers 403 to any request without a Google-signed ID token for an identity allowed to invoke it, before the request reaches Inference. Backend calls it as its runtime service account (TASK-11); see [`local-setup.md`](local-setup.md)'s "Inference deploy".
+**Access:** locally, `/analyze` takes no credentials. The deployed Inference service is private: Cloud Run answers 403 to any request without a Google-signed ID token for an identity allowed to invoke it, before the request reaches Inference. Backend calls it as its runtime service account; see [`local-setup.md`](local-setup.md)'s "Inference deploy".
 
 `is_pun`, `pun_type` and `confidence` come from pun detection alone: `confidence` is the detector's probability that the text is a pun, from 0 to 1. Sense selection only runs when `is_pun` is `true` and never changes those three fields.
 
@@ -96,7 +97,7 @@ Gemini can call `analyze_pun` on several texts at once, and can call it again in
 
 The timeouts below are defined once, with the reasoning behind each value, in [`packages/timeouts/index.js`](../packages/timeouts/index.js) (`@pun-agent/timeouts`). Backend, Frontend and [`deploy-backend.yml`](../.github/workflows/deploy-backend.yml) all read them from there, and its tests fail if a change to one breaks a relationship described here. `MODEL_STALL_LIMIT_MS` has been checked against measured silences for the Flash-Lite models only (below); all the others are **provisional and unmeasured**, and TASK-32 measures `INFERENCE_TIMEOUT_MS` once `/analyze` answers. Changing one follows [`engineering-practices.md`](engineering-practices.md)'s deploy order for the shared timeouts.
 
-`analyze_pun` waits at most `INFERENCE_TIMEOUT_MS` for Inference, then returns the undetermined result. So a `toolRequest` stays unanswered for at most that long because of Inference, and parallel calls wait together. A reply can have up to `MAX_TOOL_ROUNDS` rounds of tool calls (Backend passes it to Genkit as `maxTurns`; a reply whose model asks for another round fails with `ABORTED`), so Inference can delay one reply by up to `MAX_TOOL_ROUNDS` × `INFERENCE_TIMEOUT_MS` in total. The timeout has to cover Inference's Cloud Run cold start, which can't be measured until `/analyze` answers (TASK-16). Until TASK-11, Backend doesn't call Inference at all: every `analyze_pun` call returns the undetermined result, so Gemini judges each text itself.
+`analyze_pun` waits at most `INFERENCE_TIMEOUT_MS` for Inference, then returns the undetermined result. So a `toolRequest` stays unanswered for at most that long because of Inference, and parallel calls wait together. A reply can have up to `MAX_TOOL_ROUNDS` rounds of tool calls (Backend passes it to Genkit as `maxTurns`; a reply whose model asks for another round fails with `ABORTED`), so Inference can delay one reply by up to `MAX_TOOL_ROUNDS` × `INFERENCE_TIMEOUT_MS` in total. The timeout includes identity-token acquisition and Inference’s Cloud Run cold start. Backend now calls the real service; cold-start timing still needs measurement after deployment.
 
 Each call to the model may go at most `MODEL_STALL_LIMIT_MS` without sending anything: before its first chunk, between two chunks, or after its last chunk until the call ends ([`backend/src/flows/stall-guard.ts`](../backend/src/flows/stall-guard.ts)). A call that goes quiet for longer is cancelled. Before its first chunk, that's retried like any other failed call (see "Retries." below); after it, or once retries run out, the reply fails with `DEADLINE_EXCEEDED` (see "Failed replies" below). The timer restarts on every chunk, so a reply that keeps streaming is never cut off by it, and `analyze_pun` runs between model calls, so its wait on Inference never counts.
 
@@ -130,3 +131,7 @@ error: { "error": { "status": string, "message": string } }
 ```
 
 `message` is a user-facing sentence that Frontend can display as-is: Backend never forwards an upstream error's own message or details, and logs those server-side instead. `status` is Genkit's status code, kept for diagnostics (e.g. `UNAVAILABLE` or `DEADLINE_EXCEEDED` when the model is overloaded, slow or stops sending, `RESOURCE_EXHAUSTED` when quota runs out, `ABORTED` when the model asks for more than `MAX_TOOL_ROUNDS` rounds of tool calls, `INTERNAL` for anything unexpected), and it's the last attempt's, after any retries (see "Retries." above); Frontend shouldn't branch on specific values. In Phase 2, a turn that fails after a `toolRequest` chunk ends with this event and no matching `toolResponse`, so Frontend has to settle that pending tool call itself. That includes Gemini calling `analyze_pun` with arguments that don't match its input (`{ "text": string }`), which Genkit rejects before the tool runs. A request rejected before streaming starts (a missing or invalid App Check token, or a body that doesn't match the shape above) gets a non-2xx JSON response instead, and a client that disconnects mid-reply gets no error event.
+
+### Classifier probability extension
+
+`probabilities` exposes the detector’s three original class probabilities, each in [0, 1], summing to 1 (tolerance 1e-6). `confidence` remains P(pun) = homographic + homophonic. These are unconditional model probabilities, not calibrated confidence or sense-selection scores. Sense selection must not change them. Inference returns null when detection fails. For compatibility, existing services/fixtures may omit the field or return null; Backend and Frontend accept both and never invent missing probabilities. Frontend shows the three values in the expanded analysis card, including non-pun results. No classifier, threshold, or type-selection behavior changes.

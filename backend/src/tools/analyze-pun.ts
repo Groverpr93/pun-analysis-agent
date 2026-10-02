@@ -10,6 +10,14 @@ const analyzeResultFields = z.object({
 	explanation: z.string(),
 	// The detector's probability that the text is a pun.
 	confidence: z.number().min(0).max(1).nullable(),
+	probabilities: z
+		.object({
+			non_pun: z.number().min(0).max(1),
+			homographic: z.number().min(0).max(1),
+			homophonic: z.number().min(0).max(1),
+		})
+		.nullable()
+		.optional(),
 	sense_source: z.enum(["wordnet", "wiktionary", "llm_fallback"]).nullable(),
 });
 
@@ -25,8 +33,19 @@ const contractViolation = ({
 	words_involved,
 	explanation,
 	confidence,
+	probabilities,
 	sense_source,
 }: z.infer<typeof analyzeResultFields>) => {
+	if (probabilities != null) {
+		const pun = probabilities.homographic + probabilities.homophonic;
+		if (
+			confidence === null ||
+			Math.abs(pun + probabilities.non_pun - 1) > 1e-6 ||
+			Math.abs(pun - confidence) > 1e-6
+		) {
+			return "class probabilities must sum to one and agree with pun confidence";
+		}
+	}
 	if ((is_pun === null) !== (confidence === null)) {
 		return "is_pun and confidence must be null together";
 	}
@@ -131,8 +150,8 @@ export const analyzePunInputSchema = z.object({
 
 export interface AnalyzePunToolOptions {
 	/**
-	 * Makes the HTTP call to Inference. Injected so tests (and, until
-	 * TASK-11, production; see fixtureFetch) answer /analyze without a live
+	 * Makes the HTTP call to Inference. Injected so tests
+	 * answer /analyze without a live
 	 * Inference service, per docs/engineering-practices.md's "Backend in
 	 * isolation" section.
 	 */
