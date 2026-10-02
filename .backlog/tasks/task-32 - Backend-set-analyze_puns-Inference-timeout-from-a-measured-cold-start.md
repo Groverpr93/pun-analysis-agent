@@ -5,12 +5,15 @@ status: In Progress
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-27 15:25'
-updated_date: '2026-09-29 20:52'
+updated_date: '2026-10-02 10:04'
 labels: []
 milestone: m-4
 dependencies:
   - TASK-9
   - TASK-14
+  - TASK-51
+  - TASK-53
+  - TASK-55
 references:
   - docs/contracts.md
   - backend/src/tools/analyze-pun.ts
