@@ -112,14 +112,10 @@ def select_senses(text, ranked_pairs, extractor):
         key=lambda item: (preferred.get(item[0].index, len(preferred)), item[0].index),
     )
 
-    def embed(texts):
-        # Reuse the already loaded encoder; do not load a second ONNX model.
-        return extractor.encoder.encode(texts, normalize_embeddings=True, show_progress_bar=False)
-
     for candidate, context in ordered:
         senses = get_candidate_senses(candidate)
-        scored = score_senses(senses, text, context.predicate, context.relation, embed)
-        signal = pun_margin(scored, embed)
+        scored = score_senses(senses, text, context.predicate, context.relation, extractor.embed)
+        signal = pun_margin(scored, extractor.embed)
         # A tie between two zero/negative similarities is not contextual support.
         # Positive fit is a minimal guard, not a calibrated validity threshold.
         if not has_pun_tension(signal) or signal.runner_up.score <= 0:
@@ -128,7 +124,7 @@ def select_senses(text, ranked_pairs, extractor):
             continue
         # Coarse WordNet categories can differ even for near-synonymous glosses.
         # Apply the team's existing gloss-separation threshold to every selected pair.
-        vectors = embed([signal.top.sense.gloss, signal.runner_up.sense.gloss])
+        vectors = extractor.embed([signal.top.sense.gloss, signal.runner_up.sense.gloss])
         if float(vectors[0] @ vectors[1]) >= GLOSS_DISTINCT_THRESHOLD:
             continue
         evidence = (

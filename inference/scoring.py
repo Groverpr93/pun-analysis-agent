@@ -204,16 +204,20 @@ _embedder: TextEmbedding | None = None
 _embedder_lock = threading.Lock()
 
 
-def default_embed(texts: list[str]) -> list[npt.NDArray[np.float32]]:
+def default_embed(texts: list[str], batch_size: int = 256) -> list[npt.NDArray[np.float32]]:
     """Production Embed: all-MiniLM-L6-v2 via fastembed, loaded lazily on first use.
 
     Lazy + locked for the same reasons as senses._get_wordnet(): don't pay the
     model load at import time (Cloud Run cold start, see AGENTS.md), and don't
     let two concurrent first requests both load it.
+
+    `batch_size` is fastembed's default. Every text in a batch is padded to the
+    longest one, so a caller embedding many texts at once with a long one among
+    them should pass a smaller batch to bound memory.
     """
     global _embedder
     if _embedder is None:
         with _embedder_lock:
             if _embedder is None:
                 _embedder = TextEmbedding(EMBEDDING_MODEL)
-    return list(_embedder.embed(texts))
+    return list(_embedder.embed(texts, batch_size=batch_size))
