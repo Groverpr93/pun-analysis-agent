@@ -18,10 +18,6 @@ ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy UV_PYTHON_DOWNLOADS=never
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv uv sync --locked --no-dev
-COPY candidates.py ./
-COPY pun_detector/ pun_detector/
-ENV PUN_RESOURCES=/pun_resources
-RUN .venv/bin/python -c "from huggingface_hub import snapshot_download; from pun_detector.features import ENCODER, REVISION; snapshot_download(ENCODER, revision=REVISION, local_dir='/pun_resources/encoder', allow_patterns=['*.json', '*.txt', '*.safetensors'], ignore_patterns=['onnx/*', 'openvino/*'])"
 ENV WN_DATA_DIR=/wn_data
 RUN .venv/bin/python -m wn download oewn:2025 && rm -rf /wn_data/downloads
 # The embedding model too: fastembed would otherwise fetch it from HuggingFace
@@ -37,10 +33,9 @@ RUN useradd --system --no-create-home app
 WORKDIR /app
 # HF_HUB_OFFLINE: load the baked-in model only, never download at runtime.
 ENV PATH=/app/.venv/bin:$PATH WN_DATA_DIR=/wn_data \
-    FASTEMBED_CACHE_PATH=/fastembed_cache HF_HUB_OFFLINE=1 PUN_RESOURCES=/pun_resources
+    FASTEMBED_CACHE_PATH=/fastembed_cache HF_HUB_OFFLINE=1
 COPY --from=build /app/.venv .venv
 COPY --from=build /wn_data /wn_data
-COPY --from=build /pun_resources /pun_resources
 COPY --from=build /fastembed_cache /fastembed_cache
 COPY --from=wiktionary /wiktionary.sqlite data/wiktionary.sqlite
 COPY . .
@@ -56,7 +51,12 @@ assert get_wordnet_senses(word), 'no WordNet senses: check WN_DATA_DIR'; \
 assert get_wiktionary_senses(word), 'no Wiktionary senses: check data/wiktionary.sqlite'; \
 from scoring import default_embed; \
 assert len(default_embed(['interest'])[0]) == 384, 'embedding model: check FASTEMBED_CACHE_PATH'"
-RUN python -c "from main import analysis; result = analysis.analyze('The baker needed more dough.'); assert result['is_pun'] is True and result['probabilities'], result"
+# And the pun detector end to end, on the same baked-in data and embedding model.
+# fastembed doesn't pin the model's revision, so a confidence far from the one
+# docs/experiments/task-55 recorded means the detector's inputs drifted.
+RUN python -c "from main import analysis; result = analysis.analyze('The baker needed more dough.'); \
+assert result['is_pun'] is True and result['probabilities'], result; \
+assert abs(result['confidence'] - 0.94911) < 1e-4, f'embedding model drifted: {result}'"
 # Cloud Run sets PORT (8080 unless the service overrides it); exec hands
 # uvicorn the shell's PID so it gets Cloud Run's SIGTERM directly.
 CMD ["sh", "-c", "exec uvicorn main:app --host 0.0.0.0 --port \"${PORT:-8080}\""]
