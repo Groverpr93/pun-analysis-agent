@@ -15,7 +15,7 @@ class AnalyzeRequest(BaseModel):
 
     @field_validator("text")
     @classmethod
-    def not_blank(cls, value):
+    def not_blank(cls, value: str) -> str:
         if not value.strip():
             raise ValueError("Sentence must not be blank")
         return value
@@ -38,5 +38,5 @@ class AnalyzeResponse(BaseModel):
 
 
 @app.post("/analyze", response_model=AnalyzeResponse)
-def analyze(request: AnalyzeRequest):
-    return analysis.analyze(request.text)
+def analyze(request: AnalyzeRequest) -> AnalyzeResponse:
+    return AnalyzeResponse.model_validate(analysis.analyze(request.text))
