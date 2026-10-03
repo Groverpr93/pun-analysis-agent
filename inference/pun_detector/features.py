@@ -9,12 +9,11 @@ from pathlib import Path
 import numpy as np
 
 from candidates import CandidateWord
+from scoring import EMBEDDING_MODEL, default_embed
 
-ROOT = Path(__file__).resolve().parent
-RESOURCES = Path(os.environ.get("PUN_RESOURCES", ROOT / ".resources"))
-ENCODER = "sentence-transformers/all-MiniLM-L6-v2"
-# Pinned upstream model snapshot, also verified by setup's snapshot_download.
-REVISION = "c9745ed1d9f207416be6d2e6f8de32d1f16199bf"
+# The fastembed (ONNX) model sense scoring already loads; detector.npz records
+# the torch encoder it was trained with and the evidence that the two agree.
+ENCODER = f"fastembed:{EMBEDDING_MODEL}"
 LEXICON = "oewn:2025"
 SCHEMA = 1
 PAIR_FIELDS = (
@@ -31,6 +30,7 @@ PAIR_FIELDS = (
 MAX_CANDIDATES = 32
 MAX_SENSES = 24
 MAX_CHARS = 2000
+EMBED_BATCH_SIZE = 8
 
 
 def validate_text(text):
@@ -106,23 +106,32 @@ def feature_vector(embedding, pairs, candidate_count, ambiguous_count):
     return np.asarray(values, dtype=np.float32)
 
 
-class FeatureExtractor:
-    def __init__(self):
-        import spacy
-        import torch
-        import wn
-        from sentence_transformers import SentenceTransformer
+def onnx_embed(texts):
+    """Unit-length embeddings from the fastembed (ONNX) model sense scoring already loads.
 
-        torch.set_num_threads(1)
+    The extractor embeds a text with all its contexts and glosses in one call, so
+    batches stay small: with fastembed's default of 256, one long text padded its
+    whole batch and peaked above 1 GiB, while 8 kept the worst case near 600 MiB
+    (TASK-55). fastembed's rows are already unit length but float64; the cast and
+    normalization pin the contract feature_vector and pair_features rely on.
+    """
+    vectors = np.asarray(default_embed(list(texts), batch_size=EMBED_BATCH_SIZE), dtype=np.float32)
+    return vectors / np.linalg.norm(vectors, axis=1, keepdims=True)
+
+
+class FeatureExtractor:
+    def __init__(self, embed=onnx_embed):
+        """`embed` maps texts to unit-length sentence embeddings, one row per text."""
+        import spacy
+        import wn
+
         if os.environ.get("WN_DATA_DIR"):
             wn.config.data_directory = Path(os.environ["WN_DATA_DIR"])
         self.lexicon = wn.Wordnet(LEXICON)
         # Existing extractor disables the parser. Use its record type and POS policy,
         # but own a parser here instead of mutating its shared model.
         self.nlp = spacy.load("en_core_web_sm", disable=["ner"])
-        self.encoder = SentenceTransformer(
-            str(RESOURCES / "encoder"), local_files_only=True, device="cpu"
-        )
+        self.embed = embed
         self.vectors = {}
         self.senses = lru_cache(maxsize=8192)(self._senses)
 
@@ -165,9 +174,7 @@ class FeatureExtractor:
             bundles.append(candidates)
         missing = sorted(needed - self.vectors.keys())
         if missing:
-            vectors = self.encoder.encode(
-                missing, normalize_embeddings=True, batch_size=64, show_progress_bar=False
-            )
+            vectors = self.embed(missing)
             self.vectors.update(zip(missing, vectors, strict=True))
         results = []
         for text, candidates in zip(texts, bundles, strict=True):

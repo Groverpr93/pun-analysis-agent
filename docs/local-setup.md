@@ -70,7 +70,7 @@ The repo's two cleanup policies combine as "delete anything older than a day, un
 
 Cloud Run keeps its own copy of the image for a revision that's serving, so deleting it from the registry doesn't affect live traffic. Whether a revision that isn't serving can come back without its registry image isn't documented, so roll back only to a revision whose image is still listed.
 
-On 2026-09-28 the repo was 393 MB of the 0.5 GB free tier, mostly the ~219 MB Inference image. Kept deploys share every unchanged layer, so a code-only deploy adds very little, but three kept Inference deploys that each changed dependencies could take ~650 MB on their own (TASK-39 reduces this). Check the size with `gcloud artifacts repositories describe pun-agent --location=us-east1`.
+On 2026-09-28 the repo was 393 MB of the 0.5 GB free tier, mostly the ~219 MB Inference image. Kept deploys share every unchanged layer, so a code-only deploy adds very little, but three kept Inference deploys that each changed dependencies could take ~650 MB on their own (TASK-39 reduces this). By 2026-10-02 the Inference image had grown to ~350 MB with sense scoring's embedding model and its runtime (TASK-19), so three such deploys could take ~1 GB, twice the free tier; the pun detector adds almost nothing, since it shares that model ([TASK-55](experiments/task-55/README.md)). Check the size with `gcloud artifacts repositories describe pun-agent --location=us-east1`, or locally with `docker image inspect --format '{{.Size}}'` on a `linux/amd64` build, which reproduced the 219 MB above.
 
 Deletions are logged in Data Access audit logs, which are off by default, so check what's left with `gcloud artifacts versions list --package=backend --repository=pun-agent --location=us-east1` rather than the logs. To change the policies, write the **complete** set to a file and apply it. `set-cleanup-policies` replaces every existing policy with the file's contents, so a file missing the keep policy leaves only the delete policy, which then deletes every image older than a day. Check the result with `list-cleanup-policies`:
 
@@ -118,8 +118,8 @@ Python + [`uv`](https://docs.astral.sh/uv/) (fast, reproducible dependency manag
 ```bash
 cd inference
 uv sync
-uv run python -m wn download oewn:2025  # one-time: sense-selection's WordNet data
-uv run python -c "from scoring import default_embed; default_embed(['warm'])"  # one-time: scoring's embedding model (~87 MB, can take minutes); tests never need it. It's cached in the OS temp dir, so rerun this if that gets cleared
+uv run python -m wn download oewn:2025  # one-time: WordNet data, for sense selection and the pun detector
+uv run python -c "from scoring import default_embed; default_embed(['warm'])"  # one-time: the embedding model scoring and the pun detector share (~87 MB, can take minutes); tests never need it. It's cached in the OS temp dir, so rerun this if that gets cleared
 curl -fL --create-dirs -o data/wiktionary.sqlite.gz https://github.com/team-play/pun-analysis-agent/releases/download/wiktionary-data-2026-09-25/wiktionary.sqlite.gz && gunzip -f data/wiktionary.sqlite.gz  # one-time: sense-selection's Wiktionary data
 uv run pytest
 uv run ruff check .
@@ -127,7 +127,7 @@ uv run ruff format .
 uv run uvicorn main:app --reload
 ```
 
-The dev server serves `POST /analyze` at `http://localhost:8000`.
+The dev server serves `POST /analyze` at `http://localhost:8000`. The pun detector needs only the WordNet data and embedding model above; without them it can't load, and every `/analyze` returns the undetermined result, with the reason in the server log.
 
 ## Backend (`backend/`)
 

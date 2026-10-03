@@ -6,5 +6,3 @@ __pycache__/
 data/
 tests/
 scripts/
-
-pun_detector/.resources/

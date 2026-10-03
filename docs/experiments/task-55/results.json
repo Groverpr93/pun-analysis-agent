@@ -1,0 +1,78 @@
+{
+	"gates": {
+		"max_flips": 1,
+		"near": 0.01,
+		"metric_tolerance": 0.005
+	},
+	"passed": true,
+	"checks": {
+		"at_most_one_flip": true,
+		"flips_are_coin_flips": true,
+		"metrics_within_tolerance": true
+	},
+	"texts": 605,
+	"threshold": 0.32032454013824463,
+	"flips": [],
+	"torch_matches_stored_predictions": 605,
+	"metrics": {
+		"report_json": {
+			"pun_precision": 0.8571428571428571,
+			"pun_recall": 0.9444444444444444,
+			"pun_f1": 0.8986784140969163,
+			"binary_accuracy": 0.8479338842975207,
+			"three_class_accuracy": 0.6330578512396694,
+			"three_class_macro_f1": 0.6358121236609459
+		},
+		"torch": {
+			"pun_precision": 0.8571428571428571,
+			"pun_recall": 0.9444444444444444,
+			"pun_f1": 0.8986784140969163,
+			"binary_accuracy": 0.8479338842975207,
+			"three_class_accuracy": 0.6330578512396694,
+			"three_class_macro_f1": 0.6358121236609456
+		},
+		"onnx": {
+			"pun_precision": 0.8571428571428571,
+			"pun_recall": 0.9444444444444444,
+			"pun_f1": 0.8986784140969163,
+			"binary_accuracy": 0.8479338842975207,
+			"three_class_accuracy": 0.6330578512396694,
+			"three_class_macro_f1": 0.6358121236609456
+		},
+		"onnx_vs_report_gap": {
+			"pun_precision": 0.0,
+			"pun_recall": 0.0,
+			"pun_f1": 0.0,
+			"binary_accuracy": 0.0,
+			"three_class_accuracy": 0.0,
+			"three_class_macro_f1": 2.220446049250313e-16
+		}
+	},
+	"diagnostics": {
+		"embedded_texts_compared": 9911,
+		"min_cosine": 0.9999997615814209,
+		"mean_cosine": 1.0000000219149758,
+		"max_class_probability_gap": 1.8490920644653741e-6,
+		"mean_class_probability_gap": 1.879496316387071e-7,
+		"long_inputs": [
+			{
+				"chars": 98,
+				"cosine": 1.0000001192092896
+			},
+			{
+				"chars": 980,
+				"cosine": 1.0000001192092896
+			},
+			{
+				"chars": 1470,
+				"cosine": 1.000000238418579
+			},
+			{
+				"chars": 2000,
+				"cosine": 1.000000238418579
+			}
+		],
+		"torch_seconds": 25.2,
+		"onnx_seconds": 22.3
+	}
+}

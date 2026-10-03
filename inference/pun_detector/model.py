@@ -5,7 +5,7 @@ from pathlib import Path
 
 import numpy as np
 
-from .features import ENCODER, LEXICON, REVISION, SCHEMA, FeatureExtractor, validate_text
+from .features import ENCODER, LEXICON, SCHEMA, FeatureExtractor, validate_text
 
 ARTIFACT = Path(__file__).resolve().parent / "detector.npz"
 
@@ -25,7 +25,6 @@ class PunDetector:
             if self.metadata["features"] != {
                 "schema": SCHEMA,
                 "encoder": ENCODER,
-                "revision": REVISION,
                 "lexicon": LEXICON,
             }:
                 raise ValueError("Artifact and feature configuration differ; retrain the detector.")
