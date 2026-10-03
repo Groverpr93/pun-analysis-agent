@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-29 08:53'
-updated_date: '2026-09-29 10:42'
+updated_date: '2026-10-03 23:15'
 labels: []
 dependencies:
   - TASK-45
@@ -41,4 +41,6 @@ TASK-45 checked that each model on /api/chat's ladder accepts a follow-up whose 
 
 <!-- SECTION:NOTES:BEGIN -->
 2026-09-29 (user): parked; the team's focus moved to Inference and ladder work stopped. gemini-3.8-flash, the ladder's last rung, stays unverified (docs/contracts.md says so); the ladder only reaches it after both Flash-Lite models fail. Pick this up only if Flash's place on the ladder, or a demo on Flash (TASK-37), comes back into scope.
+
+2026-10-03 (user): archived without being done, after staying parked since 2026-09-29. Flash's place on the ladder and a demo on Flash haven't come back into scope, and work is on Inference. gemini-3.8-flash stays unverified for cross-model follow-ups, as docs/contracts.md says; docs/experiments/task-45/check.mjs re-runs the check if the ladder's models change.
 <!-- SECTION:NOTES:END -->

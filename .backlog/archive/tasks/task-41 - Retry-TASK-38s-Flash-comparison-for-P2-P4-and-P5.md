@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-28 10:00'
-updated_date: '2026-09-29 10:42'
+updated_date: '2026-10-03 23:15'
 labels: []
 dependencies:
   - TASK-38
@@ -45,4 +45,6 @@ How: in backend/, run the dev server on Flash (GEMINI_MODEL=gemini-flash-latest 
 From TASK-45 (2026-09-29): production's ladder now ends with gemini-3.8-flash, so Flash's free quota (20/day, per project) is production's last resort; this task's runs spend it.
 
 2026-09-29 (user): parked; the team's focus moved to Inference and ladder work stopped. gemini-3.8-flash, the ladder's last rung, stays unverified (docs/contracts.md says so); the ladder only reaches it after both Flash-Lite models fail. Pick this up only if Flash's place on the ladder, or a demo on Flash (TASK-37), comes back into scope.
+
+2026-10-03 (user): archived without being done, after staying parked since 2026-09-29. Flash's place on the ladder and a demo on Flash haven't come back into scope, and work is on Inference. The Flash half of TASK-38's comparison stays incomplete (P1 and P3 only); docs/experiments/task-38/README.md and record.mjs can redo it if a switch back to Flash is considered (TASK-37).
 <!-- SECTION:NOTES:END -->
