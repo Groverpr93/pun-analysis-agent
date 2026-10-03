@@ -4,7 +4,7 @@ title: Template pun explanation string and finalize sense_source tiering
 status: To Do
 assignee: []
 created_date: '2026-09-20 10:04'
-updated_date: '2026-10-03 21:31'
+updated_date: '2026-10-03 22:32'
 labels:
   - wsd
 milestone: m-6
@@ -49,4 +49,6 @@ From TASK-19's architectural review (2026-09-28): (1) PunSignal.sense_source is 
 From TASK-19's review (2026-09-29): the two-category seeds (need/want + dobj -> food or money) tie any word with a food and a money WordNet sense, whatever the rest of the sentence says: "I want more bread with my soup." scores margin 0. Sense selection only runs when the detector says is_pun: true, but in a real pun sentence a seeded bystander word could still beat the actual pun word. So when choosing which candidate wins, don't let "selectional_preference beats embedding_lesk" decide on its own. PunSignal.method (added in TASK-19) says which scorer produced the pair.
 
 2026-10-03: PR #85 already templates an explanation in pun_detector/agent.py's select_senses ('"{word}" can mean {gloss} or {gloss}. {evidence} Their score difference is {margin}. This is a proposed interpretation...'), which differs from this task's pattern; TASK-58 moves that orchestration into sense selection first. From PR #85's architectural review: sense-selection.md asks Inference to log why it fell back (no confident pair vs an internal error), but agent.py only logs exceptions, so a no-pair result and every homophonic llm_fallback are silent.
+
+2026-10-03 (TASK-58): sense selection's orchestration and its explanation template now live in inference/selection.py (select_senses / pun_readings), not pun_detector/agent.py. From TASK-58's code review: when the shared-word or gloss-similarity filter rejects a candidate's pair, the whole candidate is skipped instead of trying its next distinct sense, so a word with a valid third sense falls through to the next candidate or llm_fallback. These are really 'distinct sense' rules; folding them into scoring's pun_margin/_distinct would fix it, but changes behaviour, so it belongs here or with TASK-2.4.
 <!-- SECTION:NOTES:END -->

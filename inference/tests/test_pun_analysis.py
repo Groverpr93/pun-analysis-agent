@@ -1,5 +1,6 @@
 import pytest
 
+from pun_detector import agent
 from pun_detector.agent import PunAnalysis, undetermined
 from tests.fakes import BrokenDetector, FakeDetector, RecordingSelector, selected
 
@@ -106,3 +107,29 @@ def test_a_homographic_pun_without_candidates_falls_back_with_no_suspected_word(
 
     assert result["sense_source"] == "llm_fallback"
     assert result["words_involved"] == []
+
+
+def test_by_default_selection_runs_on_the_detectors_parse_embed_and_ranking(monkeypatch):
+    calls = []
+
+    def fake_select_senses(doc, embed, *, preferred):
+        calls.append((doc, embed, preferred))
+        return selected("wordnet")
+
+    monkeypatch.setattr(agent, "select_senses", fake_select_senses)
+
+    class Extractor:
+        embed = object()
+
+        @staticmethod
+        def nlp(text):
+            return f"parsed: {text}"
+
+    detector = FakeDetector(candidates=("dough", "baker"))
+    detector.extractor = Extractor
+
+    result = PunAnalysis(detector).analyze("The baker needed more dough.")
+
+    assert result["sense_source"] == "wordnet"
+    # The detector's ranking reaches selection as token indexes, best first.
+    assert calls == [("parsed: The baker needed more dough.", Extractor.embed, [0, 1])]

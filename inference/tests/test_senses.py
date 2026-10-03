@@ -6,7 +6,14 @@ import pytest
 import senses
 from candidates import CandidateWord
 from scripts.build_wiktionary_db import build_db, entry_glosses, keep_entry
-from senses import _get_wordnet, get_candidate_senses, get_wiktionary_senses, get_wordnet_senses
+from senses import (
+    Sense,
+    _get_wordnet,
+    alternative_lemmas,
+    get_candidate_senses,
+    get_wiktionary_senses,
+    get_wordnet_senses,
+)
 
 FAKE_KAIKKI = [
     {
@@ -256,3 +263,82 @@ def test_wiktionary_lookups_are_consistent_under_concurrency(wiktionary_db):
         for word, pos in [("rizz", "NOUN"), ("dance", "VERB"), ("pun", "NOUN")]
     ] * 5
     _assert_consistent_under_concurrency(get_wiktionary_senses, candidates)
+
+
+DOUGH = CandidateWord(text="Dough", lemma="dough", pos="NOUN", index=0)
+
+
+def _dough_sense(lexfile):
+    return next(s for s in get_wordnet_senses(DOUGH) if s.lexfile == lexfile)
+
+
+def test_alternative_lemmas_lists_the_senses_other_words_without_the_candidate():
+    money = alternative_lemmas(DOUGH, _dough_sense("noun.possession"))
+
+    assert {"bread", "loot", "moolah"} <= money
+    assert "dough" not in money
+
+
+def test_alternative_lemmas_is_empty_for_a_sense_with_no_other_words():
+    assert alternative_lemmas(DOUGH, _dough_sense("noun.food")) == frozenset()
+
+
+@pytest.mark.parametrize(
+    "sense",
+    [
+        Sense("informal terms for money", (), None, "wiktionary"),
+        Sense("not a gloss WordNet has", (), "noun.possession", "wordnet"),
+    ],
+    ids=["wiktionary sense", "no matching synset"],
+)
+def test_alternative_lemmas_is_none_when_it_cant_resolve_the_sense(sense):
+    assert alternative_lemmas(DOUGH, sense) is None
+
+
+def test_alternative_lemmas_are_consistent_under_concurrency():
+    money = _dough_sense("noun.possession")
+    _assert_consistent_under_concurrency(lambda _: alternative_lemmas(DOUGH, money), range(20))
+
+
+def test_alternative_lemmas_compares_words_case_insensitively():
+    turkey = CandidateWord(text="turkey", lemma="turkey", pos="NOUN", index=0)
+    bird = next(s for s in get_wordnet_senses(turkey) if s.lexfile == "noun.animal")
+
+    # WordNet lists "turkey" and "Meleagris gallopavo" for the bird.
+    assert alternative_lemmas(turkey, bird) == {"meleagris gallopavo"}
+
+
+def test_alternative_lemmas_is_none_when_two_synsets_match_the_sense(monkeypatch):
+    class FakeSynset:
+        def __init__(self, synset_id, lemmas):
+            self.id, self._lemmas = synset_id, lemmas
+
+        def definition(self):
+            return "informal terms for money"
+
+        def lexfile(self):
+            return "noun.possession"
+
+        def lemmas(self):
+            return self._lemmas
+
+    class FakeWordnet:
+        def synsets(self, lemma, pos):
+            return [FakeSynset("a", ["dough", "loot"]), FakeSynset("b", ["dough", "bread"])]
+
+    monkeypatch.setattr(senses, "_get_wordnet", FakeWordnet)
+    money = Sense("informal terms for money", (), "noun.possession", "wordnet")
+
+    # Two synsets fit, so which other words apply is unknown, not either list.
+    assert alternative_lemmas(DOUGH, money) is None
+
+
+def test_alternative_lemmas_also_drops_the_candidates_surface_form():
+    # A token whose lemma differs from its text (e.g. a lemmatizer slip):
+    # neither form counts as "another word".
+    moolah = CandidateWord(text="moolah", lemma="dough", pos="NOUN", index=0)
+
+    money = alternative_lemmas(moolah, _dough_sense("noun.possession"))
+
+    assert "moolah" not in money
+    assert "loot" in money

@@ -92,6 +92,41 @@ def _hypernym_chain(synset: wn.Synset) -> tuple[str, ...]:
     return tuple(chain)
 
 
+def alternative_lemmas(candidate: CandidateWord, sense: Sense) -> frozenset[str] | None:
+    """The other words WordNet lists for `sense`, normalized, without the candidate itself.
+
+    `Sense` records no synset ID, so this finds the synset among the candidate's
+    by gloss and lexfile. None when `sense` isn't from WordNet or that match
+    isn't unique: "couldn't tell", not "has no other words".
+    """
+    if sense.source != "wordnet":
+        return None
+    wordnet = _get_wordnet()
+    with _wordnet_lock:
+        synsets = {
+            synset.id: synset
+            for pos in _WORDNET_POS.get(candidate.pos, [])
+            for synset in wordnet.synsets(candidate.lemma, pos=pos)
+        }
+        matches = [
+            synset
+            for synset in synsets.values()
+            if synset.definition() == sense.gloss and synset.lexfile() == sense.lexfile
+        ]
+        if len(matches) != 1:
+            return None
+        lemmas = matches[0].lemmas()
+    return frozenset(map(_normalize, lemmas)) - {
+        _normalize(candidate.lemma),
+        _normalize(candidate.text),
+    }
+
+
+def _normalize(word: str) -> str:
+    """'Piggy_Bank ' -> 'piggy bank', so WordNet lemmas and spaCy tokens compare equal."""
+    return " ".join(word.lower().replace("_", " ").split())
+
+
 _wiktionary: sqlite3.Connection | None = None
 _wiktionary_lock = threading.Lock()
 

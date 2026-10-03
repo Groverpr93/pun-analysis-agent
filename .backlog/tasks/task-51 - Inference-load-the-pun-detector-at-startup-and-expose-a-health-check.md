@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-10-02 10:04'
-updated_date: '2026-10-03 21:31'
+updated_date: '2026-10-03 22:32'
 labels: []
 milestone: m-4
 dependencies:
@@ -44,4 +44,8 @@ PR 85 (TASK-16) loads the detector lazily inside the first /analyze request, und
 
 <!-- SECTION:NOTES:BEGIN -->
 2026-10-03: PR #90 (68ab1f3) already covers most of AC #3: tests/test_main.py swaps in a fake PunAnalysis and checks blank and over-MAX_CHARS text get 422 and that the undetermined, not-a-pun, llm_fallback, wordnet and wiktionary results all come back unchanged. Still missing: a result that breaks AnalyzeResponse gets a 500. Also from PR #85's architectural review: pun_detector/features.py's FeatureExtractor loads its own en_core_web_sm with disable=['ner'], the same settings as candidates.get_model(), so Inference holds two copies of the spaCy pipeline inside its 1 GiB; its comment saying the other one disables the parser is wrong. Reuse candidates.get_model() when moving loading to startup.
+
+Correction (2026-10-03, while doing TASK-58): the note above is wrong about memory. Production never calls candidates.get_model() (only tests do), so Inference loads one spaCy pipeline, the detector's. Only features.py's comment ('Existing extractor disables the parser') is wrong. TASK-58 keeps it that way: selection.py takes a parsed Doc from its caller instead of loading a pipeline. If startup loading wants one shared pipeline, FeatureExtractor can use candidates.get_model(), since the settings are identical.
+
+From TASK-58's code review: selection re-embeds what the detector already embedded. score_senses embeds the sentence once per candidate, and gloss_similarity re-embeds glosses, while the detector's FeatureExtractor.vectors already caches the sentence and every WordNet gloss. When moving loading to startup, select_with_detector could pass an embed that reads that cache first.
 <!-- SECTION:NOTES:END -->

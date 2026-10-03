@@ -24,6 +24,19 @@ Handles **homographic** puns (one written word, two senses). Homophonic puns (so
 5. **Sense-pair signal = tension, not a single winner.** Normal WSD picks the argmax sense. We want the *margin* between the top two candidate senses instead: two senses that are both plausible (small margin) and clearly distinct (different top-level hypernym — e.g. *dough* has one sense under `food` ("a paste of flour, water, etc." for baking) and one under `possession` (informal for money)) is what makes a sense pair a convincing pun reading. The margin doesn't decide `is_pun` (detection does) or feed `confidence` (the detector's probability): it decides whether sense selection has a confident pair to explain (`wordnet`/`wiktionary`) or hands off with `llm_fallback` (Tier 3).
 6. **Explanation.** Template the `explanation` string off the two winning glosses: `"{word}" can mean {gloss_1} or {gloss_2}; the sentence supports both because {evidence}`. For "the baker needed more dough": `"dough" can mean bread dough or (informally) money; the sentence supports both because a struggling bakery needs both`.
 
+### In code
+
+Each step has its own module in `inference/`: `candidates.py` (step 1), `senses.py` (step 2 and Tiers 0 and 2), `context.py` (step 3) and `scoring.py` (steps 4 and 5, Tier 1). [`selection.py`](../../inference/selection.py) runs them over one parsed sentence. Pun detection calls its `select_senses()` once it has decided the text is a homographic pun, passing its own parse and its ranking of the candidate words. Calibration can call `pun_readings()` to measure what production runs: it yields every candidate with a pun reading, and with `threshold=math.inf` it shows every margin the other filters let through. It tries candidates in production's order only when it's given detection's ranking as `preferred`; otherwise sentence order decides which reading comes first. (Eval measures through `/analyze` instead.)
+
+Candidates are tried in detection's ranking first, then in sentence order, and the first one with a pun reading wins, so the order decides *which* word gets explained when several qualify. Only the first 32 candidates in the sentence are tried, plus any detection ranked, to bound the work one long input can cost. A candidate's top two senses (step 5) count as a pun reading only when all of these hold:
+
+- **The margin is at most `MARGIN_THRESHOLD`:** both senses fit about as well.
+- **The runner-up's score is positive.** Two senses that both fit badly aren't a pun just because they fit equally badly.
+- **The two senses share no other WordNet word.** Senses that do (say both list *bread*) are usually near-synonyms, even in different lexfiles. A sense WordNet can't pin to one synset (a Wiktionary sense, or a gloss two synsets share) can't veto a pair.
+- **Their glosses aren't similar** (cosine below `GLOSS_DISTINCT_THRESHOLD`), even when their lexfiles differ: step 5's category check alone lets through near-identical glosses filed under different lexfiles.
+
+Until TASK-21 lands, the explanation doesn't follow step 6's template yet. It reads `"{word}" can mean {gloss_1} or {gloss_2}.`, then the evidence (the seeded slot, or the glosses' similarity to the sentence), then the score difference, and says it's a proposed interpretation.
+
 ## Risk: WordNet coverage gaps
 
 WordNet is a static, hand-curated resource, so it fails in predictable ways for pun text: slang, proper nouns, novel/compound usage, and glosses short enough to make literal word-overlap scoring noisy. Rather than one fallback, this is a tiered pipeline where each tier only runs when the previous one couldn't produce a confident answer, so degradation is graceful and measurable instead of all-or-nothing.

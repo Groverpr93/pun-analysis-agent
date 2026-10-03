@@ -18,7 +18,10 @@ class FakeDetector:
             "pun_type": pun_type,
             "confidence": probabilities["homographic"] + probabilities["homophonic"],
             "probabilities": probabilities,
-            "candidate_pairs": [{"candidate": {"text": word}} for word in candidates],
+            "candidate_pairs": [
+                {"candidate": {"text": word, "index": index}}
+                for index, word in enumerate(candidates)
+            ],
         }
 
     def predict(self, text):

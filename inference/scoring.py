@@ -184,17 +184,22 @@ def _distinct(a: Sense, b: Sense, embed: Embed) -> bool:
     """
     if _informative(a.lexfile) and _informative(b.lexfile):
         return a.lexfile != b.lexfile
+    return gloss_similarity(a, b, embed) < GLOSS_DISTINCT_THRESHOLD
+
+
+def gloss_similarity(a: Sense, b: Sense, embed: Embed) -> float:
+    """Cosine similarity between two senses' glosses; 1.0 = same meaning."""
     gloss_a, gloss_b = embed([a.gloss, b.gloss])
-    return _cosine(gloss_a, gloss_b) < GLOSS_DISTINCT_THRESHOLD
+    return _cosine(gloss_a, gloss_b)
 
 
 def _informative(lexfile: str | None) -> bool:
     return lexfile is not None and lexfile not in _UNINFORMATIVE_LEXFILES
 
 
-def has_pun_tension(signal: PunSignal | None) -> bool:
+def has_pun_tension(signal: PunSignal | None, threshold: float = MARGIN_THRESHOLD) -> bool:
     """True when both senses are close enough in score to read as a pun."""
-    return signal is not None and signal.margin <= MARGIN_THRESHOLD
+    return signal is not None and signal.margin <= threshold
 
 
 # Baked into the image at build time (Dockerfile), which must name the same model.

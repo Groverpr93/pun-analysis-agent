@@ -56,6 +56,7 @@ assert len(default_embed(['interest'])[0]) == 384, 'embedding model: check FASTE
 # docs/experiments/task-55 recorded means the detector's inputs drifted.
 RUN python -c "from main import analysis; result = analysis.analyze('The baker needed more dough.'); \
 assert result['is_pun'] is True and result['probabilities'], result; \
+assert result['sense_source'] == 'wordnet' and result['words_involved'] == ['dough'], result; \
 assert abs(result['confidence'] - 0.94911) < 1e-4, f'embedding model drifted: {result}'"
 # Cloud Run sets PORT (8080 unless the service overrides it); exec hands
 # uvicorn the shell's PID so it gets Cloud Run's SIGTERM directly.
