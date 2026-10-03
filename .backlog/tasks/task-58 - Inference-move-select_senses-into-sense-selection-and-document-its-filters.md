@@ -1,11 +1,11 @@
 ---
 id: TASK-58
 title: 'Inference: move select_senses into sense selection and document its filters'
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-10-03 21:30'
-updated_date: '2026-10-03 22:32'
+updated_date: '2026-10-03 22:52'
 labels:
   - wsd
 milestone: m-6
@@ -61,3 +61,9 @@ Verified: every response field identical before and after on all 606 test-split 
 
 Reviews (AGENTS.md): code review and architectural review subagents. Fixed: untested adapter; filter boundaries (runner-up exactly 0, margin exactly at the threshold); duplicated pun-tension rule; MAX_CANDIDATES coupling; dict return type; untested surface-form removal; the design doc overclaiming that calibration already calls pun_readings (it can, given the detector's ranking; Eval measures through /analyze); weak Docker smoke check. Documented, not changed: running pun_readings on threads alongside a loaded PunDetector isn't safe (two WordNet objects share wn's connection under different locks; production runs selection inside PunAnalysis's lock). Left as is, since this task is a pure move: repeated embedding (note on TASK-51), a vetoed pair dropping the whole candidate (note on TASK-21), two WordNet lookups per surviving candidate instead of one (606 sentences took 20 s before, 21 s after). The architectural review measured scoring.default_embed against the detector's onnx_embed: cosines differ by at most 2.5e-9, so calibration can use either; only the order (preferred) matters.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+Moved sense selection's Tier 0-2 orchestration out of pun_detector/agent.py into a top-level inference/selection.py (#93, a9e2928). pun_readings(doc, embed, *, preferred, threshold) yields each candidate that passes every filter, in the detector's order; select_senses() formats the first one, or returns None. pun_detector imports only select_senses. senses.alternative_lemmas and scoring.gloss_similarity replace the private helpers agent.py reached into, and has_pun_tension takes a threshold so calibration can sweep it on the same code production runs. docs/design/sense-selection.md now documents every filter and the candidate order. It was a pure move: every /analyze field was identical before and after on all 606 test-split sentences. Each of 20 deliberate breakages (filters, ordering, cap, threshold, adapter) fails a test. Re-verified on main after merge: 93 inference tests pass, ruff check and format clean. Follow-ups noted on TASK-21 (a vetoed pair drops the whole candidate) and TASK-51 (repeated embedding).
+<!-- SECTION:FINAL_SUMMARY:END -->
