@@ -1,11 +1,11 @@
 ---
 id: TASK-57
 title: 'Frontend: make the analyze_pun card lighter now that it shows probabilities'
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-10-02 10:04'
-updated_date: '2026-10-02 11:24'
+updated_date: '2026-10-03 21:39'
 labels: []
 milestone: m-4
 dependencies:
@@ -25,21 +25,21 @@ PR 85 added a three-row probability panel to the expanded analyze_pun card. Rend
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The collapsed header reads "Pun score N%" with a whole percent, for pun and non-pun verdicts alike
-- [ ] #2 The expanded card shows, in order: the quote with every `words_involved` word highlighted (case-insensitive), the explanation, the probabilities, and the raw response
-- [ ] #3 Probabilities render as one stacked bar with a legend in whole percents and an uncalibrated hint; its colors are theme tokens that pass the dataviz skill's palette validator in light and dark mode
-- [ ] #4 The raw /analyze JSON is collapsed by default behind a "Raw response" toggle
-- [ ] #5 A result whose `probabilities` is null or missing renders without the bar
-- [ ] #6 Fixtures include `probabilities`, and tests cover the formatting, the highlighting and the missing-probabilities case
-- [ ] #7 Frontend comments give the right reason `probabilities` is optional (threads saved before it existed), and the fixture comment saying production returns the undetermined result until TASK-11 is gone
-- [ ] #8 The card is checked rendered at desktop and phone widths
+- [x] #1 The collapsed header reads "Pun score N%" with a whole percent, for pun and non-pun verdicts alike
+- [x] #2 The expanded card shows, in order: the quote with every `words_involved` word highlighted (case-insensitive), the explanation, the probabilities, and the raw response
+- [x] #3 Probabilities render as one stacked bar with a legend in whole percents and an uncalibrated hint; its colors are theme tokens that pass the dataviz skill's palette validator in light and dark mode
+- [x] #4 The raw /analyze JSON is collapsed by default behind a "Raw response" toggle
+- [x] #5 A result whose `probabilities` is null or missing renders without the bar
+- [x] #6 Fixtures include `probabilities`, and tests cover the formatting, the highlighting and the missing-probabilities case
+- [x] #7 Frontend comments give the right reason `probabilities` is optional (threads saved before it existed), and the fixture comment saying production returns the undetermined result until TASK-11 is gone
+- [x] #8 The card is checked rendered at desktop and phone widths
 <!-- AC:END -->
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
-- [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
-- [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
+- [x] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
+- [x] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
+- [x] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
 
 ## Implementation Plan
@@ -58,4 +58,12 @@ PR 85 added a three-row probability panel to the expanded analyze_pun card. Rend
 
 <!-- SECTION:NOTES:BEGIN -->
 Implemented on task-57-lighter-card (stacked on PR 85 head b5dd5f7): validated --chart-1..3 colors, probabilities in fixtures (undetermined fixture omits the key, like Backend's own undetermined result and the recorded streams), and the redesigned card (Pun score label, highlighted words, explanation, stacked bar + legend, collapsed Raw response). Review subagent found the legend could sum to 101% and disagree with the header when classes were rounded separately; fixed by rounding the pun score once and splitting it between the pun types (tested over 201 splits). Bar logic moved to its own tested component. 162 frontend tests pass; rendered at desktop and phone widths in light and dark. Backend's undetermined result omitting probabilities was added to TASK-52 as an acceptance criterion.
+
+Rebased onto main after PR #85 merged (2026-10-03; #85 was squash-merged, so only TASK-57's three commits were replayed, no conflicts) and merged as #88 (67f4513), all 9 CI checks passing. Re-verified on the rebased branch with Node 24: 162 frontend tests, tsc -b and Biome clean. Rendered with the stub adapter via Playwright at 1280 and 390 px wide: pun (light, dark, both widths) 'Pun score 94%', legend 81% + 13% + 6%; llm_fallback 'Pun score 81%', legend 11% + 70% + 19%; not a pun 'Pun score 7%', legend 4% + 3% + 93%; undetermined with no bar. Every card shows the quote with words_involved marked, then the explanation, the bar and legend with the uncalibrated hint, and Raw response collapsed; no horizontal overflow at 390 px.
 <!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+The analyze_pun card is lighter and no longer contradicts itself. The header reads 'Pun score N%' (whole percent) for every verdict. The expanded card shows the quote with its words_involved highlighted, the explanation, one stacked probability bar with a whole-percent legend and an uncalibrated hint, and the raw response collapsed behind a toggle. The legend rounds the pun score once and splits it between the pun types, so it always sums to 100% and matches the header (a test sweeps 201 splits). The chart colors are theme tokens validated with the dataviz palette checker in light and dark mode. A result with null or missing probabilities shows no bar, and the fixtures now include probabilities. Verified with 162 frontend tests and Playwright renders at desktop and phone widths in both themes. Merged in #88 (67f4513).
+<!-- SECTION:FINAL_SUMMARY:END -->
