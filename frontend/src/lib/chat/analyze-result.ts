@@ -17,5 +17,11 @@ export type AnalyzeResult = {
 	explanation: string;
 	/** The detector's probability that the text is a pun, from 0 to 1. */
 	confidence: number | null;
+	/** Raw classifier probabilities; absent for older inference responses. */
+	probabilities?: {
+		non_pun: number;
+		homographic: number;
+		homophonic: number;
+	} | null;
 	sense_source: "wordnet" | "wiktionary" | "llm_fallback" | null;
 };

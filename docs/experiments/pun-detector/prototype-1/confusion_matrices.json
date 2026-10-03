@@ -1,0 +1,11 @@
+{
+	"orientation": "rows = actual; columns = predicted",
+	"binary": {
+		"class_order": ["non_pun", "pun"],
+		"counts": [[105, 68], [24, 408]]
+	},
+	"three_class": {
+		"class_order": ["non_pun", "homographic", "homophonic"],
+		"counts": [[105, 34, 34], [14, 168, 59], [10, 71, 110]]
+	}
+}

@@ -190,7 +190,7 @@ for (const [name, fetch, cause] of failures) {
 	});
 }
 
-test("production's stand-in for Inference answers the undetermined result", async () => {
+test("the stand-in for Inference answers the undetermined result", async () => {
 	const analyzePun = buildTool(fixtureFetch);
 
 	assert.deepEqual(
@@ -210,8 +210,8 @@ test("logs the status of a non-2xx response", async () => {
 });
 
 // The fake fetches above assume how the real fetch fails. These pin those
-// assumptions against the real fetch and a real (local) server, since the
-// real fetch is what TASK-11 swaps in.
+// assumptions against the real fetch and a real (local) server, since
+// production's createInferenceFetch wraps the real fetch.
 async function listen(
 	handler: Parameters<typeof createServer>[1],
 ): Promise<{ server: Server; url: string }> {

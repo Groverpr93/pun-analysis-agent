@@ -51,6 +51,12 @@ assert get_wordnet_senses(word), 'no WordNet senses: check WN_DATA_DIR'; \
 assert get_wiktionary_senses(word), 'no Wiktionary senses: check data/wiktionary.sqlite'; \
 from scoring import default_embed; \
 assert len(default_embed(['interest'])[0]) == 384, 'embedding model: check FASTEMBED_CACHE_PATH'"
+# And the pun detector end to end, on the same baked-in data and embedding model.
+# fastembed doesn't pin the model's revision, so a confidence far from the one
+# docs/experiments/task-55 recorded means the detector's inputs drifted.
+RUN python -c "from main import analysis; result = analysis.analyze('The baker needed more dough.'); \
+assert result['is_pun'] is True and result['probabilities'], result; \
+assert abs(result['confidence'] - 0.94911) < 1e-4, f'embedding model drifted: {result}'"
 # Cloud Run sets PORT (8080 unless the service overrides it); exec hands
 # uvicorn the shell's PID so it gets Cloud Run's SIGTERM directly.
 CMD ["sh", "-c", "exec uvicorn main:app --host 0.0.0.0 --port \"${PORT:-8080}\""]

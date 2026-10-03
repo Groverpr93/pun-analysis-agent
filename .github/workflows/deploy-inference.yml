@@ -92,12 +92,17 @@ jobs:
           # --invoker-iam-check turns the check back on if someone disabled it.
           # The runtime service account holds no roles, since Inference's data
           # is baked into the image. One instance, scaled to zero when idle.
+          # 1 GiB is about 1.7x the ~600 MiB peak of the worst case measured in
+          # docs/experiments/task-55. Concurrency 1: PunAnalysis serializes
+          # detection anyway, so a second request would only add memory.
           flags: >-
             --service-account=pun-agent-inference@${{ env.PROJECT_ID }}.iam.gserviceaccount.com
             --no-allow-unauthenticated
             --invoker-iam-check
             --min-instances=0
             --max-instances=1
+            --memory=1Gi
+            --concurrency=1
 
       # Backend calls /analyze as its runtime service account, so it depends on
       # this grant on Inference's service. Applied on every deploy (a no-op
@@ -127,8 +132,8 @@ jobs:
           URL: ${{ steps.deploy.outputs.url }}
 
       # The deployer can invoke the service through its project-level
-      # roles/run.admin. /openapi.json rather than /analyze, which answers 500
-      # until the classifier lands (TASK-16).
+      # roles/run.admin. The image build already checks a real classifier result;
+      # this smoke test checks authenticated service reachability.
       - if: env.DEPLOY == 'true'
         name: Smoke-test the deployed service with an ID token
         run: |

@@ -9,7 +9,7 @@ import { createJsonLogSink } from "./logging.ts";
 import { appCheck } from "./middleware/app-check.ts";
 import { createChatHandler } from "./routes/chat.ts";
 import { createAnalyzePunTool } from "./tools/analyze-pun.ts";
-import { fixtureFetch } from "./tools/analyze-pun-fixture.ts";
+import { createInferenceFetch } from "./tools/inference-fetch.ts";
 
 // Before any of this file's logging (like the APP_CHECK=off warning below).
 // Logs made while the imports above load would miss it; none log today.
@@ -36,10 +36,9 @@ if (config.appCheckEnforced) {
 	);
 }
 
-// Answered by a fixture until TASK-11 swaps fixtureFetch for a real fetch,
-// which has to carry an ID token: Inference's Cloud Run service is private.
+// Use the same transport locally and in deployment; Cloud Run adds its service identity.
 const analyzePun = createAnalyzePunTool(ai, {
-	fetch: fixtureFetch,
+	fetch: createInferenceFetch(config.inferenceUrl),
 	inferenceUrl: config.inferenceUrl,
 });
 const chatFlow = createChatFlow(ai, chatModels, [analyzePun]);
