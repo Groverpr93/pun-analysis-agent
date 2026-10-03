@@ -5,7 +5,7 @@ status: In Progress
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-09-27 15:25'
-updated_date: '2026-10-02 10:04'
+updated_date: '2026-10-03 21:31'
 labels: []
 milestone: m-4
 dependencies:
@@ -75,4 +75,6 @@ From TASK-47 (2026-09-29): gemini-3.1-flash-lite now runs at thinkingLevel MEDIU
 2026-09-29: AC #4 done for the Flash-Lite rungs (docs/experiments/task-32, run 2026-09-29T10-12-09.489Z, 50 replies). Harness runs createChatFlow in-process with stallLimitMs 120 s and times each ladder attempt through registered timed/<model> wrapper models carrying GEMINI_MODEL_CONFIG. Longest silence: 3.5 1.3 s (45 attempts); 3.1 14.8 s (47), a mid-reply gap between two text chunks, not before the first. Slowest first chunk 7.0 s (3.1). MODEL_STALL_LIMIT_MS kept at 30 s (~2x worst); comment corrected (the longest silence isn't necessarily before the first chunk); contracts.md records it. Flash follow-up: TASK-50. Dependents informed: TASK-28, TASK-37, TASK-43, TASK-45. Reviews: code + architectural subagents; applied: '15 s would have failed it' was wrong (14.84 s gap, 0.16 s to spare), README no longer infers where thinking happens (Backend doesn't request thoughts), stalls recorded via the guard's abort reason and reported as >= stallLimitMs, summarize sorts explicitly, contracts.md cites the constant and sample sizes. AC #1-#3 still wait on TASK-16.
 
 From TASK-19 (2026-09-28): scoring uses fastembed (onnxruntime), not sentence-transformers, so there's no torch. The ~87 MB all-MiniLM-L6-v2 model is baked into the image (no runtime download) and loads lazily on the first embed call; importing scoring adds ~0.3 s. Scoring isn't wired into /analyze until TASK-21, so a cold-start measurement before then won't include it.
+
+From PR #85's architectural review (2026-10-03, on TASK-16): Inference runs one instance with concurrency 1, and PunAnalysis serializes requests behind a lock, so parallel analyze_pun calls queue: they start their INFERENCE_TIMEOUT_MS clocks together, and the Nth waits about N x one call's latency (worse after a cold start; Cloud Run may also answer 429 when no instance is free). Measure 2-3 parallel calls, not just one, before setting the timeout.
 <!-- SECTION:NOTES:END -->

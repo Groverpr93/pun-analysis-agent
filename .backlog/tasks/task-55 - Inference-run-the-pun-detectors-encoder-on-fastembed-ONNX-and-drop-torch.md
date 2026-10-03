@@ -1,11 +1,11 @@
 ---
 id: TASK-55
 title: 'Inference: run the pun detector''s encoder on fastembed ONNX and drop torch'
-status: In Progress
+status: Done
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-10-02 10:04'
-updated_date: '2026-10-02 10:13'
+updated_date: '2026-10-03 20:57'
 labels:
   - pun-classifier
 milestone: m-4
@@ -27,19 +27,19 @@ PR 85 runs all-MiniLM-L6-v2 twice in Inference: through sentence-transformers on
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 The detector and its sense selection embed with the same fastembed ONNX model scoring.py uses, and torch, transformers and sentence-transformers are gone from inference/pyproject.toml and uv.lock
-- [ ] #2 On the 605-item test split, ONNX and torch 3-class predictions differ on at most 1 item, and only where P(pun) is within 0.01 of the threshold or the top two classes are within 0.01 of each other
-- [ ] #3 Metrics recomputed from the ONNX predictions are within 0.005 of report.json, with embedding cosine similarity and the largest class-probability difference recorded alongside
-- [ ] #4 detector.npz's feature metadata names the new encoder, so `PunDetector`'s configuration check still rejects a mismatched artifact
-- [ ] #5 The image size and Cloud Run memory use are measured; `--memory` in deploy-inference.yml is set from the measurement and docs/local-setup.md's registry note is updated
-- [ ] #6 docs/local-setup.md's Inference section covers every one-time download the detector needs, and inference/README.md no longer carries its own local-setup steps
+- [x] #1 The detector and its sense selection embed with the same fastembed ONNX model scoring.py uses, and torch, transformers and sentence-transformers are gone from inference/pyproject.toml and uv.lock
+- [x] #2 On the 605-item test split, ONNX and torch 3-class predictions differ on at most 1 item, and only where P(pun) is within 0.01 of the threshold or the top two classes are within 0.01 of each other
+- [x] #3 Metrics recomputed from the ONNX predictions are within 0.005 of report.json, with embedding cosine similarity and the largest class-probability difference recorded alongside
+- [x] #4 detector.npz's feature metadata names the new encoder, so `PunDetector`'s configuration check still rejects a mismatched artifact
+- [x] #5 The image size and Cloud Run memory use are measured; `--memory` in deploy-inference.yml is set from the measurement and docs/local-setup.md's registry note is updated
+- [x] #6 docs/local-setup.md's Inference section covers every one-time download the detector needs, and inference/README.md no longer carries its own local-setup steps
 <!-- AC:END -->
 
 ## Definition of Done
 <!-- DOD:BEGIN -->
-- [ ] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
-- [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
-- [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
+- [x] #1 Code review (test coverage + human-readable code) done per AGENTS.md's Code review section
+- [x] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
+- [x] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
 
 ## Implementation Plan
@@ -52,3 +52,19 @@ PR 85 runs all-MiniLM-L6-v2 twice in Inference: through sentence-transformers on
 5. Docs: local-setup.md's Inference section lists every one-time download; inference/README.md drops its own setup steps; the registry-size note is updated.
 6. Code review by a subagent per AGENTS.md, then open the PR into Groverpr93:review/pun-detector (PR 85's branch).
 <!-- SECTION:PLAN:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+Implemented in Groverpr93/pun-analysis-agent#1 (into PR #85's branch, merged 2026-10-03 18:23 UTC), which landed on main with PR #85 as 2e93091. docs/experiments/task-55/compare.py ran PR #85's torch encoder and the fastembed ONNX one over the 605-item test split, with torch brought in only through uv run --with. Gates (fixed 2026-10-02, before the first run) all passed: 0 of 605 predictions differ; every metric matches report.json (largest gap 2.2e-16); the torch run reproduces the stored predictions 605 of 605. Across the 9,911 texts embedded, the lowest cosine between the two encoders was 0.9999998 and the largest class-probability difference was 1.8e-6. No retraining was needed. detector.npz keeps byte-identical weights; only its metadata changed (features.encoder = fastembed:all-MiniLM-L6-v2, plus encoder_history naming the torch encoder and docs/experiments/task-55 as the equivalence evidence).
+
+Measured locally on linux/amd64: compressed image 768 MB (PR #85 with torch) -> 350 MB (same as main before #85); peak memory on dense 2,000-character texts 1,765 MiB -> 524-601 MiB, so deploy-inference.yml's --memory went from 2 GiB to 1 GiB. EMBED_BATCH_SIZE is 8 because fastembed's default of 256 pads a batch to its longest text: one 2,000-character text peaked at 1,155 MiB at the default (found by the independent review, fixed and re-measured). fastembed pins no model revision, so the Dockerfile's last build step also checks the baker sentence's confidence (0.94911 +/- 1e-4) to catch drift. Tests added: test_artifact_matches_the_encoder_the_detector_runs_on, test_onnx_embed_returns_unit_length_float32_rows_in_order (also pins the small batch size).
+
+Verified 2026-10-03 on main (2e93091): uv run pytest 55 passed; torch, transformers and sentence-transformers are absent from inference/pyproject.toml and uv.lock; deploy-inference.yml sets --memory=1Gi and the post-merge Deploy Inference run succeeded.
+<!-- SECTION:NOTES:END -->
+
+## Final Summary
+
+<!-- SECTION:FINAL_SUMMARY:BEGIN -->
+The pun detector now embeds through the fastembed ONNX all-MiniLM-L6-v2 that sense scoring already loads, and torch, transformers and sentence-transformers are gone, so Inference holds one copy of the model. Verified with docs/experiments/task-55: 0 of 605 test predictions changed, metrics identical to report.json, encoder cosine >= 0.9999998, so detector.npz kept byte-identical weights and only its encoder metadata changed. Image 768 -> 350 MB and peak memory 1,765 -> about 600 MiB, so Cloud Run memory is 1 GiB. Docs: local-setup.md lists every one-time download; inference/README.md no longer has its own setup. Landed via Groverpr93/pun-analysis-agent#1 inside PR #85 (2e93091); 55 inference tests pass and the post-merge deploy succeeded.
+<!-- SECTION:FINAL_SUMMARY:END -->

@@ -5,6 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-10-02 10:04'
+updated_date: '2026-10-03 21:31'
 labels: []
 milestone: m-4
 dependencies:
@@ -38,3 +39,9 @@ PR 85 (TASK-16) loads the detector lazily inside the first /analyze request, und
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+2026-10-03: PR #90 (68ab1f3) already covers most of AC #3: tests/test_main.py swaps in a fake PunAnalysis and checks blank and over-MAX_CHARS text get 422 and that the undetermined, not-a-pun, llm_fallback, wordnet and wiktionary results all come back unchanged. Still missing: a result that breaks AnalyzeResponse gets a 500. Also from PR #85's architectural review: pun_detector/features.py's FeatureExtractor loads its own en_core_web_sm with disable=['ner'], the same settings as candidates.get_model(), so Inference holds two copies of the spaCy pipeline inside its 1 GiB; its comment saying the other one disables the parser is wrong. Reuse candidates.get_model() when moving loading to startup.
+<!-- SECTION:NOTES:END -->

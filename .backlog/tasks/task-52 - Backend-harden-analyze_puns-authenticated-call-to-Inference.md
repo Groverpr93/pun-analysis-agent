@@ -5,7 +5,7 @@ status: To Do
 assignee:
   - '@yaisiel.torres'
 created_date: '2026-10-02 10:04'
-updated_date: '2026-10-02 11:24'
+updated_date: '2026-10-03 21:31'
 labels: []
 milestone: m-4
 dependencies:
@@ -42,3 +42,9 @@ PR 85 added `backend/src/tools/inference-fetch.ts`, a hand-written metadata-serv
 - [ ] #2 Architectural review done if this touches contracts.md, project-spec.md topology, or engineering-practices.md isolation/phase order, or adds a service/dependency/deploy target
 - [ ] #3 Docs checked for drift (README.md, project-spec.md, local-setup.md, AGENTS.md); follow-up commit made if any changed
 <!-- DOD:END -->
+
+## Implementation Notes
+
+<!-- SECTION:NOTES:BEGIN -->
+From PR #85's architectural review (2026-10-03, on TASK-16): deploy-backend.yml resolves INFERENCE_URL with gcloud run services describe pun-agent-inference, so Backend's deploy now needs the Inference service to exist; in a fresh project (or if Inference is deleted) the URL is empty and Backend fails at startup (new URL('')) instead of degrading to the undetermined result. That contradicts engineering-practices.md's claim that deploys don't block on each other; besides the empty-URL guard here, say in local-setup.md's one-time GCP setup that Inference deploys first.
+<!-- SECTION:NOTES:END -->
