@@ -17,7 +17,11 @@ export type AnalyzeResult = {
 	explanation: string;
 	/** The detector's probability that the text is a pun, from 0 to 1. */
 	confidence: number | null;
-	/** Raw classifier probabilities; absent for older inference responses. */
+	/**
+	 * The detector's three class probabilities, summing to 1; `confidence` is
+	 * `homographic` + `homophonic`. Missing from results saved in threads
+	 * before the field existed, and null when the result is undetermined.
+	 */
 	probabilities?: {
 		non_pun: number;
 		homographic: number;

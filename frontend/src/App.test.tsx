@@ -1,4 +1,10 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import {
+	fireEvent,
+	render,
+	screen,
+	waitFor,
+	within,
+} from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import App from "./App";
 import { createStubChatModelAdapter } from "./lib/chat/stub-chat-model-adapter";
@@ -85,7 +91,7 @@ describe("App", () => {
 			await sendMessage("got a good pun for me?");
 
 			const preamble = await screen.findByText(/let me take a look/i);
-			const card = await findCard("Pun (homographic), Pun probability 94%");
+			const card = await findCard("Pun (homographic), Pun score 94%");
 			const followUp = await screen.findByText(
 				/found one/i,
 				{},
@@ -102,21 +108,51 @@ describe("App", () => {
 			expect(screen.queryByText(/"sense_source": "wordnet"/)).toBeNull();
 		});
 
-		it("shows the explanation and Inference's raw response once opened", async () => {
+		it("shows the marked pun word, the explanation, then the class probabilities once opened", async () => {
 			renderApp();
 			await screen.findByText("Got a pun for me?");
 			await sendMessage("got a good pun for me?");
 
-			fireEvent.click(await findCard("Pun (homographic), Pun probability 94%"));
+			fireEvent.click(await findCard("Pun (homographic), Pun score 94%"));
 
-			expect(
-				await screen.findByText(/its slang sense \(money\)/, { selector: "p" }),
-			).toBeInTheDocument();
+			const word = await screen.findByText("dough", { selector: "mark" });
+			const explanation = await screen.findByText(/its slang sense \(money\)/, {
+				selector: "p",
+			});
+			const probabilities = screen.getByRole("list", {
+				name: "Classifier probabilities",
+			});
+			expect(probabilities).toHaveTextContent(
+				"Homographic 81%Homophonic 13%Not a pun 6%",
+			);
+			expect(word.compareDocumentPosition(explanation)).toBe(
+				Node.DOCUMENT_POSITION_FOLLOWING,
+			);
+			expect(explanation.compareDocumentPosition(probabilities)).toBe(
+				Node.DOCUMENT_POSITION_FOLLOWING,
+			);
+		});
+
+		it("keeps Inference's raw response behind its own toggle", async () => {
+			renderApp();
+			await screen.findByText("Got a pun for me?");
+			await sendMessage("got a good pun for me?");
+			fireEvent.click(await findCard("Pun (homographic), Pun score 94%"));
+
+			const toggle = await screen.findByRole("button", {
+				name: "Raw response",
+			});
+			expect(toggle).toHaveAttribute("aria-expanded", "false");
+			expect(screen.queryByText(/"sense_source"/)).toBeNull();
+
+			fireEvent.click(toggle);
+
 			// Check the block's text: once highlighted, the JSON is split across
 			// token spans (lazy-shiki-highlighter.test.tsx checks the colors).
-			const response = await screen.findByText("Inference response");
-			expect(response.parentElement).toHaveTextContent(
-				'"sense_source": "wordnet"',
+			await waitFor(() =>
+				expect(toggle.parentElement).toHaveTextContent(
+					'"sense_source": "wordnet"',
+				),
 			);
 		});
 
@@ -126,23 +162,31 @@ describe("App", () => {
 
 			await sendMessage("show me the fallback");
 
+			const card = await findCard(
+				"Pun (homophonic), Pun score 81%, Senses supplied by Gemini, at lower confidence",
+			);
+			fireEvent.click(card);
+
+			// No explanation of its own, but Inference still names the word.
 			expect(
-				await findCard(
-					"Pun (homophonic), Pun probability 81%, Senses supplied by Gemini, at lower confidence",
-				),
+				await screen.findByText("knight", { selector: "mark" }),
 			).toBeInTheDocument();
 		});
 
-		it("says Inference couldn't analyze an undetermined result, with no confidence", async () => {
+		it("says Inference couldn't analyze an undetermined result, with no confidence or probabilities", async () => {
 			renderApp();
 			await screen.findByText("Got a pun for me?");
 
 			await sendMessage("an undetermined one");
 
 			// The exact name rules out a confidence alongside it.
+			const card = await findCard("Inference couldn't analyze this");
+			fireEvent.click(card);
+
+			await screen.findByRole("button", { name: "Raw response" });
 			expect(
-				await findCard("Inference couldn't analyze this"),
-			).toBeInTheDocument();
+				screen.queryByRole("list", { name: "Classifier probabilities" }),
+			).toBeNull();
 		});
 
 		it("stays running while the call is slow, and shows it cancelled when the user stops", async () => {

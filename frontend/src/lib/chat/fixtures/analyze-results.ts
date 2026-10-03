@@ -14,6 +14,7 @@ export const punResult: AnalyzeResult = {
 	explanation:
 		'"Dough" plays on its literal sense (bread dough) and its slang sense (money) — a baker "not making enough dough" reads as both a baking and a financial complaint.',
 	confidence: 0.94,
+	probabilities: { homographic: 0.81, homophonic: 0.13, non_pun: 0.06 },
 	sense_source: "wordnet",
 };
 
@@ -24,6 +25,7 @@ export const llmFallbackResult: AnalyzeResult = {
 	words_involved: ["knight"],
 	explanation: "",
 	confidence: 0.81,
+	probabilities: { homographic: 0.11, homophonic: 0.7, non_pun: 0.19 },
 	sense_source: "llm_fallback",
 };
 
@@ -33,12 +35,14 @@ export const notAPunResult: AnalyzeResult = {
 	words_involved: [],
 	explanation: "",
 	confidence: 0.07,
+	probabilities: { homographic: 0.04, homophonic: 0.03, non_pun: 0.93 },
 	sense_source: null,
 };
 
 /**
- * Inference couldn't judge the text (or couldn't be reached). Until
- * TASK-11, production's analyze_pun returns only this.
+ * Inference couldn't judge the text (or couldn't be reached). Without
+ * `probabilities`, like Backend's own undetermined result and the recorded
+ * streams; Inference sends it as null.
  */
 export const undeterminedResult: AnalyzeResult = {
 	is_pun: null,
