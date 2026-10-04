@@ -39,10 +39,11 @@ if (!isLogFormat(logFormat)) {
 // flows/model-ladder.ts). Quota and capacity are per model, so another one
 // often answers when the first can't. Two Flash-Lite models (TASK-38 chose
 // Flash-Lite for its free tier and availability; TASK-43 added 3.1), then
-// Flash as a last resort. Flash has the least of both (5 requests/min and
-// 20/day on the free tier), and TASK-38 and TASK-45 saw it overloaded, out
-// of quota and stalling. Three stalls (MODEL_STALL_LIMIT_MS each) on any
-// model spend the reply's whole RETRY_BUDGET_MS before it can step down, so
+// Flash as a last resort. Flash has the least of both (free-tier limits:
+// AGENTS.md's Gemini quota section), and TASK-38 and TASK-45 saw it
+// overloaded, out of quota and stalling. Three stalls (MODEL_STALL_LIMIT_MS
+// each) on any model spend the reply's whole RETRY_BUDGET_MS before it can
+// step down, so
 // the top rung goes to a model that hasn't been seen stalling. Each rung
 // names a fixed version rather than a -latest alias, so two rungs can't turn
 // out to be the same model. gemini-3.1-flash-lite shuts down no
