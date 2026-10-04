@@ -23,3 +23,11 @@ __pycache__/
 
 # Inference: downloaded Wiktionary sense data (see docs/local-setup.md)
 inference/data/
+
+# Eval: generated run output, not a committed dataset or report
+eval/eval-run.log
+eval/*-results.json
+
+# Inference: generated calibration run output (see scripts/calibrate_margin.py)
+inference/calibrate-*.log
+inference/calibrate-*.txt

@@ -41,10 +41,10 @@ Columns follow the `semeval2017_task7_puns.csv` convention above, plus one extra
 
 ## Precision/recall evaluation harness
 
-`evaluate_dataset.py` runs `datasets/semeval2017_task7_puns.csv` through an `/analyze` implementation and reports precision/recall/F1 for `is_pun` detection, plus separate `pun_type` metrics restricted to gold pun rows (`is_pun: True`), per [`../docs/contracts.md`](../docs/contracts.md). It validates every response against the full `/analyze` contract shape and records per-row request failures instead of crashing the run.
+`evaluate_dataset.py` runs `datasets/semeval2017_task7_puns.csv` through an `/analyze` implementation and reports precision/recall/F1 for `is_pun` detection, plus separate `pun_type` metrics restricted to detector true positives (gold `is_pun: True` *and* predicted `is_pun: True`), per [`../docs/contracts.md`](../docs/contracts.md). It validates every response against the full `/analyze` contract shape and records per-row request failures instead of crashing the run.
 
 An undetermined response (`is_pun: null`, Inference couldn't judge the text) is a valid answer, not a request failure. Each slice reports it three ways:
-- `is_pun` and `pun_type` are scored over determined rows only, measuring the detector's quality when it does answer.
+- `is_pun` is scored over determined rows only, measuring the detector's quality when it does answer. `pun_type` is scored over detector true positives only -- a false negative has no predicted pun_type to grade.
 - `undetermined_rows` and `detection_coverage` (determined rows / successful rows) show how often it answered at all. Always read coverage next to `is_pun`, since answering undetermined whenever unsure would otherwise inflate precision/recall.
 - `is_pun_end_to_end` scores undetermined as "not a pun", which is what a chat user sees.
 
@@ -64,4 +64,4 @@ Run against gold-label fixtures to sanity-check the evaluator itself (no HTTP ca
 uv run python evaluate_dataset.py --fixture
 ```
 
-Both report an `animal_food` slice (`category` in `food`/`animal`/`animal/food` — the food+animal baseline, per `TASK-2.2`) and an `all_categories` slice. Use `--dataset` to point at a different CSV and `--output` to also write the JSON result to a file. See [`reports/task-2.3-harness-validation.md`](reports/task-2.3-harness-validation.md) for a recorded fixture-mode self-validation run against the full dataset; a live run against a real `/analyze` classifier is blocked on TASK-16.
+Both report an `animal_food` slice (`category` in `food`/`animal`/`animal/food` — the food+animal baseline, per `TASK-2.2`) and an `all_categories` slice. Use `--dataset` to point at a different CSV and `--output` to also write the JSON result to a file. Use `--ids <file>` (optionally with `--ids-key`) to restrict to a named id list, e.g. a pun detector's `splits.json`, so a run can report on its unseen test split instead of data it trained or tuned on. See [`reports/task-2.3-harness-validation.md`](reports/task-2.3-harness-validation.md) for recorded fixture-mode and live runs.

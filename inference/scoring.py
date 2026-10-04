@@ -62,13 +62,12 @@ SELECTIONAL_PREFERENCES: dict[tuple[str, str], frozenset[str]] = {
     ("swing", "dobj"): frozenset({"sports implement", "sports equipment"}),
 }
 
-# Placeholders until TASK-2.4 calibrates them against SemEval.
-# A margin at or below this counts as "both senses plausible" = pun tension.
-# Only embedding-Lesk margins depend on it: selectional-preference scores are
-# 0 or 1, so their margins are too.
-MARGIN_THRESHOLD = 0.1
+# Calibrated by TASK-2.4 (scripts/calibrate_margin.py): tuned on the detector's
+# dev split, reported on its test split. Numbers, scope and rationale:
+# docs/design/sense-selection.md, open questions.
+MARGIN_THRESHOLD = 0.01
 # Two glosses with cosine similarity below this count as different senses
-# (used only when lexfiles can't tell -- see _distinct()).
+# (used only when lexfiles can't tell -- see _distinct()). Not yet calibrated.
 GLOSS_DISTINCT_THRESHOLD = 0.5
 
 # Nearly every WordNet adjective shares this lexfile, so it can't tell two
@@ -216,9 +215,8 @@ def default_embed(texts: list[str], batch_size: int = 256) -> list[npt.NDArray[n
     model load at import time (Cloud Run cold start, see AGENTS.md), and don't
     let two concurrent first requests both load it.
 
-    `batch_size` is fastembed's default. Every text in a batch is padded to the
-    longest one, so a caller embedding many texts at once with a long one among
-    them should pass a smaller batch to bound memory.
+    `batch_size` forwards to fastembed's own default (256); pun_detector's
+    onnx_embed passes a smaller value to cap peak memory (TASK-55).
     """
     global _embedder
     if _embedder is None:

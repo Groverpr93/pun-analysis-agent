@@ -1,3 +1,4 @@
+import json
 import sys
 import tempfile
 import unittest
@@ -28,13 +29,22 @@ def valid_response(**overrides: object) -> dict[str, object]:
         "explanation": "No pun detected.",
         "confidence": 0.5,
         "sense_source": None,
+        "probabilities": {"non_pun": 0.5, "homographic": 0.5, "homophonic": 0.0},
     }
     response.update(overrides)
     return response
 
 
 def undetermined_response(**overrides: object) -> dict[str, object]:
-    return valid_response(**{"is_pun": None, "explanation": "", "confidence": None, **overrides})
+    return valid_response(
+        **{
+            "is_pun": None,
+            "explanation": "",
+            "confidence": None,
+            "probabilities": None,
+            **overrides,
+        }
+    )
 
 
 class EvaluateDatasetTests(unittest.TestCase):
@@ -117,6 +127,42 @@ class EvaluateDatasetTests(unittest.TestCase):
             with self.subTest(**overrides), self.assertRaises(EvaluationError):
                 validate_response(undetermined_response(**overrides))
 
+    def test_validate_response_accepts_missing_probabilities_as_backward_compatible(self) -> None:
+        # docs/contracts.md: results predating the field omit it; treated like null.
+        response = valid_response()
+        del response["probabilities"]
+
+        validate_response(response)
+
+    def test_validate_response_rejects_undetermined_with_probabilities(self) -> None:
+        with self.assertRaises(EvaluationError):
+            validate_response(
+                undetermined_response(
+                    probabilities={"non_pun": 1.0, "homographic": 0.0, "homophonic": 0.0}
+                )
+            )
+
+    def test_validate_response_rejects_probabilities_missing_a_key(self) -> None:
+        with self.assertRaises(EvaluationError):
+            validate_response(valid_response(probabilities={"non_pun": 0.5, "homographic": 0.5}))
+
+    def test_validate_response_rejects_probabilities_not_summing_to_one(self) -> None:
+        with self.assertRaises(EvaluationError):
+            validate_response(
+                valid_response(
+                    probabilities={"non_pun": 0.5, "homographic": 0.5, "homophonic": 0.5}
+                )
+            )
+
+    def test_validate_response_rejects_probabilities_inconsistent_with_confidence(self) -> None:
+        with self.assertRaises(EvaluationError):
+            validate_response(
+                valid_response(
+                    confidence=0.9,
+                    probabilities={"non_pun": 0.5, "homographic": 0.5, "homophonic": 0.0},
+                )
+            )
+
     def test_validate_response_rejects_undetermined_with_words_or_explanation(self) -> None:
         for overrides in ({"words_involved": ["pun"]}, {"explanation": "A guess."}):
             with self.subTest(**overrides), self.assertRaises(EvaluationError):
@@ -153,6 +199,24 @@ class EvaluateDatasetTests(unittest.TestCase):
         self.assertEqual(result["slices"]["animal_food"]["is_pun"]["false_positive"], 1)
         self.assertEqual(result["slices"]["all_categories"]["pun_type"]["support"], 2)
         self.assertEqual(result["slices"]["all_categories"]["pun_type"]["accuracy"], 1.0)
+
+    def test_evaluate_excludes_detector_false_negatives_from_pun_type(self) -> None:
+        rows = [
+            DatasetRow("1", "pun", True, "homographic", "food"),
+            DatasetRow("2", "missed pun", True, "homophonic", "general"),
+        ]
+
+        def analyzer(row: DatasetRow) -> dict[str, object]:
+            if row.row_id == "2":
+                # Detector false negative: gold says pun, detector disagrees.
+                return valid_response(is_pun=False, pun_type=None)
+            return valid_response(**expected_output(row))
+
+        result = evaluate(rows, analyzer)
+
+        pun_type = result["slices"]["all_categories"]["pun_type"]
+        self.assertEqual(pun_type["support"], 1)
+        self.assertEqual(pun_type["accuracy"], 1.0)
 
     def test_evaluate_records_analyzer_errors(self) -> None:
         rows = [DatasetRow("1", "pun", True, "homographic", "food")]
@@ -308,6 +372,115 @@ class MainCliTests(unittest.TestCase):
 
         with patch.object(
             sys, "argv", ["evaluate_dataset.py", "--fixture", "--dataset", str(dataset_path)]
+        ):
+            exit_code = main()
+
+        self.assertEqual(exit_code, 1)
+
+    def _write_json(self, data: object) -> Path:
+        path = Path(self.enterContext(tempfile.TemporaryDirectory())) / "ids.json"
+        path.write_text(json.dumps(data), encoding="utf-8")
+        return path
+
+    def test_main_ids_flag_restricts_to_listed_rows(self) -> None:
+        dataset_path = self._write_dataset(
+            "id,is_pun,pun_type,category,text\n"
+            "hom_1,True,homographic,food,A pun.\n"
+            "het_1,False,,food,Not a pun.\n"
+        )
+        ids_path = self._write_json(["hom_1"])
+        output_path = dataset_path.with_name("result.json")
+
+        argv = [
+            "evaluate_dataset.py",
+            "--fixture",
+            "--dataset",
+            str(dataset_path),
+            "--ids",
+            str(ids_path),
+            "--output",
+            str(output_path),
+        ]
+        with patch.object(sys, "argv", argv):
+            exit_code = main()
+
+        self.assertEqual(exit_code, 0)
+        result = json.loads(output_path.read_text(encoding="utf-8"))
+        self.assertEqual(result["dataset_rows"], 1)
+
+    def test_main_ids_key_selects_a_named_list_from_a_json_object(self) -> None:
+        dataset_path = self._write_dataset(
+            "id,is_pun,pun_type,category,text\n"
+            "hom_1,True,homographic,food,A pun.\n"
+            "het_1,False,,food,Not a pun.\n"
+        )
+        ids_path = self._write_json({"train": ["het_1"], "test": ["hom_1"]})
+        output_path = dataset_path.with_name("result.json")
+
+        with patch.object(
+            sys,
+            "argv",
+            [
+                "evaluate_dataset.py",
+                "--fixture",
+                "--dataset",
+                str(dataset_path),
+                "--ids",
+                str(ids_path),
+                "--ids-key",
+                "test",
+                "--output",
+                str(output_path),
+            ],
+        ):
+            exit_code = main()
+
+        self.assertEqual(exit_code, 0)
+        result = json.loads(output_path.read_text(encoding="utf-8"))
+        # Only hom_1 (the "test" key), not het_1 from "train" -- proves the key
+        # actually selected a sublist rather than falling through to every row.
+        self.assertEqual(result["dataset_rows"], 1)
+
+    def test_main_ids_key_without_ids_is_rejected(self) -> None:
+        # A lone --ids-key would otherwise be silently ignored and score every
+        # row, hiding exactly the train/test leakage --ids exists to prevent.
+        dataset_path = self._write_dataset(
+            "id,is_pun,pun_type,category,text\nhom_1,True,homographic,food,A pun.\n"
+        )
+
+        with patch.object(
+            sys,
+            "argv",
+            [
+                "evaluate_dataset.py",
+                "--fixture",
+                "--dataset",
+                str(dataset_path),
+                "--ids-key",
+                "test",
+            ],
+        ):
+            exit_code = main()
+
+        self.assertEqual(exit_code, 1)
+
+    def test_main_ids_rejects_an_id_missing_from_the_dataset(self) -> None:
+        dataset_path = self._write_dataset(
+            "id,is_pun,pun_type,category,text\nhom_1,True,homographic,food,A pun.\n"
+        )
+        ids_path = self._write_json(["hom_1", "does_not_exist"])
+
+        with patch.object(
+            sys,
+            "argv",
+            [
+                "evaluate_dataset.py",
+                "--fixture",
+                "--dataset",
+                str(dataset_path),
+                "--ids",
+                str(ids_path),
+            ],
         ):
             exit_code = main()
 
