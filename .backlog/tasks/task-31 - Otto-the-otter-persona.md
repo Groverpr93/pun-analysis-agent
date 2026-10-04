@@ -4,7 +4,7 @@ title: Otto the otter persona
 status: In Progress
 assignee: []
 created_date: '2026-09-27 15:02'
-updated_date: '2026-09-28 14:40'
+updated_date: '2026-10-04 00:16'
 labels: []
 milestone: m-5
 dependencies: []
@@ -20,7 +20,7 @@ The app already looks like an otter mascot (TASK-22) but doesn't act like one: G
 
 ## Acceptance Criteria
 <!-- AC:BEGIN -->
-- [ ] #1 Both subtasks (backend persona, frontend loading animation) are Done
+- [x] #1 Both subtasks (backend persona, frontend loading animation) are Done
 - [ ] #2 In a manual end-to-end check against the deployed or local app, Otto's voice in replies and the thinking animation read as the same character as the TASK-22 mascot
 <!-- AC:END -->
 
@@ -35,4 +35,6 @@ The app already looks like an otter mascot (TASK-22) but doesn't act like one: G
 
 <!-- SECTION:NOTES:BEGIN -->
 TASK-31.2 Done; TASK-31.1 merged (#67) and deployed, with AC #4 pending a live check blocked by Gemini 503s on 2026-09-28. Deployed app check: the thinking otter and rotating phrases render in production; Otto's reply could not be observed there because Gemini returned 503.
+
+2026-10-03: TASK-31.1's AC #4 (in-character redirects) attempted and reverted; prompt edits traded it against tool-call regressions. See docs/experiments/task-31/README.md. TASK-31 stays In Progress until AC #4 is met or explicitly dropped.
 <!-- SECTION:NOTES:END -->
