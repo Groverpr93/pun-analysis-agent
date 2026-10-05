@@ -225,10 +225,13 @@ def test_report_verification_rejects_changed_results():
 
 def test_trained_artifact_loads_in_the_runtime_detector(tmp_path, monkeypatch):
     from scripts import train_detector
+    from scripts.train_detector import CLASSES
 
-    # Separable synthetic features: 4 "embedding" columns plus the 22 pair/count slots.
+    # Separable synthetic features: 4 "embedding" columns plus the 22 pair/count slots,
+    # with each class shifted along its own column.
     rng = np.random.default_rng(0)
-    labels = ["non_pun", "homographic", "homophonic"] * 20
+    width = 4 + 22
+    labels = CLASSES * 20
     vectors = {}
     dataset = tmp_path / "rows.csv"
     with dataset.open("w", newline="") as handle:
@@ -236,7 +239,7 @@ def test_trained_artifact_loads_in_the_runtime_detector(tmp_path, monkeypatch):
         writer.writerow(["id", "text", "is_pun", "pun_type"])
         for i, label in enumerate(labels):
             text = f"sentence {i}"
-            vectors[text] = rng.normal(size=26) + 3 * np.eye(26)[labels.index(label) % 3]
+            vectors[text] = rng.normal(size=width) + 3 * np.eye(width)[CLASSES.index(label)]
             is_pun = label != "non_pun"
             writer.writerow([f"r{i}", text, is_pun, label if is_pun else ""])
     ids = [f"r{i}" for i in range(len(labels))]
@@ -269,3 +272,7 @@ def test_trained_artifact_loads_in_the_runtime_detector(tmp_path, monkeypatch):
     constructed.clear()
     train_detector.train(dataset, output, splits)
     assert constructed == []
+    # Features cached under another configuration (e.g. the old torch encoder) are refused.
+    np.savez_compressed(output / "features.npz", x=np.zeros((60, width)), signature="other")
+    with pytest.raises(ValueError, match="stale"):
+        train_detector.train(dataset, output, splits)

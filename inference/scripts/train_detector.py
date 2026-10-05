@@ -279,7 +279,7 @@ THRESHOLD_TOLERANCE = 1e-4
 
 
 def verify_report(actual, reference, key=None):
-    """Compare all reported metrics/configuration, allowing only float roundoff."""
+    """Compare all reported metrics/configuration: float roundoff only, except thresholds."""
     if isinstance(reference, dict):
         if set(actual) != set(reference):
             raise ValueError("Report keys differ")
@@ -321,5 +321,5 @@ if __name__ == "__main__":
         )
         print(
             f"All report metrics and confusion matrices match (absolute tolerance "
-            f"{METRIC_TOLERANCE}; thresholds {THRESHOLD_TOLERANCE})."
+            f"{METRIC_TOLERANCE:g}; thresholds {THRESHOLD_TOLERANCE:g})."
         )

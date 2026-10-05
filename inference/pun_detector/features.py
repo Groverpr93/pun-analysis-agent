@@ -11,8 +11,9 @@ import numpy as np
 from candidates import CandidateWord
 from scoring import EMBEDDING_MODEL, default_embed
 
-# The fastembed (ONNX) model sense scoring already loads; detector.npz records
-# the torch encoder it was trained with and the evidence that the two agree.
+# The fastembed (ONNX) model sense scoring already loads. The shipped prototype-1
+# detector.npz records the torch encoder it was trained with and the evidence
+# that the two agree; scripts/train_detector.py trains on this one directly.
 ENCODER = f"fastembed:{EMBEDDING_MODEL}"
 LEXICON = "oewn:2025"
 SCHEMA = 1
