@@ -31,3 +31,6 @@ eval/*-results.json
 # Inference: generated calibration run output (see scripts/calibrate_margin.py)
 inference/calibrate-*.log
 inference/calibrate-*.txt
+
+# Offline detector training outputs (the presentation snapshot is committed separately)
+inference/training-output/
