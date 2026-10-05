@@ -2,9 +2,10 @@
 id: TASK-15
 title: 'Export conversation as JSON, and reset controls'
 status: To Do
-assignee: []
+assignee:
+  - '@yaitorr'
 created_date: '2026-09-18 00:02'
-updated_date: '2026-09-22 10:37'
+updated_date: '2026-10-04 20:57'
 due_date: '2026-09-21'
 labels: []
 milestone: m-1
@@ -14,6 +15,7 @@ dependencies:
 references:
   - docs/design/frontend-design.md
   - docs/contracts.md
+priority: medium
 project: frontend
 ordinal: 16000
 ---

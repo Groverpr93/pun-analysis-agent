@@ -3,9 +3,9 @@ id: TASK-57
 title: 'Frontend: make the analyze_pun card lighter now that it shows probabilities'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-10-02 10:04'
-updated_date: '2026-10-03 21:39'
+updated_date: '2026-10-04 20:57'
 labels: []
 milestone: m-4
 dependencies:

@@ -3,9 +3,9 @@ id: TASK-27
 title: 'Frontend CI: redeploy on dependency changes, serialize deploys, build on PRs'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-25 02:01'
-updated_date: '2026-09-28 08:42'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies: []
 references:

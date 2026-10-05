@@ -3,9 +3,9 @@ id: TASK-38
 title: Compare Gemini Flash and Flash-Lite pun analysis from a local Backend
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-27 20:49'
-updated_date: '2026-09-29 10:42'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies:
   - TASK-9

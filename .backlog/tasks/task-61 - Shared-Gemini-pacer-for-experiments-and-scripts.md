@@ -2,15 +2,17 @@
 id: TASK-61
 title: Shared Gemini pacer for experiments and scripts
 status: To Do
-assignee: []
+assignee:
+  - '@yaitorr'
 created_date: '2026-10-04 20:15'
-updated_date: '2026-10-04 20:43'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies: []
 references:
   - AGENTS.md
   - docs/experiments/task-31/README.md
   - docs/experiments/task-45/README.md
+priority: medium
 type: enhancement
 project: backend
 ordinal: 57000

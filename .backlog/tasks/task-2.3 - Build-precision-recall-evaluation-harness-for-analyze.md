@@ -3,9 +3,9 @@ id: TASK-2.3
 title: Build precision/recall evaluation harness for /analyze
 status: Done
 assignee:
-  - Livia
+  - '@lecastro-tech'
 created_date: '2026-09-20 10:05'
-updated_date: '2026-10-04 04:20'
+updated_date: '2026-10-05 01:18'
 labels:
   - dataset
   - evaluation

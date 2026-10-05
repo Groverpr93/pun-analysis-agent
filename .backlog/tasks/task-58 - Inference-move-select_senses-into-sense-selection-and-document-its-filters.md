@@ -3,9 +3,9 @@ id: TASK-58
 title: 'Inference: move select_senses into sense selection and document its filters'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-10-03 21:30'
-updated_date: '2026-10-03 22:52'
+updated_date: '2026-10-04 20:57'
 labels:
   - wsd
 milestone: m-6

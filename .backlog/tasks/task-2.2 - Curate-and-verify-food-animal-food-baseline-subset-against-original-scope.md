@@ -3,9 +3,9 @@ id: TASK-2.2
 title: Curate and verify food/animal-food baseline subset against original scope
 status: Done
 assignee:
-  - Livia
+  - '@lecastro-tech'
 created_date: '2026-09-20 10:05'
-updated_date: '2026-09-26 00:11'
+updated_date: '2026-10-04 20:57'
 labels:
   - dataset
 milestone: m-6

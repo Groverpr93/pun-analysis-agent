@@ -3,9 +3,9 @@ id: TASK-29
 title: 'Backend: structured logs on Cloud Run, one entry per event with a severity'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-26 13:45'
-updated_date: '2026-09-28 09:40'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies: []
 references:

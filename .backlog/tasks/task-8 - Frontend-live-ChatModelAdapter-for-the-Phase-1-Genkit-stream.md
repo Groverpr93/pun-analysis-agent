@@ -3,9 +3,9 @@ id: TASK-8
 title: 'Frontend: live ChatModelAdapter for the Phase 1 Genkit stream'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-17 23:34'
-updated_date: '2026-09-26 13:44'
+updated_date: '2026-10-04 20:57'
 due_date: '2026-09-21'
 labels: []
 milestone: m-2

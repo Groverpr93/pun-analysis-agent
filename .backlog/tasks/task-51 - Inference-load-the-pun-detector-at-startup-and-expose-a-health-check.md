@@ -3,9 +3,9 @@ id: TASK-51
 title: 'Inference: load the pun detector at startup and expose a health check'
 status: To Do
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-10-02 10:04'
-updated_date: '2026-10-03 22:32'
+updated_date: '2026-10-04 20:57'
 labels: []
 milestone: m-4
 dependencies:
@@ -14,6 +14,7 @@ references:
   - docs/contracts.md
   - inference/main.py
   - inference/pun_detector/agent.py
+priority: medium
 project: inference
 ordinal: 47000
 ---

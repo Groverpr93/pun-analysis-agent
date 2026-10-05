@@ -2,8 +2,10 @@
 id: TASK-39
 title: 'Inference image: download WordNet in its own Docker stage'
 status: To Do
-assignee: []
+assignee:
+  - '@Andi-Cast'
 created_date: '2026-09-28 09:46'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies:
   - TASK-14

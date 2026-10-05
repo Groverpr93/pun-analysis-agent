@@ -3,9 +3,9 @@ id: TASK-40
 title: 'Artifact Registry: make image retention match what we expect'
 status: In Progress
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-28 09:46'
-updated_date: '2026-09-29 01:52'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies:
   - TASK-14
@@ -13,7 +13,7 @@ references:
   - docs/local-setup.md
   - .github/workflows/deploy-backend.yml
   - .github/workflows/deploy-inference.yml
-priority: high
+priority: medium
 type: chore
 ordinal: 39000
 ---

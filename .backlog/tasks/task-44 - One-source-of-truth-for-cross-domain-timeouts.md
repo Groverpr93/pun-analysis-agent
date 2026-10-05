@@ -3,9 +3,9 @@ id: TASK-44
 title: One source of truth for cross-domain timeouts
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-28 16:31'
-updated_date: '2026-09-28 19:47'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies:
   - TASK-42

@@ -13,6 +13,7 @@ dependencies:
   - TASK-16
 references:
   - docs/experiments/pun-detector/prototype-1/README.md
+priority: medium
 project: inference
 ordinal: 50000
 ---

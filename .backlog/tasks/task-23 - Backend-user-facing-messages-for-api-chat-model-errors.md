@@ -3,9 +3,9 @@ id: TASK-23
 title: 'Backend: user-facing messages for /api/chat model errors'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-23 08:53'
-updated_date: '2026-09-23 09:10'
+updated_date: '2026-10-04 20:57'
 labels: []
 milestone: m-2
 dependencies: []

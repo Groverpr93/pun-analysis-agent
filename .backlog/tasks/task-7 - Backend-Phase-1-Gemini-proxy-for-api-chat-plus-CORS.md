@@ -3,9 +3,9 @@ id: TASK-7
 title: 'Backend: Phase 1 Gemini proxy for /api/chat, plus CORS'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-17 23:34'
-updated_date: '2026-09-22 09:24'
+updated_date: '2026-10-04 20:57'
 due_date: '2026-09-21'
 labels: []
 milestone: m-2

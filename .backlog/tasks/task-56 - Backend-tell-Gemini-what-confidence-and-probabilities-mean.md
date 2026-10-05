@@ -3,14 +3,16 @@ id: TASK-56
 title: 'Backend: tell Gemini what confidence and probabilities mean'
 status: To Do
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-10-02 10:04'
+updated_date: '2026-10-04 20:57'
 labels: []
 milestone: m-4
 dependencies:
   - TASK-16
 references:
   - backend/src/flows/system-instruction.ts
+priority: medium
 project: backend
 ordinal: 52000
 ---

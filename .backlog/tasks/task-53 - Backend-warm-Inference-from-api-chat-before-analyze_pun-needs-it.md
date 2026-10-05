@@ -3,8 +3,9 @@ id: TASK-53
 title: 'Backend: warm Inference from /api/chat before analyze_pun needs it'
 status: To Do
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-10-02 10:04'
+updated_date: '2026-10-04 20:57'
 labels: []
 milestone: m-4
 dependencies:
@@ -13,6 +14,7 @@ dependencies:
 references:
   - backend/src/routes/chat.ts
   - docs/project-spec.md
+priority: medium
 project: backend
 ordinal: 49000
 ---

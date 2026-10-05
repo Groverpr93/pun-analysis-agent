@@ -2,9 +2,10 @@
 id: TASK-37
 title: 'Demo prep: enable Gemini API billing with spending limits'
 status: To Do
-assignee: []
+assignee:
+  - '@yaitorr'
 created_date: '2026-09-27 20:47'
-updated_date: '2026-09-29 10:32'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies:
   - TASK-38
@@ -14,6 +15,7 @@ references:
   - 'https://aistudio.google.com/rate-limit'
   - backend/src/config.ts
   - docs/experiments/task-38/README.md
+priority: medium
 ordinal: 36000
 ---
 

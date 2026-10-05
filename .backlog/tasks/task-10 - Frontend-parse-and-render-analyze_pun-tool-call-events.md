@@ -3,9 +3,9 @@ id: TASK-10
 title: 'Frontend: parse and render analyze_pun tool-call events'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-17 23:34'
-updated_date: '2026-09-27 20:17'
+updated_date: '2026-10-04 20:57'
 due_date: '2026-09-21'
 labels: []
 milestone: m-3

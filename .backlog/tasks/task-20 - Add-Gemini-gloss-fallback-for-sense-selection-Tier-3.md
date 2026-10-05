@@ -4,9 +4,10 @@ title: >-
   Backend: Gemini supplies the senses when /analyze returns llm_fallback (Tier
   3)
 status: To Do
-assignee: []
+assignee:
+  - '@Andi-Cast'
 created_date: '2026-09-20 10:04'
-updated_date: '2026-09-28 13:50'
+updated_date: '2026-10-04 20:58'
 labels:
   - wsd
 milestone: m-6
@@ -17,6 +18,7 @@ references:
   - docs/design/sense-selection.md
   - docs/contracts.md
   - backend/src/flows/system-instruction.ts
+priority: medium
 project: backend
 ordinal: 20000
 ---
@@ -51,4 +53,6 @@ Split with TASK-12, which owns the system instruction's structure and scope/redi
 
 <!-- SECTION:NOTES:BEGIN -->
 From TASK-12's review: the undetermined-result guidance ("If is_pun is null, the classifier couldn't judge the text: decide yourself.") currently lives in analyze_pun's tool description (backend/src/tools/analyze-pun.ts), not in backend/src/flows/system-instruction.ts. When adding the llm_fallback/undetermined paragraph to the system instruction, move or merge that sentence so the guidance lives in one place.
+
+2026-10-04, while assigning to @Andi-Cast: llm_fallback results already reach Gemini in production, with no guidance yet. Since PR #85, inference/pun_detector/agent.py sets sense_source "llm_fallback" on every is_pun:true result before sense selection, and returns early for anything not homographic. So every homophonic pun arrives as llm_fallback with an empty explanation and an empty words_involved (not the suspected word this task's description assumes), and homographic puns land there whenever select_senses finds no confident pair. Today only analyze_pun's tool description says anything (the is_pun-null sentence in backend/src/tools/analyze-pun.ts); backend/src/flows/system-instruction.ts still has the "TASK-20 will add a paragraph" placeholder. AC #2's guidance therefore has to cover an empty words_involved, where Gemini also picks the word.
 <!-- SECTION:NOTES:END -->
