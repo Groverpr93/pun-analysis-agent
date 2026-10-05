@@ -65,7 +65,7 @@ These metrics evaluate sentence labels, not whether the recovered two senses are
 - [Test predictions](test_predictions.jsonl) and [split IDs](splits.json): audit and error analysis.
 - [Model metadata](model_metadata.json) and [hash manifest](manifest.json): resource/package versions and artifact/data identity.
 
-The original training outputs are preserved here. Runtime code and trained weights now live under `inference/pun_detector/`. Training scripts and development tests are archived locally outside the review branch; they are not included in the deployed service. Model/data hashes identify the original run; the integration does not retrain it.
+The original training outputs are preserved here. Runtime code and trained weights now live under `inference/pun_detector/`. The trainer and detector tests are now committed under `inference/scripts/train_detector.py` and `inference/tests/test_detector.py`; both remain excluded from the deployment image. See [reproduction instructions](../reproduction.md). Model/data hashes identify the original run; the integration does not retrain it.
 
 Snapshot verification: recomputed combined-model confusion matrices and binary metrics from the 605 stored predictions; checked dataset hash and model metadata against the report. This verifies consistency, not a fresh training run.
 
