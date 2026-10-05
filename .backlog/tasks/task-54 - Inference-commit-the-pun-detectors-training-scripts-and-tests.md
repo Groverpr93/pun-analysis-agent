@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@Groverpr93'
 created_date: '2026-10-02 10:04'
-updated_date: '2026-10-05 00:08'
+updated_date: '2026-10-05 01:32'
 labels:
   - pun-classifier
 milestone: m-6
@@ -47,10 +47,12 @@ Restore the original trainer with saved split IDs and explicit training dependen
 
 <!-- SECTION:NOTES:BEGIN -->
 Fresh original torch feature extraction and saved-split training reproduced all five report structures at absolute tolerance 1e-9. Cached rerun also passed. 113 inference tests passed. Independent code/architecture review found no blockers. Optional training deps excluded from production export; generated output excluded from Git/Docker. Source commit 558ed27; reproduction documentation follows in a separate commit.
+
+Review follow-up (316b14c): the trainer recorded the ONNX encoder in detector.npz's features while extracting with torch, so PunDetector's configuration check accepted weights with no parity evidence. Training now uses the runtime fastembed (ONNX) FeatureExtractor and the training group (torch, sentence-transformers, transformers) is removed. A fresh ONNX run reproduced every report metric, confusion matrix, selected C and all 605 test predictions; thresholds moved at most 2.9e-5 and weights at most 2.2e-5, so --verify-reference allows 1e-4 on thresholds only. Added a train() round-trip test; 114 inference tests pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
 
 <!-- SECTION:FINAL_SUMMARY:BEGIN -->
-Committed trainer with recorded split validation, pinned offline training dependencies, report verification and model-free detector tests. Full training reproduces prototype-1 metrics for presentation; no shipped weights changed.
+Committed trainer with recorded split validation, report verification and model-free detector tests. Training embeds with the deployed fastembed (ONNX) encoder, so retrained artifacts record the encoder they were trained on and need no PyTorch; retraining reproduces prototype-1's metrics and predictions for the presentation. No shipped weights changed.
 <!-- SECTION:FINAL_SUMMARY:END -->

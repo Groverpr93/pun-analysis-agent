@@ -1,21 +1,21 @@
 # Reproduce the detector results — TASK-54
 
-Verified on 4 October 2026: fresh feature extraction and training on the recorded split IDs reproduced **all five models' report metrics and confusion matrices**, with absolute tolerance `1e-9`. A second run using the feature cache passed the same check. The full inference suite passed **113 tests**, including 12 restored/new detector tests. No deployed weights or previous report files were overwritten.
+Verified on 4 October 2026: fresh feature extraction and training on the recorded split IDs reproduced **all five models' report metrics and confusion matrices**, first with the original torch encoder (absolute tolerance `1e-9`), then with the deployed fastembed (ONNX) encoder the trainer now uses. The ONNX run also reproduced the selected `C` and all 605 stored test predictions. Only the thresholds moved, by at most `2.9e-5`, and the combined model's weights by at most `2.2e-5`: thresholds are picked from development-set probabilities, so tiny encoder differences shift them without changing any decision. Verification allows `1e-4` on thresholds and `1e-9` everywhere else. No deployed weights or previous report files were overwritten.
 
 ## Run it
 
 From `inference/`:
 
 ```sh
-uv sync --locked --group training
-uv run --group training python -m wn download oewn:2025
-uv run --group training python scripts/train_detector.py \
+uv sync --locked
+uv run python -m wn download oewn:2025
+uv run python scripts/train_detector.py \
   --verify-reference ../docs/experiments/pun-detector/prototype-1/report.json
 ```
 
-The first run downloads the pinned MiniLM torch snapshot. It computes fresh features unless a matching `training-output/features.npz` already exists. To force fresh extraction while keeping prior outputs, pass a new directory, e.g. `--output training-output/fresh`. Paths for `--dataset`, `--splits`, `--output`, and `--verify-reference` can be overridden. The default dataset is the committed SemEval CSV; the default splits are the committed prototype-1 split IDs. Missing/repeated IDs and duplicate sentences crossing splits are rejected. The script does not make a new random split when reproducing results.
+Features come from the same fastembed model `/analyze` uses, downloaded on first use as in local setup. The script computes fresh features unless a matching `training-output/features.npz` already exists. To force fresh extraction while keeping prior outputs, pass a new directory, e.g. `--output training-output/fresh`. Paths for `--dataset`, `--splits`, `--output`, and `--verify-reference` can be overridden. The default dataset is the committed SemEval CSV; the default splits are the committed prototype-1 split IDs. Missing/repeated IDs and duplicate sentences crossing splits are rejected. The script does not make a new random split when reproducing results.
 
-The script writes `detector.npz`, `report.json`, `splits.json`, `test_predictions.jsonl`, and a reusable `features.npz` to `training-output/`. Verification fails if any report structure, metric, confusion-matrix entry, data hash or selected configuration differs beyond float tolerance. Generated files are excluded from Git and Docker. Output directly into the deployed model directory is refused.
+The script writes `detector.npz`, `report.json`, `splits.json`, `test_predictions.jsonl`, and a reusable `features.npz` to `training-output/`. Verification fails if any report structure, metric, confusion-matrix entry, data hash or selected configuration differs beyond the tolerances above. Generated files are excluded from Git and Docker. Output directly into the deployed model directory is refused.
 
 ## Tests without downloaded models
 
@@ -26,7 +26,7 @@ uv sync --locked
 uv run pytest tests/test_detector.py
 ```
 
-These tests use synthetic feature vectors and spaCy token documents, not downloaded WordNet or transformer models. They cover the decision threshold, summed pun probability, homographic/homophonic type choice and ties, sklearn/NumPy prediction agreement, artifact schema/class validation, invalid feature vectors, contextual feature calculations, duplicate handling, split integrity, output protection and report comparison. The existing full suite still needs WordNet as documented in local setup.
+These tests use synthetic feature vectors and spaCy token documents, not downloaded WordNet or transformer models. They cover the decision threshold, summed pun probability, homographic/homophonic type choice and ties, sklearn/NumPy prediction agreement, artifact schema/class validation, invalid feature vectors, contextual feature calculations, duplicate handling, split integrity, output protection, report comparison, and a `train()` round trip whose artifact must load in `PunDetector`. The existing full suite still needs WordNet as documented in local setup.
 
 ## Presentation-ready results
 
@@ -44,6 +44,6 @@ For slides, use the [original report and confusion matrices](prototype-1/README.
 
 ## Training versus deployment
 
-Reproduction uses the original pinned **sentence-transformers/PyTorch** encoder and scikit-learn 1.9.1. Production uses **fastembed/ONNX** and a NumPy classifier. Training adds no runtime dependency: torch and sentence-transformers belong only to the optional `training` group, while scikit-learn is also a development dependency for tests. The deployment's `uv sync --no-dev` installs none of those packages.
+Training and production both embed with **fastembed/ONNX**; training fits the head with scikit-learn 1.9.1, and production runs it with NumPy. scikit-learn is a development dependency only, so the deployment's `uv sync --no-dev` doesn't install it, and nothing in the project needs PyTorch. That holds while MiniLM stays frozen: fine-tuning the encoder itself would need PyTorch again.
 
-The exported artifact records both the training encoder provenance and the current runtime feature schema. The existing [TASK-55 encoder comparison](../task-55/README.md) established parity for the shipped prototype weights; this training reproduction is a separate check and does not establish parity for arbitrary future retrained weights. Re-run encoder comparison before deploying materially changed weights.
+The exported artifact records the encoder it was trained on, so `PunDetector`'s configuration check rejects weights trained on any other encoder. The shipped prototype-1 weights were trained on the torch encoder; [TASK-55's comparison](../task-55/README.md) is the evidence that they run unchanged on ONNX, and their `encoder_history` metadata points to it.
