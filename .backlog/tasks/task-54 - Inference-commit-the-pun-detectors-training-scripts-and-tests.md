@@ -5,6 +5,7 @@ status: To Do
 assignee:
   - '@Groverpr93'
 created_date: '2026-10-02 10:04'
+updated_date: '2026-10-04 20:56'
 labels:
   - pun-classifier
 milestone: m-6
@@ -12,6 +13,7 @@ dependencies:
   - TASK-16
 references:
   - docs/experiments/pun-detector/prototype-1/README.md
+priority: medium
 project: inference
 ordinal: 50000
 ---

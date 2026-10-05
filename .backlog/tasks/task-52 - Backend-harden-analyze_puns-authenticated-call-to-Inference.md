@@ -3,9 +3,9 @@ id: TASK-52
 title: 'Backend: harden analyze_pun''s authenticated call to Inference'
 status: To Do
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-10-02 10:04'
-updated_date: '2026-10-03 21:31'
+updated_date: '2026-10-04 20:57'
 labels: []
 milestone: m-4
 dependencies:
@@ -14,6 +14,7 @@ references:
   - backend/src/tools/inference-fetch.ts
   - backend/src/tools/analyze-pun.ts
   - .github/workflows/deploy-backend.yml
+priority: medium
 project: backend
 ordinal: 48000
 ---

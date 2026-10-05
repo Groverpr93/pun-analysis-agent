@@ -3,9 +3,9 @@ id: TASK-55
 title: 'Inference: run the pun detector''s encoder on fastembed ONNX and drop torch'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-10-02 10:04'
-updated_date: '2026-10-03 20:57'
+updated_date: '2026-10-04 20:57'
 labels:
   - pun-classifier
 milestone: m-4

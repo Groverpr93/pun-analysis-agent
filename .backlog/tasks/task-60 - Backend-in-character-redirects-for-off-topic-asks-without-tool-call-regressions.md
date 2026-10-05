@@ -4,9 +4,10 @@ title: >-
   Backend: in-character redirects for off-topic asks, without tool-call
   regressions
 status: To Do
-assignee: []
+assignee:
+  - '@yaitorr'
 created_date: '2026-10-04 00:16'
-updated_date: '2026-10-04 20:43'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies: []
 references:

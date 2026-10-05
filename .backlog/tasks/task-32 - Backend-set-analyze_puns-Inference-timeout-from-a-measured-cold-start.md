@@ -3,9 +3,9 @@ id: TASK-32
 title: 'Backend: set analyze_pun''s Inference timeout from a measured cold start'
 status: In Progress
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-27 15:25'
-updated_date: '2026-10-03 21:31'
+updated_date: '2026-10-04 20:57'
 labels: []
 milestone: m-4
 dependencies:
@@ -17,6 +17,7 @@ dependencies:
 references:
   - docs/contracts.md
   - backend/src/tools/analyze-pun.ts
+priority: medium
 project: backend
 ordinal: 34000
 ---

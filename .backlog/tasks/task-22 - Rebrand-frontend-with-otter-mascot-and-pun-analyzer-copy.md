@@ -3,9 +3,9 @@ id: TASK-22
 title: Rebrand frontend with otter mascot and pun-analyzer copy
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-20 11:46'
-updated_date: '2026-09-20 12:05'
+updated_date: '2026-10-04 20:57'
 labels: []
 milestone: m-1
 dependencies:

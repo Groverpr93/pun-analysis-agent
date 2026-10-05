@@ -3,9 +3,9 @@ id: TASK-12
 title: 'Backend: restrict Gemini''s conversational scope to pun analysis'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-17 23:34'
-updated_date: '2026-09-28 13:49'
+updated_date: '2026-10-04 20:57'
 due_date: '2026-09-21'
 labels: []
 milestone: m-5

@@ -3,9 +3,9 @@ id: TASK-36
 title: 'Frontend: highlight only JSON/JSON5 and silence the Vite chunk-size warning'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-27 20:18'
-updated_date: '2026-09-28 08:42'
+updated_date: '2026-10-04 20:57'
 labels:
   - frontend
 dependencies: []

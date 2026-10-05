@@ -3,9 +3,9 @@ id: TASK-45
 title: 'Backend: check chat continuity across the model ladder''s models'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-28 19:54'
-updated_date: '2026-09-29 10:32'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies:
   - TASK-43

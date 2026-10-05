@@ -3,9 +3,9 @@ id: TASK-14
 title: Deploy inference to Cloud Run via CI
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-17 23:40'
-updated_date: '2026-09-28 10:19'
+updated_date: '2026-10-04 20:57'
 due_date: '2026-09-21'
 labels: []
 milestone: m-4

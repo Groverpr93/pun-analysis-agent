@@ -2,8 +2,10 @@
 id: TASK-34
 title: 'Frontend: automated browser test for the bounded chat viewport'
 status: To Do
-assignee: []
+assignee:
+  - '@yaitorr'
 created_date: '2026-09-27 18:43'
+updated_date: '2026-10-04 20:57'
 labels:
   - frontend
   - testing
@@ -12,6 +14,7 @@ dependencies:
 references:
   - docs/design/frontend-design.md
   - frontend/src/App.tsx
+priority: low
 type: task
 project: frontend
 ordinal: 35000

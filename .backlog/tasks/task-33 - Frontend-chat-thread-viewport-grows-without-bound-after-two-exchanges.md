@@ -3,9 +3,9 @@ id: TASK-33
 title: 'Frontend: chat thread viewport grows without bound after two exchanges'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-27 18:32'
-updated_date: '2026-09-27 18:48'
+updated_date: '2026-10-04 20:57'
 labels:
   - frontend
   - bug

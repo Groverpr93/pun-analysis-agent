@@ -3,9 +3,9 @@ id: TASK-30
 title: 'Pre-commit hooks: auto-format with Ruff and Biome; enforce ruff format in CI'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-26 19:09'
-updated_date: '2026-09-26 19:58'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies: []
 references:

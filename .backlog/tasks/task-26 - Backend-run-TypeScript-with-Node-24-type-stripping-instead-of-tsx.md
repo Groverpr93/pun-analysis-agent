@@ -3,9 +3,9 @@ id: TASK-26
 title: 'Backend: run TypeScript with Node 24 type stripping instead of tsx'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-23 13:46'
-updated_date: '2026-09-28 08:42'
+updated_date: '2026-10-04 20:57'
 labels:
   - backend
   - tooling

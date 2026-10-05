@@ -3,9 +3,9 @@ id: TASK-17
 title: Retrieve WordNet/Wiktionary candidate senses for pun-word candidates
 status: Done
 assignee:
-  - Andi J. Castillo-Mauricio
+  - '@Andi-Cast'
 created_date: '2026-09-20 10:04'
-updated_date: '2026-09-27 18:43'
+updated_date: '2026-10-04 20:57'
 labels:
   - wsd
 milestone: m-6

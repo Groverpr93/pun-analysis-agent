@@ -2,8 +2,10 @@
 id: TASK-59
 title: 'Contracts: document /analyze''s request limits and bound analyze_pun''s input'
 status: To Do
-assignee: []
+assignee:
+  - '@yaitorr'
 created_date: '2026-10-03 21:30'
+updated_date: '2026-10-04 20:57'
 labels: []
 milestone: m-4
 dependencies: []
@@ -11,6 +13,7 @@ references:
   - docs/contracts.md
   - inference/main.py
   - backend/src/tools/analyze-pun.ts
+priority: medium
 ordinal: 55000
 ---
 

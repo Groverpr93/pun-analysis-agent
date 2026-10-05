@@ -3,9 +3,9 @@ id: TASK-6.1
 title: 'Theme & chat shell (assistant-ui Thread, Claude-inspired tokens)'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-17 23:33'
-updated_date: '2026-09-20 11:05'
+updated_date: '2026-10-04 20:57'
 due_date: '2026-09-21'
 labels: []
 milestone: m-1

@@ -2,9 +2,10 @@
 id: TASK-21
 title: Template pun explanation string and finalize sense_source tiering
 status: To Do
-assignee: []
+assignee:
+  - '@Andi-Cast'
 created_date: '2026-09-20 10:04'
-updated_date: '2026-10-03 22:32'
+updated_date: '2026-10-04 20:57'
 labels:
   - wsd
 milestone: m-6
@@ -13,6 +14,7 @@ dependencies:
 references:
   - docs/design/sense-selection.md
   - docs/contracts.md
+priority: high
 project: inference
 ordinal: 21000
 ---

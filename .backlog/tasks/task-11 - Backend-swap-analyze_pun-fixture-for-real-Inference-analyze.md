@@ -3,9 +3,9 @@ id: TASK-11
 title: 'Backend: swap analyze_pun fixture for real Inference /analyze'
 status: In Progress
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-17 23:34'
-updated_date: '2026-10-04 20:19'
+updated_date: '2026-10-04 20:58'
 due_date: '2026-09-21'
 labels: []
 milestone: m-4
@@ -14,10 +14,10 @@ dependencies:
   - TASK-9
   - TASK-14
   - TASK-16
-  - TASK-21
 references:
   - docs/contracts.md
   - docs/project-spec.md
+priority: medium
 project: backend
 ordinal: 12000
 ---
@@ -68,4 +68,6 @@ Verified 2026-10-04 (the swap itself landed in PR #85, commit 2e93091, outside t
 AC #2 raw tool result from that conversation (Raw response toggle on the card): {"is_pun": true, "pun_type": "homographic", "words_involved": ["lost"], "confidence": 0.9966, "probabilities": {"non_pun": 0.0034, "homographic": 0.9334, "homophonic": 0.0632}, "sense_source": "wordnet", explanation: "\"lost\" can mean fail to make money in a business; ..."}. (Sense selection picked "lost" rather than "interest", a quality issue for the sense-selection chain, not this task.)
 
 URL note: deploy-backend.yml resolves INFERENCE_URL from 'gcloud run services describe ... status.url', which returns the legacy hashed form (https://pun-agent-inference-rlm5dfjheq-ue.a.run.app), not the deterministic https://pun-agent-inference-203365930808.us-east1.run.app in the TASK-14 note above. Both address the same service, and Cloud Run accepts an ID token whose audience is either URL.
+
+2026-10-04: dropped the TASK-21 dependency (decided with @yaitorr). ACs #1-#4 shipped against the deployed Inference without TASK-21's explanation templating, so it does not block this task; the description's mention of TASK-21 as a prerequisite is historical. The m-6 quality chain still improves what analyze_pun returns, but no longer gates closing m-4.
 <!-- SECTION:NOTES:END -->

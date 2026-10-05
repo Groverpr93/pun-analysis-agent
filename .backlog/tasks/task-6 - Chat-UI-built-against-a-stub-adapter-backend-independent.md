@@ -3,9 +3,9 @@ id: TASK-6
 title: Chat UI built against a stub adapter (backend-independent)
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-17 23:33'
-updated_date: '2026-09-20 11:45'
+updated_date: '2026-10-04 20:57'
 due_date: '2026-09-21'
 labels: []
 milestone: m-1

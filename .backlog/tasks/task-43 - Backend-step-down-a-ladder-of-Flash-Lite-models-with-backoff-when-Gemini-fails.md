@@ -5,9 +5,9 @@ title: >-
   fails
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-28 15:05'
-updated_date: '2026-09-29 10:32'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies:
   - TASK-42

@@ -3,9 +3,9 @@ id: TASK-25
 title: Protect /api/chat with Firebase App Check
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-23 09:50'
-updated_date: '2026-09-26 13:44'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies:
   - TASK-13

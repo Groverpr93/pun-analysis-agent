@@ -3,9 +3,9 @@ id: TASK-42
 title: 'Backend: fail a stalled Gemini stream instead of holding /api/chat open'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-28 14:45'
-updated_date: '2026-09-28 17:58'
+updated_date: '2026-10-04 20:57'
 labels: []
 dependencies: []
 references:

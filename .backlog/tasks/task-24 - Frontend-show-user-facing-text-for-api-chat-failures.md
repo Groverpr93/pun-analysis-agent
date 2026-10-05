@@ -3,9 +3,9 @@ id: TASK-24
 title: 'Frontend: show user-facing text for /api/chat failures'
 status: Done
 assignee:
-  - '@yaisiel.torres'
+  - '@yaitorr'
 created_date: '2026-09-23 08:56'
-updated_date: '2026-09-24 02:05'
+updated_date: '2026-10-04 20:57'
 labels: []
 milestone: m-2
 dependencies:
