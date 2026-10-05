@@ -21,11 +21,7 @@ from sklearn.preprocessing import StandardScaler
 INFERENCE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(INFERENCE))
 
-from pun_detector.features import ENCODER as RUNTIME_ENCODER
-from pun_detector.features import LEXICON, SCHEMA, FeatureExtractor
-
-ENCODER = "sentence-transformers/all-MiniLM-L6-v2"
-REVISION = "c9745ed1d9f207416be6d2e6f8de32d1f16199bf"
+from pun_detector.features import ENCODER, LEXICON, SCHEMA, FeatureExtractor
 from pun_detector.model import ARTIFACT, choose_label
 
 DATASET = INFERENCE.parent / "eval/datasets/semeval2017_task7_puns.csv"
@@ -119,27 +115,6 @@ def saved_splits(rows, path):
     return result
 
 
-def training_extractor():
-    """Original pinned torch encoder, used only by offline training."""
-    import torch
-    from huggingface_hub import snapshot_download
-    from sentence_transformers import SentenceTransformer
-
-    path = snapshot_download(
-        ENCODER,
-        revision=REVISION,
-        allow_patterns=["*.json", "*.txt", "*.safetensors"],
-        ignore_patterns=["onnx/*", "openvino/*"],
-    )
-    torch.set_num_threads(4)
-    model = SentenceTransformer(path, local_files_only=True, device="cpu")
-    return FeatureExtractor(
-        embed=lambda texts: model.encode(
-            texts, normalize_embeddings=True, batch_size=64, show_progress_bar=False
-        )
-    )
-
-
 def threshold_for(y, probabilities, classes):
     p = probabilities[:, classes != "non_pun"].sum(axis=1)
     gold = y != "non_pun"
@@ -185,16 +160,18 @@ def train(dataset, output, splits_path):
     }
     (output / "splits.json").write_text(json.dumps(manifest, indent=2))
     fingerprint = hashlib.sha256(Path(dataset).read_bytes()).hexdigest()
-    config = {"schema": SCHEMA, "encoder": ENCODER, "revision": REVISION, "lexicon": LEXICON}
+    # The deployed fastembed (ONNX) encoder, so the artifact's recorded configuration is
+    # the one it was trained on and PunDetector's configuration check stays meaningful.
+    config = {"schema": SCHEMA, "encoder": ENCODER, "lexicon": LEXICON}
     cache = output / "features.npz"
     signature = json.dumps({"dataset": fingerprint, "features": config}, sort_keys=True)
     if cache.exists():
         with np.load(cache, allow_pickle=False) as stored:
             if str(stored["signature"]) != signature:
-                raise ValueError("Feature cache is stale; remove artifacts/features.npz and retry.")
+                raise ValueError("Feature cache is stale; remove features.npz and retry.")
             x = stored["x"]
     else:
-        extractor = training_extractor()
+        extractor = FeatureExtractor()
         vectors = []
         for start in range(0, len(rows), 64):
             vectors.extend(
@@ -243,15 +220,14 @@ def train(dataset, output, splits_path):
         }
         if name == "combined":
             metadata = {
-                "features": {"schema": SCHEMA, "encoder": RUNTIME_ENCODER, "lexicon": LEXICON},
-                "training_features": config,
+                "features": config,
                 "threshold": threshold,
                 "version": "prototype-1",
                 "dataset_sha256": fingerprint,
                 "seed": SEED,
                 "packages": {
                     p: importlib.metadata.version(p)
-                    for p in ("spacy", "wn", "sentence-transformers", "scikit-learn", "numpy")
+                    for p in ("spacy", "wn", "fastembed", "scikit-learn", "numpy")
                 },
             }
             np.savez_compressed(
@@ -294,23 +270,32 @@ def train(dataset, output, splits_path):
     )
 
 
-def verify_report(actual, reference):
+# Thresholds are picked from development-set probabilities, so float-level encoder
+# differences move them without changing any decision: retraining prototype-1 on the
+# ONNX encoder instead of the original torch one moved the combined model's threshold
+# by 2.9e-5 while every metric and prediction stayed identical (TASK-54).
+METRIC_TOLERANCE = 1e-9
+THRESHOLD_TOLERANCE = 1e-4
+
+
+def verify_report(actual, reference, key=None):
     """Compare all reported metrics/configuration, allowing only float roundoff."""
     if isinstance(reference, dict):
         if set(actual) != set(reference):
             raise ValueError("Report keys differ")
-        for key in reference:
-            verify_report(actual[key], reference[key])
+        for name in reference:
+            verify_report(actual[name], reference[name], name)
     elif isinstance(reference, list):
         if len(actual) != len(reference):
             raise ValueError("Report lengths differ")
         for a, b in zip(actual, reference, strict=True):
-            verify_report(a, b)
+            verify_report(a, b, key)
     elif isinstance(reference, (int, float)):
-        if not np.isclose(actual, reference, rtol=0, atol=1e-9):
-            raise ValueError(f"Report differs: {actual} != {reference}")
+        tolerance = THRESHOLD_TOLERANCE if key == "threshold" else METRIC_TOLERANCE
+        if not np.isclose(actual, reference, rtol=0, atol=tolerance):
+            raise ValueError(f"Report differs at {key}: {actual} != {reference}")
     elif actual != reference:
-        raise ValueError(f"Report differs: {actual} != {reference}")
+        raise ValueError(f"Report differs at {key}: {actual} != {reference}")
 
 
 if __name__ == "__main__":
@@ -334,4 +319,7 @@ if __name__ == "__main__":
             json.loads((args.output / "report.json").read_text()),
             json.loads(args.verify_reference.read_text()),
         )
-        print("All report metrics and confusion matrices match (absolute tolerance 1e-9).")
+        print(
+            f"All report metrics and confusion matrices match (absolute tolerance "
+            f"{METRIC_TOLERANCE}; thresholds {THRESHOLD_TOLERANCE})."
+        )

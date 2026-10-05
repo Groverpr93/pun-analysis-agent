@@ -215,3 +215,57 @@ def test_report_verification_rejects_changed_results():
     verify_report({"f1": 0.9 + 1e-12, "matrix": [[2, 1]]}, {"f1": 0.9, "matrix": [[2, 1]]})
     with pytest.raises(ValueError):
         verify_report({"matrix": [[1, 2]]}, {"matrix": [[2, 1]]})
+    # Only thresholds get the wider tolerance; a metric moving as much still fails.
+    verify_report({"threshold": 0.32 + 3e-5}, {"threshold": 0.32})
+    with pytest.raises(ValueError, match="f1"):
+        verify_report({"f1": 0.9 + 3e-5}, {"f1": 0.9})
+    with pytest.raises(ValueError, match="threshold"):
+        verify_report({"threshold": 0.32 + 1e-3}, {"threshold": 0.32})
+
+
+def test_trained_artifact_loads_in_the_runtime_detector(tmp_path, monkeypatch):
+    from scripts import train_detector
+
+    # Separable synthetic features: 4 "embedding" columns plus the 22 pair/count slots.
+    rng = np.random.default_rng(0)
+    labels = ["non_pun", "homographic", "homophonic"] * 20
+    vectors = {}
+    dataset = tmp_path / "rows.csv"
+    with dataset.open("w", newline="") as handle:
+        writer = csv.writer(handle)
+        writer.writerow(["id", "text", "is_pun", "pun_type"])
+        for i, label in enumerate(labels):
+            text = f"sentence {i}"
+            vectors[text] = rng.normal(size=26) + 3 * np.eye(26)[labels.index(label) % 3]
+            is_pun = label != "non_pun"
+            writer.writerow([f"r{i}", text, is_pun, label if is_pun else ""])
+    ids = [f"r{i}" for i in range(len(labels))]
+    splits = tmp_path / "splits.json"
+    splits.write_text(json.dumps({"train": ids[:36], "dev": ids[36:48], "test": ids[48:]}))
+    constructed = []
+
+    class FakeExtractor:
+        def __init__(self):
+            constructed.append(self)
+
+        def extract_many(self, texts):
+            return [(vectors[text], []) for text in texts]
+
+        def extract(self, text):
+            return self.extract_many([text])[0]
+
+    monkeypatch.setattr(train_detector, "FeatureExtractor", FakeExtractor)
+    output = tmp_path / "out"
+    train_detector.train(dataset, output, splits)
+
+    detector = PunDetector(output / "detector.npz", extractor=FakeExtractor())
+    assert detector.metadata["features"] == {
+        "schema": SCHEMA,
+        "encoder": ENCODER,
+        "lexicon": LEXICON,
+    }
+    assert detector.predict("sentence 1")["pun_type"] == "homographic"
+    # A rerun reuses the cached features instead of building an extractor.
+    constructed.clear()
+    train_detector.train(dataset, output, splits)
+    assert constructed == []
