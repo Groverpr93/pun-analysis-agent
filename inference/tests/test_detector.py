@@ -92,7 +92,10 @@ def test_split_rows_regenerates_the_committed_splits():
         for name, indices in split_rows(rows).items()
     }
     committed = json.loads(SPLITS.read_text())
-    assert regenerated == {name: sorted(ids) for name, ids in committed.items()}
+    assert regenerated == {name: sorted(ids) for name, ids in committed.items()}, (
+        "split_rows no longer reproduces prototype-1's splits. Training still uses the saved "
+        "IDs, so update split_rows' docstring; don't regenerate splits.json."
+    )
 
 
 def test_near_duplicate_groups_never_cross_splits():
@@ -248,7 +251,7 @@ def test_prediction_verification_rejects_any_changed_label(tmp_path):
     verify_predictions(write("same.jsonl", ["non_pun", "homographic"]), reference)
     with pytest.raises(ValueError, match="1 test predictions differ"):
         verify_predictions(write("changed.jsonl", ["non_pun", "homophonic"]), reference)
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="reference has 2"):
         verify_predictions(write("short.jsonl", ["non_pun"]), reference)
 
 

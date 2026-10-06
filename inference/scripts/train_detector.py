@@ -130,7 +130,12 @@ def encoder_revision():
     is the Hugging Face snapshot, named by commit hash.
     """
     scoring.default_embed(["load the model"])
-    return Path(scoring._embedder.model._model_dir).name
+    path = Path(scoring._embedder.model._model_dir)
+    # Without Hugging Face, fastembed falls back to a tarball from another source, which
+    # isn't either snapshot; refuse rather than record its directory name as a revision.
+    if not re.fullmatch(r"[0-9a-f]{40}", path.name):
+        raise RuntimeError(f"fastembed loaded {path}, not a Hugging Face snapshot")
+    return path.name
 
 
 def threshold_for(y, probabilities, classes):
@@ -329,6 +334,8 @@ def verify_predictions(actual_path, reference_path):
         return [(row["ids"], row["prediction"]) for row in map(json.loads, lines)]
 
     actual, reference = read(actual_path), read(reference_path)
+    if len(actual) != len(reference):
+        raise ValueError(f"{len(actual)} test predictions, reference has {len(reference)}")
     differing = [a for a, b in zip(actual, reference, strict=True) if a != b]
     if differing:
         raise ValueError(f"{len(differing)} test predictions differ from the reference run")
@@ -345,16 +352,18 @@ if __name__ == "__main__":
         help="Fail if the regenerated report, or the test_predictions.jsonl beside it, differs",
     )
     args = parser.parse_args()
+    if args.verify_reference:
+        reference_predictions = args.verify_reference.with_name("test_predictions.jsonl")
+        # Checked up front so a missing file doesn't surface only after a full training run.
+        if not reference_predictions.exists():
+            parser.error(f"--verify-reference needs {reference_predictions} beside the report")
     train(args.dataset, args.output, args.splits)
     if args.verify_reference:
         verify_report(
             json.loads((args.output / "report.json").read_text()),
             json.loads(args.verify_reference.read_text()),
         )
-        verify_predictions(
-            args.output / "test_predictions.jsonl",
-            args.verify_reference.with_name("test_predictions.jsonl"),
-        )
+        verify_predictions(args.output / "test_predictions.jsonl", reference_predictions)
         print(
             f"All report metrics, confusion matrices and test predictions match (absolute "
             f"tolerance {METRIC_TOLERANCE:g}; thresholds {THRESHOLD_TOLERANCE:g})."
