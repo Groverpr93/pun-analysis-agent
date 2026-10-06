@@ -5,7 +5,7 @@ status: Done
 assignee:
   - '@Groverpr93'
 created_date: '2026-10-02 10:04'
-updated_date: '2026-10-05 01:32'
+updated_date: '2026-10-06 01:06'
 labels:
   - pun-classifier
 milestone: m-6
@@ -50,6 +50,8 @@ Restore the original trainer with saved split IDs and explicit training dependen
 Fresh original torch feature extraction and saved-split training reproduced all five report structures at absolute tolerance 1e-9. Cached rerun also passed. 113 inference tests passed. Independent code/architecture review found no blockers. Optional training deps excluded from production export; generated output excluded from Git/Docker. Source commit 558ed27; reproduction documentation follows in a separate commit.
 
 Review follow-up (316b14c): the trainer recorded the ONNX encoder in detector.npz's features while extracting with torch, so PunDetector's configuration check accepted weights with no parity evidence. Training now uses the runtime fastembed (ONNX) FeatureExtractor and the training group (torch, sentence-transformers, transformers) is removed. A fresh ONNX run reproduced every report metric, confusion matrix, selected C and all 605 test predictions; thresholds moved at most 2.9e-5 and weights at most 2.2e-5, so --verify-reference allows 1e-4 on thresholds only. Added a train() round-trip test; 114 inference tests pass.
+
+Review comments addressed: split_rows regenerates splits.json exactly (now tested); artifacts and the feature cache record the resolved ONNX export (encoder_revision), since fastembed doesn't pin it and it moved from 8f518e88 (TASK-55) to d1395466 on 2026-09-30; --verify-reference also compares test_predictions.jsonl. A fresh run on d1395466 reproduced every metric and all 605 predictions; 116 inference tests pass.
 <!-- SECTION:NOTES:END -->
 
 ## Final Summary
