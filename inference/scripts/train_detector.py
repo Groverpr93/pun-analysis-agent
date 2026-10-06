@@ -21,10 +21,12 @@ from sklearn.preprocessing import StandardScaler
 INFERENCE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(INFERENCE))
 
-from pun_detector.features import ENCODER, LEXICON, SCHEMA, FeatureExtractor
+import scoring
+from pun_detector.features import ENCODER, LEXICON, SCHEMA, FeatureExtractor, feature_vector
 from pun_detector.model import ARTIFACT, choose_label
 
 DATASET = INFERENCE.parent / "eval/datasets/semeval2017_task7_puns.csv"
+SPLITS = INFERENCE.parent / "docs/experiments/pun-detector/prototype-1/splits.json"
 CLASSES = ["non_pun", "homographic", "homophonic"]
 SEED = 42
 
@@ -54,7 +56,12 @@ def load_rows(path):
 
 
 def split_rows(rows):
-    # Connected near-duplicate groups stay together even when labels differ.
+    """How prototype-1's splits.json was made; tests check it still regenerates that file.
+
+    Training reads the saved IDs (saved_splits) instead of calling this, so a change to
+    scikit-learn or the dataset can't silently reshuffle the splits behind a reproduction.
+    Connected near-duplicate groups stay together even when labels differ.
+    """
     matrix = TfidfVectorizer(analyzer="char", ngram_range=(3, 5)).fit_transform(
         r["text"].lower() for r in rows
     )
@@ -115,6 +122,17 @@ def saved_splits(rows, path):
     return result
 
 
+def encoder_revision():
+    """The ONNX export fastembed resolved, which it doesn't pin.
+
+    The export changes upstream: TASK-55 checked 8f518e88, and d1395466 (30 September
+    2026) changed its padding. fastembed has no public accessor, but its model directory
+    is the Hugging Face snapshot, named by commit hash.
+    """
+    scoring.default_embed(["load the model"])
+    return Path(scoring._embedder.model._model_dir).name
+
+
 def threshold_for(y, probabilities, classes):
     p = probabilities[:, classes != "non_pun"].sum(axis=1)
     gold = y != "non_pun"
@@ -163,8 +181,11 @@ def train(dataset, output, splits_path):
     # The deployed fastembed (ONNX) encoder, so the artifact's recorded configuration is
     # the one it was trained on and PunDetector's configuration check stays meaningful.
     config = {"schema": SCHEMA, "encoder": ENCODER, "lexicon": LEXICON}
+    revision = encoder_revision()
     cache = output / "features.npz"
-    signature = json.dumps({"dataset": fingerprint, "features": config}, sort_keys=True)
+    signature = json.dumps(
+        {"dataset": fingerprint, "features": config, "encoder_revision": revision}, sort_keys=True
+    )
     if cache.exists():
         with np.load(cache, allow_pickle=False) as stored:
             if str(stored["signature"]) != signature:
@@ -189,8 +210,9 @@ def train(dataset, output, splits_path):
         "split_sizes": {k: len(v) for k, v in splits.items()},
         "models": {},
     }
-    # Embedding dimension is total minus two (nine features + mask) slots and two counts.
-    dimension = x.shape[1] - 22
+    # Everything feature_vector appends after the sentence embedding: two candidate-pair
+    # slots (features + presence mask) and two counts.
+    dimension = x.shape[1] - len(feature_vector([], [], 0, 0))
     for name, features in (
         ("embedding_only", x[:, :dimension]),
         ("senses_only", x[:, dimension:]),
@@ -221,6 +243,7 @@ def train(dataset, output, splits_path):
         if name == "combined":
             metadata = {
                 "features": config,
+                "encoder_revision": revision,
                 "threshold": threshold,
                 "version": "prototype-1",
                 "dataset_sha256": fingerprint,
@@ -298,19 +321,28 @@ def verify_report(actual, reference, key=None):
         raise ValueError(f"Report differs at {key}: {actual} != {reference}")
 
 
+def verify_predictions(actual_path, reference_path):
+    """Every held-out sentence must get the same label as in the reference run."""
+
+    def read(path):
+        lines = Path(path).read_text().splitlines()
+        return [(row["ids"], row["prediction"]) for row in map(json.loads, lines)]
+
+    actual, reference = read(actual_path), read(reference_path)
+    differing = [a for a, b in zip(actual, reference, strict=True) if a != b]
+    if differing:
+        raise ValueError(f"{len(differing)} test predictions differ from the reference run")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", type=Path, default=DATASET)
-    parser.add_argument(
-        "--splits",
-        type=Path,
-        default=INFERENCE.parent / "docs/experiments/pun-detector/prototype-1/splits.json",
-    )
+    parser.add_argument("--splits", type=Path, default=SPLITS)
     parser.add_argument("--output", type=Path, default=INFERENCE / "training-output")
     parser.add_argument(
         "--verify-reference",
         type=Path,
-        help="Fail if regenerated report differs from this JSON report",
+        help="Fail if the regenerated report, or the test_predictions.jsonl beside it, differs",
     )
     args = parser.parse_args()
     train(args.dataset, args.output, args.splits)
@@ -319,7 +351,11 @@ if __name__ == "__main__":
             json.loads((args.output / "report.json").read_text()),
             json.loads(args.verify_reference.read_text()),
         )
+        verify_predictions(
+            args.output / "test_predictions.jsonl",
+            args.verify_reference.with_name("test_predictions.jsonl"),
+        )
         print(
-            f"All report metrics and confusion matrices match (absolute tolerance "
-            f"{METRIC_TOLERANCE:g}; thresholds {THRESHOLD_TOLERANCE:g})."
+            f"All report metrics, confusion matrices and test predictions match (absolute "
+            f"tolerance {METRIC_TOLERANCE:g}; thresholds {THRESHOLD_TOLERANCE:g})."
         )

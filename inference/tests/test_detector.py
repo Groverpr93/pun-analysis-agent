@@ -83,6 +83,18 @@ def test_dataset_deduplicates_and_rejects_conflicts(tmp_path):
         load_rows(path)
 
 
+def test_split_rows_regenerates_the_committed_splits():
+    from scripts.train_detector import DATASET, SPLITS
+
+    rows = load_rows(DATASET)
+    regenerated = {
+        name: sorted(row_id for i in indices for row_id in rows[i]["ids"])
+        for name, indices in split_rows(rows).items()
+    }
+    committed = json.loads(SPLITS.read_text())
+    assert regenerated == {name: sorted(ids) for name, ids in committed.items()}
+
+
 def test_near_duplicate_groups_never_cross_splits():
     # Long repeated sentences differ only in punctuation: same near-duplicate group.
     rng = np.random.default_rng(42)
@@ -223,14 +235,31 @@ def test_report_verification_rejects_changed_results():
         verify_report({"threshold": 0.32 + 1e-3}, {"threshold": 0.32})
 
 
+def test_prediction_verification_rejects_any_changed_label(tmp_path):
+    from scripts.train_detector import verify_predictions
+
+    def write(name, predictions):
+        path = tmp_path / name
+        rows = [{"ids": [f"r{i}"], "prediction": p} for i, p in enumerate(predictions)]
+        path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+        return path
+
+    reference = write("reference.jsonl", ["non_pun", "homographic"])
+    verify_predictions(write("same.jsonl", ["non_pun", "homographic"]), reference)
+    with pytest.raises(ValueError, match="1 test predictions differ"):
+        verify_predictions(write("changed.jsonl", ["non_pun", "homophonic"]), reference)
+    with pytest.raises(ValueError):
+        verify_predictions(write("short.jsonl", ["non_pun"]), reference)
+
+
 def test_trained_artifact_loads_in_the_runtime_detector(tmp_path, monkeypatch):
     from scripts import train_detector
     from scripts.train_detector import CLASSES
 
-    # Separable synthetic features: 4 "embedding" columns plus the 22 pair/count slots,
-    # with each class shifted along its own column.
+    # Separable synthetic features: 4 "embedding" columns plus feature_vector's pair and
+    # count slots, with each class shifted along its own column.
     rng = np.random.default_rng(0)
-    width = 4 + 22
+    width = 4 + len(feature_vector([], [], 0, 0))
     labels = CLASSES * 20
     vectors = {}
     dataset = tmp_path / "rows.csv"
@@ -258,6 +287,7 @@ def test_trained_artifact_loads_in_the_runtime_detector(tmp_path, monkeypatch):
             return self.extract_many([text])[0]
 
     monkeypatch.setattr(train_detector, "FeatureExtractor", FakeExtractor)
+    monkeypatch.setattr(train_detector, "encoder_revision", lambda: "rev-1")
     output = tmp_path / "out"
     train_detector.train(dataset, output, splits)
 
@@ -267,12 +297,13 @@ def test_trained_artifact_loads_in_the_runtime_detector(tmp_path, monkeypatch):
         "encoder": ENCODER,
         "lexicon": LEXICON,
     }
+    assert detector.metadata["encoder_revision"] == "rev-1"
     assert detector.predict("sentence 1")["pun_type"] == "homographic"
     # A rerun reuses the cached features instead of building an extractor.
     constructed.clear()
     train_detector.train(dataset, output, splits)
     assert constructed == []
-    # Features cached under another configuration (e.g. the old torch encoder) are refused.
-    np.savez_compressed(output / "features.npz", x=np.zeros((60, width)), signature="other")
+    # Features cached under another encoder revision or configuration are refused.
+    monkeypatch.setattr(train_detector, "encoder_revision", lambda: "rev-2")
     with pytest.raises(ValueError, match="stale"):
         train_detector.train(dataset, output, splits)
